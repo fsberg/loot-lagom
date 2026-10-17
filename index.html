@@ -230,6 +230,12 @@ html.pixel .tnode{border-radius:0}
 .charhead{display:flex;gap:12px;align-items:center;margin-bottom:10px}.charhead canvas{width:96px;height:96px;border:1px solid var(--edge);border-radius:6px;background:#1d1820}
 html.pixel .charhead canvas{image-rendering:pixelated;border-radius:0}
 .xpbar{height:8px;background:rgba(0,0,0,.4);border-radius:4px;overflow:hidden}.xpbar .fill{height:100%;background:var(--xp)}
+#orbPts{position:absolute;top:-8px;right:-6px;z-index:3;min-width:30px;height:30px;padding:0 6px;border-radius:15px;border:2px solid #fff4c8;background:#d9473a;color:#fff;font:800 15px var(--body);cursor:pointer;pointer-events:auto;box-shadow:0 0 12px rgba(255,90,60,.7);animation:ptsPulse 1.2s ease-in-out infinite}
+#hTree:not(:empty){top:-8px;right:-8px;bottom:auto;min-width:20px;height:20px;line-height:20px;text-align:center;border-radius:10px;background:#d9473a;color:#fff;font-size:12px;box-shadow:0 0 8px rgba(255,90,60,.8);animation:ptsPulse 1.2s ease-in-out infinite}
+.orbw.lvl::after{content:"";position:absolute;inset:-6px;border-radius:50%;box-shadow:0 0 18px 6px rgba(243,211,81,.75),inset 0 0 14px 4px rgba(243,211,81,.6);animation:lvlGlow .8s ease-in-out infinite alternate;pointer-events:none}
+html.pixel #orbPts,html.pixel #hTree:not(:empty){border-radius:0}
+@keyframes ptsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes lvlGlow{from{opacity:.45}to{opacity:1}}
 @keyframes stampIn{0%{opacity:0;transform:rotate(14deg) scale(3)}100%{opacity:1;transform:rotate(14deg) scale(1)}}
 @keyframes logoIn{0%{opacity:0;transform:scale(.3) rotate(-8deg)}60%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:none}}
 @keyframes splashOut{to{opacity:0;visibility:hidden}}
@@ -298,7 +304,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <button class="sk" data-act="menu" title="Meny (Esc)"><span class="k">Esc</span><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg><span class="n"></span></button>
     <button class="sk" data-act="mute" id="muteBtn" title="Ljud (M)"><span class="k">M</span><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><span class="n"></span></button>
   </div>
-  <div class="orbw r"><canvas id="orbR" class="orb r" width="128" height="128" aria-label="Erfarenhet"></canvas><div class="orbtxt r" id="orbRT"></div></div>
+  <div class="orbw r" id="orbRW"><button id="orbPts" hidden title="Talangpoäng (K)"></button><canvas id="orbR" class="orb r" width="128" height="128" aria-label="Erfarenhet"></canvas><div class="orbtxt r" id="orbRT"></div></div>
   </div>
   <div class="xp"><div class="fill" id="xpFill"></div></div>
 </div>
@@ -324,7 +330,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       <div class="shop">
         <button class="btn sm" data-act="buypot" id="buyPot">Beställ dryck med brevduva</button>
       </div>
-      <details class="savebox" id="saveBox">
+      <details class="savebox" id="saveBox" hidden>
         <summary>Sparning och grafik</summary>
         <div class="row" style="justify-content:flex-start;margin-top:6px"><button class="btn sm" data-act="pixel" id="invPixel">Pixelgrafik: av (G)</button></div>
         <p class="muted">Spelet sparas automatiskt i den här webbläsaren när du byter våning och var tolfte sekund. Du fortsätter alltid från början av den våning du var på. Spar-koden tar med hjälten till en annan dator eller webbläsare.</p>
@@ -505,6 +511,24 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     </div>
   </div>
 </div>
+<div class="screen" id="saveM" hidden>
+  <div class="card" style="max-width:520px">
+    <h2 class="logo" style="font-size:clamp(36px,7vw,56px)">Sparfiler</h2>
+    <p class="tag" style="font-size:16px">Spelet sparas automatiskt i den här webbläsaren. Vill du spela vidare på en annan dator eller i en annan webbläsare laddar du ner en sparfil här och laddar in den där.</p>
+    <div class="row" style="flex-direction:column;align-items:stretch;width:100%;max-width:360px">
+      <p class="lbl" style="margin:4px 0 0" id="saveInfo"></p>
+      <button class="btn primary" id="svDown">Ladda ner sparfil</button>
+      <button class="btn" id="svCopy">Kopiera sparkod</button>
+      <p class="lbl" style="margin:10px 0 0">Ladda in en hjälte</p>
+      <button class="btn" id="svFileBtn">Välj sparfil...</button>
+      <input type="file" id="svFile" accept=".txt,.json,text/plain" hidden>
+      <textarea id="codeIn" rows="3" placeholder="...eller klistra in en sparkod här" aria-label="Spar-kod"></textarea>
+      <button class="btn" id="btnLoadCode">Ladda hjälten från koden</button>
+      <p id="codeErr" class="muted" style="margin:0"></p>
+      <button class="btn primary" id="svBack" style="margin-top:8px">Tillbaka</button>
+    </div>
+  </div>
+</div>
 <div class="screen" id="diffPick" hidden>
   <div class="card" style="max-width:620px">
     <h2 class="logo" style="font-size:clamp(36px,7vw,56px)">Välj svårighetsgrad</h2>
@@ -534,6 +558,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       <button class="btn" data-pm="nums" id="pmNums">Skadesiffror: på</button>
       <button class="btn" data-pm="lang" id="pmLang" data-notr>Språk: Svenska</button>
       <button class="btn" data-pm="save">Spara spelet</button>
+      <button class="btn" data-pm="download">Ladda ner sparfil</button>
       <button class="btn" data-pm="quit" id="pmQuit">Avsluta till startmenyn</button>
     </div>
     <div class="keys">
@@ -550,6 +575,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <div class="row">
       <button class="btn primary" id="btnCont" hidden>Fortsätt</button>
       <button class="btn" id="btnNew">Nytt äventyr</button>
+      <button class="btn" id="btnSaves">Sparfiler</button>
       <button class="btn" id="btnOpt">Inställningar</button>
     </div>
     <div class="keys">
@@ -566,12 +592,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       <b>M</b><span>Ljud av och på</span>
       <b>G</b><span>Pixelgrafik av och på</span>
     </div>
-    <details class="savebox" style="max-width:420px">
-      <summary>Har du en spar-kod?</summary>
-      <textarea id="codeIn" rows="3" placeholder="Klistra in koden här" aria-label="Spar-kod"></textarea>
-      <button class="btn sm" id="btnLoadCode">Ladda hjälten</button>
-      <p id="codeErr" class="muted"></p>
-    </details>
+
     <p class="muted" style="margin:0;font-size:14px">Hitta trappan ner på varje våning. Var femte våning sitter en boss och trycker på den.</p>
   </div>
 </div>
@@ -1603,7 +1624,7 @@ function gainXp(x){
     {const f=P.hp/Math.max(1,S.hp); recalc(); P.hp=Math.min(S.hp,S.hp*f+S.hp*.25);}
     burst(P.x,P.y,'#f2a03d',30,220,4); SFX.play('levelup');
     const unlock=Object.values(mySkills()).map(id=>SKILLS[id]).find(s=>s.lvl===P.lvl);
-    text(P.x,P.y-50,'NIVÅ UPP!','#f2a03d',true); log(`Nivå ${P.lvl}! Du fick en talangpoäng. Tryck K för talangträdet.`,'#f2a03d'); if(unlock) log(`Ny förmåga: ${unlock.n}`,'#9fe3d2');
+    text(P.x,P.y-50,'NIVÅ UPP!','#f2a03d',true); G.lvlFxT=5; G.rings.push({x:P.x,y:P.y,r:120,t:.6,max:.6,col:'#f3d351'}); log(`Nivå ${P.lvl}! Du fick en talangpoäng. Tryck K för talangträdet.`,'#f2a03d'); if(unlock) log(`Ny förmåga: ${unlock.n}`,'#9fe3d2');
     save();
   }
 }
@@ -3435,6 +3456,7 @@ function hud(){
     b.style.setProperty('--cd',locked?0:(P.cds[id]/sk.cd).toFixed(3));
   }
   setT('hScroll',String(P.scrolls||0)); setT('hTree',P.pp>0?String(P.pp):'');
+  {const op=$('orbPts'), on=P.pp>0; if(op.hidden===on) op.hidden=!on; if(on) setT('orbPts','+'+P.pp); const w=$('orbRW'), lv=G.time<(P.lvlFx||0)||(G.lvlFxT||0)>0; if(w.classList.contains('lvl')!==lv) w.classList.toggle('lvl',lv); if(G.lvlFxT>0) G.lvlFxT-=1/60;}
   const hm=$('hMain'); if(hm.hidden) hm.hidden=false; setT('hMain',mainQuestText()); {const hs=$('hSide'), st=sideText(); if(hs.hidden===!st) hs.hidden=!st; if(st) setT('hSide',st);}
   const ch=G.challenge, ca=!!(ch&&ch.state==='active'), hc=$('hChal'); if(hc.hidden===ca) hc.hidden=!ca;
   if(ca) setT('hChal',`Utmaning: ${Math.max(0,Math.ceil(ch.t))} s${ch.type==='kill'?' · '+G.enemies.filter(e=>e.chal&&!e.dead).length+' kvar':''}`);
@@ -4341,6 +4363,7 @@ $('pauseM').addEventListener('click',e=>{
   else if(a==='sound'){toggleMute();}
   else if(a==='pixel'){setPixel(!PIXEL);}
   else if(a==='shake'){OPT.shake=!OPT.shake; saveOpt();}
+  else if(a==='download'){save(); downloadSave(); return;}
   else if(a==='nums'){OPT.nums=!OPT.nums; saveOpt();}
   else if(a==='lang'){setLang(LANG==='en'?'sv':'en');}
   else if(a==='save'){log(save()?'Spelet är sparat.':'Kunde inte spara.','#9fe3d2'); b.textContent='Sparat!'; setTimeout(()=>{b.textContent='Spara spelet';},1200); return;}
@@ -4775,7 +4798,7 @@ Object.assign(EN_EXACT,{
 "Elitjägare":"Elite Hunter","Besegra 50 elitfiender.":"Defeat 50 elite enemies.","Tusen Små Bitar":"A Thousand Little Pieces","Besegra 1000 fiender.":"Defeat 1000 enemies.","Snålvarg":"Penny Pincher","Ha 10 000 guld på en gång.":"Have 10,000 gold at once.","Lite Erfaren":"A Bit Experienced","Nå nivå 10.":"Reach level 10.","Ganska Erfaren":"Quite Experienced","Nå nivå 20.":"Reach level 20.","Gammal och Vis":"Old and Wise","Nå nivå 30.":"Reach level 30.",
 "Förbannat Bra":"Cursedly Good","Överlev bakhållet vid en förbannad kista.":"Survive the ambush at a cursed chest.","Önsketänkande":"Wishful Thinking","Önska något vid en önskebrunn.":"Make a wish at a wishing well.","Möbelflyttare":"Furniture Mover","Fånga en rymmande byrå.":"Catch a runaway dresser.","Skattmasen":"The Tax Man","Fånga Svartjobbaren Sune.":"Catch Sune the Black Marketeer.","Torrlagd":"Dry Spell","Besegra en boss utan att dricka en enda dryck på våningen.":"Defeat a boss without drinking a single potion on that floor.","Bosskrossare":"Boss Crusher","Besegra alla sex bossar.":"Defeat all six bosses.",
 "Inredare":"Decorator","Köp fem möbler till ditt hem.":"Buy five pieces of furniture for your home.","Hemmafixare":"Home Improver","Inred hela ditt hem.":"Furnish your entire home.","Snäll Granne":"Kind Neighbor","Klara ett sidouppdrag.":"Complete a side quest.","Byns Hjälte":"Village Hero","Klara alla sidouppdrag.":"Complete all side quests.","Nattuggla":"Night Owl","Var i stan mitt i natten.":"Be in town in the middle of the night.","Runristare":"Rune Carver","Sätt en runa i en förmåga.":"Put a rune in an ability.","Omställning":"Change of Plans","Byt till en annan förmåga hos Tore.":"Switch to a different ability at Tore's.",
-"Bagar-Bosse":"Baker Bosse","Så här ser du ut just nu.":"This is how you look right now.","Byt-Berit":"Barter Berit","kr":"$","Bara Sir Kastrull kastar kastruller. Men Kerstin förtrollar dina skott med den kastrull du väljer: ungefär vart tredje skott får kastrullens kraft. Wokens kraft ger mer skada.":"Only Sir Saucepan throws saucepans. But Kerstin enchants your shots with the saucepan you choose: about every third shot gets the saucepan's power. The wok's power adds damage.","Inställningar":"Settings","Grafik":"Graphics","Ljud":"Sound","Välj svårighetsgrad":"Choose difficulty","Starta äventyret":"Start the adventure","Hur ont ska det göra?":"How much should it hurt?","Zoom":"Zoom","Fröken Fluff":"Miss Fluff","en het soppa":"a hot soup","Skelettet Åke":"Åke the Skeleton","Teleporterande":"Teleporting","Kallande":"Summoning","Slemmig":"Slimy","Rasande":"Furious",
+"Bagar-Bosse":"Baker Bosse","Sparfiler":"Save files","Spelet sparas automatiskt i den här webbläsaren. Vill du spela vidare på en annan dator eller i en annan webbläsare laddar du ner en sparfil här och laddar in den där.":"The game saves automatically in this browser. To keep playing on another computer or in another browser, download a save file here and load it there.","Ladda ner sparfil":"Download save file","Kopiera sparkod":"Copy save code","Ladda in en hjälte":"Load a hero","Välj sparfil...":"Choose save file...","...eller klistra in en sparkod här":"...or paste a save code here","Ladda hjälten från koden":"Load hero from code","Sparad hjälte:":"Saved hero:","Ingen hjälte är sparad i den här webbläsaren än.":"No hero is saved in this browser yet.","Webbläsaren tillät inte nedladdningen. Använd Kopiera sparkod i stället.":"The browser blocked the download. Use Copy save code instead.","Sparkoden är kopierad. Spara den någonstans säkert.":"The save code is copied. Keep it somewhere safe.","Sparfilen laddas ner. Spara den någonstans säkert.":"The save file is downloading. Keep it somewhere safe.","Talangpoäng (K)":"Talent points (K)","Så här ser du ut just nu.":"This is how you look right now.","Byt-Berit":"Barter Berit","kr":"$","Bara Sir Kastrull kastar kastruller. Men Kerstin förtrollar dina skott med den kastrull du väljer: ungefär vart tredje skott får kastrullens kraft. Wokens kraft ger mer skada.":"Only Sir Saucepan throws saucepans. But Kerstin enchants your shots with the saucepan you choose: about every third shot gets the saucepan's power. The wok's power adds damage.","Inställningar":"Settings","Grafik":"Graphics","Ljud":"Sound","Välj svårighetsgrad":"Choose difficulty","Starta äventyret":"Start the adventure","Hur ont ska det göra?":"How much should it hurt?","Zoom":"Zoom","Fröken Fluff":"Miss Fluff","en het soppa":"a hot soup","Skelettet Åke":"Åke the Skeleton","Teleporterande":"Teleporting","Kallande":"Summoning","Slemmig":"Slimy","Rasande":"Furious",
 "BONK!":"BONK!","Middag är serverad!":"Dinner is served!","Stekt!":"Fried!","Akta vagnen!":"Mind the cart!","REA!":"SALE!","Ur vägen, jag har kupong!":"Out of the way, I have a coupon!","Fikadags!":"Coffee time!","Lite kaffe och en bulle, sen kör vi.":"A little coffee and a bun, then we go.","Paus!":"Break!","Kallt ute idag!":"Cold out today!","Stäng dörren, det drar!":"Close the door, there's a draft!","Frysvaror!":"Frozen goods!","Påtår till alla!":"Refills for everyone!","Nu jäklar!":"Here we go!","Siktet är inställt.":"Sights are set.",
 "Plasten skyddar!":"The plastic protects!","Hjälp! Kompisar!":"Help! Buddies!","Grabbar, kom hit!":"Guys, over here!","NU ÄR JAG RASANDE!":"NOW I'M FURIOUS!","Fas 2! Nu blir det allvar.":"Phase 2! Now it gets serious.","Sista striden!":"The final fight!","Jag ger mig aldrig!":"I'll never give up!","Det här är inte över!":"This isn't over!",
 "Kladdregn!":"Goo rain!","Blankettvirvel! Fyll i alla!":"Form whirlwind! Fill them all in!","Morotsregn!":"Carrot rain!","Eldring! Steg 13!":"Ring of fire! Step 13!","Ordningsvakt Olle":"Olle the Security Guard","Jag har ringt polisen! Och slagit på vattenspridaren!":"I called the police! And turned on the sprinkler!","Jag KOKAR ÖVER!":"I'm BOILING OVER!",
@@ -5126,8 +5149,25 @@ $('btnRes').addEventListener('click',respawn);
 $('btnLoadCode').addEventListener('click',()=>{
   const d=decodeSave($('codeIn').value);
   if(!d){$('codeErr').textContent='Koden fungerar inte. Kontrollera att du fick med hela.';return;}
-  startFrom(d); log(`Välkommen tillbaka! Nivå ${d.P.lvl}, våning ${d.depth}.`,'#9fe3d2');
+  $('saveM').hidden=true; startFrom(d); save(); log(`Välkommen tillbaka! Nivå ${d.P.lvl}, våning ${d.depth}.`,'#9fe3d2');
 });
+let DLNS=null; try{if(window.claude&&window.claude.use) window.claude.use('downloads').then(n=>{DLNS=n;},()=>{});}catch(e){}
+function saveCodeNow(){if(started){save(); return encodeSave();} try{const raw=localStorage.getItem(SKEY); return raw?'LL1.'+btoa(unescape(encodeURIComponent(raw))):null;}catch(e){return null;}}
+function downloadSave(){
+  const code=saveCodeNow(); if(!code) return false; const d=decodeSave(code), name=`loot-lagom-${d?CLASSES[d.P.cls||'krigare'].n.replace(/[^A-Za-zÅÄÖåäö]+/g,'-').toLowerCase():'hjalte'}-niva-${d?d.P.lvl:1}.txt`;
+  if(DLNS){DLNS.save({filename:name,data:code}).then(()=>{if(started) log('Sparfilen laddas ner. Spara den någonstans säkert.','#9fe3d2');},err=>{if(err&&err.code!=='declined'){const m='Webbläsaren tillät inte nedladdningen. Använd Kopiera sparkod i stället.'; if(started) log(m,'#ff7a6a'); else $('codeErr').textContent=m;}}); return true;}
+  try{const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([code],{type:'text/plain'})); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},500); if(started) log('Sparfilen laddas ner. Spara den någonstans säkert.','#9fe3d2'); return true;}catch(e){return false;}
+}
+function renderSaves(){
+  const sv=readSave(); $('svDown').disabled=$('svCopy').disabled=!sv;
+  $('saveInfo').textContent=sv?`Sparad hjälte: ${CLASSES[sv.P.cls||'krigare'].n}, nivå ${sv.P.lvl}, våning ${sv.depth}`:'Ingen hjälte är sparad i den här webbläsaren än.'; $('codeErr').textContent='';
+}
+$('btnSaves').addEventListener('click',()=>{$('title').hidden=true; $('saveM').hidden=false; renderSaves();});
+$('svBack').addEventListener('click',()=>{$('saveM').hidden=true; $('title').hidden=false;});
+$('svDown').addEventListener('click',()=>{if(!downloadSave()) $('codeErr').textContent='Webbläsaren tillät inte nedladdningen. Använd Kopiera sparkod i stället.';});
+$('svCopy').addEventListener('click',()=>{const c=saveCodeNow(); if(!c) return; const ta=$('codeIn'); ta.value=c; ta.focus(); ta.select(); const pr=navigator.clipboard&&navigator.clipboard.writeText(c); const ok=()=>{$('codeErr').textContent='Sparkoden är kopierad. Spara den någonstans säkert.';}; if(pr) pr.then(ok,()=>{$('codeErr').textContent='Koden är markerad. Kopiera den med Ctrl+C.';}); else $('codeErr').textContent='Koden är markerad. Kopiera den med Ctrl+C.';});
+$('svFileBtn').addEventListener('click',()=>$('svFile').click());
+$('svFile').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=()=>{$('codeIn').value=String(rd.result||'').trim(); $('btnLoadCode').click();}; rd.readAsText(f); e.target.value='';});
 
 // ---------------- input ----------------
 addEventListener('keydown',e=>{
@@ -5221,7 +5261,7 @@ function attract(){
 function goTitle(doSave){
   if(doSave) save();
   started=false; paused=true; DUNGEON=null; DLG=null; $('dlg').hidden=true; closePanels(); if(invOpen) openInv(false);
-  for(const id of ['perk','dead','classPick','diffPick','optM']) $(id).hidden=true; $('title').hidden=false; $('bossbar').hidden=true; $('talkBtn').hidden=true;
+  for(const id of ['perk','dead','classPick','diffPick','optM','saveM']) $(id).hidden=true; $('title').hidden=false; $('bossbar').hidden=true; $('talkBtn').hidden=true;
   confirmNew=false; $('btnNew').textContent='Nytt äventyr';
   attract();
 }
