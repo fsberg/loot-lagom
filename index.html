@@ -442,6 +442,25 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <button class="btn sm" id="classBack">Tillbaka</button>
   </div>
 </div>
+<div class="screen" id="optM" hidden>
+  <div class="card" style="max-width:480px">
+    <h2 class="logo" style="font-size:clamp(36px,7vw,56px)">Inställningar</h2>
+    <div class="row" style="flex-direction:column;align-items:stretch;width:100%;max-width:340px">
+      <p class="lbl" style="margin:4px 0 0" data-notr>Språk / Language</p>
+      <button class="btn" id="btnLang" data-notr>Språk: Svenska</button>
+      <p class="lbl" style="margin:8px 0 0">Grafik</p>
+      <button class="btn" id="btnPixel">Pixelgrafik: av</button>
+      <button class="btn" id="optShake">Skärmskakning: på</button>
+      <button class="btn" id="optNums">Skadesiffror: på</button>
+      <label class="pmvol" for="optZoom">Zoom <input type="range" id="optZoom" min="100" max="180" step="5" value="130"></label>
+      <p class="lbl" style="margin:8px 0 0">Ljud</p>
+      <button class="btn" id="optSound">Ljud: på</button>
+      <label class="pmvol" for="optVol">Volym <input type="range" id="optVol" min="0" max="100" value="100"></label>
+      <label class="pmvol" for="optMusic">Musik <input type="range" id="optMusic" min="0" max="100" step="5" value="60"></label>
+      <button class="btn primary" id="optBack" style="margin-top:8px">Tillbaka</button>
+    </div>
+  </div>
+</div>
 <div class="screen" id="diffPick" hidden>
   <div class="card" style="max-width:620px">
     <h2 class="logo" style="font-size:clamp(36px,7vw,56px)">Välj svårighetsgrad</h2>
@@ -487,8 +506,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <div class="row">
       <button class="btn primary" id="btnCont" hidden>Fortsätt</button>
       <button class="btn" id="btnNew">Nytt äventyr</button>
-      <button class="btn sm" id="btnPixel">Pixelgrafik: av</button>
-      <button class="btn sm" id="btnLang" data-notr>Språk: Svenska</button>
+      <button class="btn" id="btnOpt">Inställningar</button>
     </div>
     <div class="keys">
       <b>WASD / pilar</b><span>Gå (eller dra på vänster sida av skärmen)</span>
@@ -4278,6 +4296,19 @@ $('pauseM').addEventListener('click',e=>{
   renderPause();
 });
 $('btnLang').addEventListener('click',()=>{setLang(LANG==='en'?'sv':'en');});
+function renderOpt(){
+  $('btnPixel').textContent='Pixelgrafik: '+(PIXEL?'på':'av'); $('optShake').textContent='Skärmskakning: '+(OPT.shake?'på':'av'); $('optNums').textContent='Skadesiffror: '+(OPT.nums?'på':'av');
+  $('optSound').textContent='Ljud: '+(SFX.muted?'av':'på'); $('optZoom').value=Math.round((OPT.zoom||1)*100); $('optVol').value=OPT.vol; $('optMusic').value=OPT.music??60; updateLangBtns();
+}
+$('btnOpt').addEventListener('click',()=>{$('title').hidden=true; $('optM').hidden=false; renderOpt();});
+$('optBack').addEventListener('click',()=>{$('optM').hidden=true; $('title').hidden=false;});
+$('btnPixel').addEventListener('click',()=>setTimeout(renderOpt,0));
+$('optShake').addEventListener('click',()=>{OPT.shake=!OPT.shake; saveOpt(); renderOpt();});
+$('optNums').addEventListener('click',()=>{OPT.nums=!OPT.nums; saveOpt(); renderOpt();});
+$('optSound').addEventListener('click',()=>{SFX.setMuted(!SFX.muted); updateMuteBtn(); renderOpt();});
+$('optZoom').addEventListener('input',e=>setZoom(+e.target.value/100));
+$('optVol').addEventListener('input',e=>{OPT.vol=+e.target.value; SFX.setVol(); saveOpt();});
+$('optMusic').addEventListener('input',e=>{OPT.music=+e.target.value; saveOpt(); MUSIC.setVol();});
 updateLangBtns();
 $('pmVol').addEventListener('input',e=>{OPT.vol=+e.target.value; SFX.setVol(); saveOpt();});
 function setZoom(z){OPT.zoom=Math.round(clamp(z,1,1.8)*100)/100; saveOpt(); const s=$('pmZoom'); if(s) s.value=Math.round(OPT.zoom*100);}
@@ -4688,7 +4719,7 @@ Object.assign(EN_EXACT,{
 "Elitjägare":"Elite Hunter","Besegra 50 elitfiender.":"Defeat 50 elite enemies.","Tusen Små Bitar":"A Thousand Little Pieces","Besegra 1000 fiender.":"Defeat 1000 enemies.","Snålvarg":"Penny Pincher","Ha 10 000 guld på en gång.":"Have 10,000 gold at once.","Lite Erfaren":"A Bit Experienced","Nå nivå 10.":"Reach level 10.","Ganska Erfaren":"Quite Experienced","Nå nivå 20.":"Reach level 20.","Gammal och Vis":"Old and Wise","Nå nivå 30.":"Reach level 30.",
 "Förbannat Bra":"Cursedly Good","Överlev bakhållet vid en förbannad kista.":"Survive the ambush at a cursed chest.","Önsketänkande":"Wishful Thinking","Önska något vid en önskebrunn.":"Make a wish at a wishing well.","Möbelflyttare":"Furniture Mover","Fånga en rymmande byrå.":"Catch a runaway dresser.","Skattmasen":"The Tax Man","Fånga Svartjobbaren Sune.":"Catch Sune the Black Marketeer.","Torrlagd":"Dry Spell","Besegra en boss utan att dricka en enda dryck på våningen.":"Defeat a boss without drinking a single potion on that floor.","Bosskrossare":"Boss Crusher","Besegra alla sex bossar.":"Defeat all six bosses.",
 "Inredare":"Decorator","Köp fem möbler till ditt hem.":"Buy five pieces of furniture for your home.","Hemmafixare":"Home Improver","Inred hela ditt hem.":"Furnish your entire home.","Snäll Granne":"Kind Neighbor","Klara ett sidouppdrag.":"Complete a side quest.","Byns Hjälte":"Village Hero","Klara alla sidouppdrag.":"Complete all side quests.","Nattuggla":"Night Owl","Var i stan mitt i natten.":"Be in town in the middle of the night.","Runristare":"Rune Carver","Sätt en runa i en förmåga.":"Put a rune in an ability.","Omställning":"Change of Plans","Byt till en annan förmåga hos Tore.":"Switch to a different ability at Tore's.",
-"Bagar-Bosse":"Baker Bosse","Välj svårighetsgrad":"Choose difficulty","Starta äventyret":"Start the adventure","Hur ont ska det göra?":"How much should it hurt?","Zoom":"Zoom","Fröken Fluff":"Miss Fluff","en het soppa":"a hot soup","Skelettet Åke":"Åke the Skeleton","Teleporterande":"Teleporting","Kallande":"Summoning","Slemmig":"Slimy","Rasande":"Furious",
+"Bagar-Bosse":"Baker Bosse","Inställningar":"Settings","Grafik":"Graphics","Ljud":"Sound","Välj svårighetsgrad":"Choose difficulty","Starta äventyret":"Start the adventure","Hur ont ska det göra?":"How much should it hurt?","Zoom":"Zoom","Fröken Fluff":"Miss Fluff","en het soppa":"a hot soup","Skelettet Åke":"Åke the Skeleton","Teleporterande":"Teleporting","Kallande":"Summoning","Slemmig":"Slimy","Rasande":"Furious",
 "BONK!":"BONK!","Middag är serverad!":"Dinner is served!","Stekt!":"Fried!","Akta vagnen!":"Mind the cart!","REA!":"SALE!","Ur vägen, jag har kupong!":"Out of the way, I have a coupon!","Fikadags!":"Coffee time!","Lite kaffe och en bulle, sen kör vi.":"A little coffee and a bun, then we go.","Paus!":"Break!","Kallt ute idag!":"Cold out today!","Stäng dörren, det drar!":"Close the door, there's a draft!","Frysvaror!":"Frozen goods!","Påtår till alla!":"Refills for everyone!","Nu jäklar!":"Here we go!","Siktet är inställt.":"Sights are set.",
 "Plasten skyddar!":"The plastic protects!","Hjälp! Kompisar!":"Help! Buddies!","Grabbar, kom hit!":"Guys, over here!","NU ÄR JAG RASANDE!":"NOW I'M FURIOUS!","Fas 2! Nu blir det allvar.":"Phase 2! Now it gets serious.","Sista striden!":"The final fight!","Jag ger mig aldrig!":"I'll never give up!","Det här är inte över!":"This isn't over!",
 "Kladdregn!":"Goo rain!","Blankettvirvel! Fyll i alla!":"Form whirlwind! Fill them all in!","Morotsregn!":"Carrot rain!","Eldring! Steg 13!":"Ring of fire! Step 13!","Ordningsvakt Olle":"Olle the Security Guard","Jag har ringt polisen! Och slagit på vattenspridaren!":"I called the police! And turned on the sprinkler!","Jag KOKAR ÖVER!":"I'm BOILING OVER!",
@@ -4997,7 +5028,7 @@ function attract(){
 function goTitle(doSave){
   if(doSave) save();
   started=false; paused=true; DUNGEON=null; DLG=null; $('dlg').hidden=true; closePanels(); if(invOpen) openInv(false);
-  for(const id of ['perk','dead','classPick','diffPick']) $(id).hidden=true; $('title').hidden=false; $('bossbar').hidden=true; $('talkBtn').hidden=true;
+  for(const id of ['perk','dead','classPick','diffPick','optM']) $(id).hidden=true; $('title').hidden=false; $('bossbar').hidden=true; $('talkBtn').hidden=true;
   confirmNew=false; $('btnNew').textContent='Nytt äventyr';
   attract();
 }
