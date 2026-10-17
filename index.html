@@ -236,6 +236,7 @@ html.pixel .charhead canvas{image-rendering:pixelated;border-radius:0}
 html.pixel #orbPts,html.pixel #hTree:not(:empty){border-radius:0}
 @keyframes ptsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 @keyframes lvlGlow{from{opacity:.45}to{opacity:1}}
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"dlig" 0,"calt" 0}
 @keyframes stampIn{0%{opacity:0;transform:rotate(14deg) scale(3)}100%{opacity:1;transform:rotate(14deg) scale(1)}}
 @keyframes logoIn{0%{opacity:0;transform:scale(.3) rotate(-8deg)}60%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:none}}
 @keyframes splashOut{to{opacity:0;visibility:hidden}}
@@ -647,7 +648,8 @@ function tr(s){
 }
 if(typeof CanvasRenderingContext2D!=='undefined'){
   const C2=CanvasRenderingContext2D.prototype;
-  for(const f of ['fillText','strokeText','measureText']){const o=C2[f]; if(o) C2[f]=function(t,...a){return o.call(this,LANG==='en'?tr(String(t)):t,...a);};}
+  const noLig=s=>typeof s==='string'&&s.indexOf('f')>=0?s.replace(/f(?=[ilf])/g,'f‌'):s;
+  for(const f of ['fillText','strokeText','measureText']){const o=C2[f]; if(o) C2[f]=function(t,...a){return o.call(this,noLig(LANG==='en'?tr(String(t)):t),...a);};}
 }
 const TRATTR=['title','aria-label','placeholder'], TRO=new WeakMap(), TRA=new WeakMap();
 const trSkip=el=>!el||(el.closest&&el.closest('[data-notr],script,style,textarea'));
