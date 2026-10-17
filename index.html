@@ -1295,7 +1295,7 @@ function roomPos(r,pad=1){return [(rand(r.x+pad,r.x+r.w-pad))*TILE,(rand(r.y+pad
 
 // ---------------- floors ----------------
 function spawn(type,x,y,elite=false){
-  const D=DF(), T=ET[type], sc=(1+.4*(G.depth-1))*(1+.012*Math.pow(G.depth-1,1.5))*D.hp, dsc=(1+.27*(G.depth-1))*D.dmg;
+  const D=DF(), T=ET[type], sc=1.45*(1+.45*(G.depth-1))*(1+.015*Math.pow(G.depth-1,1.5))*D.hp, dsc=1.35*(1+.32*(G.depth-1))*D.dmg;
   const e={type,T,x,y,r:T.r*(elite?1.25:1),maxhp:Math.round(T.hp*sc*(elite?2.6:1)),dmg:T.dmg*dsc*(elite?1.5:1),spd:T.spd*(elite?1.1:1),
     cd:rand(.3,1),aggro:false,elite,stun:0,flash:0,kx:0,ky:0,ph:Math.random()*6,say:null,qt:rand(4,10),bt:2,bt2:5,dash:0,
     name:elite?T.name+' '+pick(ELITE):T.name,sleeping:T.kind==='mimic'};
@@ -1320,8 +1320,8 @@ function newFloor(depth,opt){
       G.boss=spawn(bossFor(depth),(r.cx-2)*TILE,(r.cy+.5)*TILE);
       continue;
     }
-    const n=ri(3,5)+Math.floor(depth/2.5);
-    for(let i=0;i<n;i++){const [x,y]=roomPos(r); spawn(pick(pool),x,y,Math.random()<.1+depth*.01);}
+    const n=ri(4,6)+Math.floor(depth/2);
+    for(let i=0;i<n;i++){const [x,y]=roomPos(r); spawn(pick(pool),x,y,Math.random()<.12+depth*.012);}
   }
   const others=G.m.rooms.filter(r=>r!==st&&r!==G.m.stairs);
   if(others.length&&Math.random()<.65){const [x,y]=roomPos(pick(others),1.5); spawn('mimic',x,y);}
@@ -1487,7 +1487,7 @@ function hitEnemy(e,base,opts={}){
   if(crit&&S.chain&&!opts.chain) chainLightning(e,base);
   if(e.T.kind==='thief'&&Math.random()<.5) drop(e.x,e.y,{kind:'gold',amt:Math.max(1,Math.round(rand(1,3)*G.depth*(1+S.gf/100)))});
   text(e.x+rand(-6,6),e.y-e.r-4,d,crit?'#ffd34a':'#f4ece0',crit);
-  if(S.ls&&!opts.nols) heal(d*S.ls/100);
+  if(S.ls&&!opts.nols) leech(d*Math.min(S.ls,8)/100);
   if(crit){G.shake=Math.min(8,G.shake+3); if(S.fx.has('squeak')){e.stun=Math.max(e.stun,1); SFX.play('squeak'); text(e.x,e.y-e.r-22,'PIIP!','#ff8b2e');}}
   const a=Math.atan2(e.y-P.y,e.x-P.x), kb=e.T.kind==='boss'?40:opts.kb??220;
   e.kx+=Math.cos(a)*kb; e.ky+=Math.sin(a)*kb;
@@ -4367,11 +4367,12 @@ function afterHit(e,d,opts){
   const rn=opts.rune||RUNE_CTX;
   if(rn==='frost') e.slowT=Math.max(e.slowT||0,2);
   if(rn==='eld'||S.fx.has('iron')) e.burn={t:3,dps:Math.max(2,d*.3),k:.5};
-  if(rn==='vamp') heal(d*.05);
+  if(rn==='vamp') leech(d*.03);
   if(rn==='blixt'&&!opts.chain&&Math.random()<.35){RUNE_CTX=null; chainLightning(e,d); RUNE_CTX=rn;}
   if(S.fx.has('chill')) e.slowT=Math.max(e.slowT||0,1.2);
   if(S.fx.has('charm')&&e.T.kind!=='boss'&&Math.random()<.1&&!opts.chain){e.fear=Math.max(e.fear||0,2); text(e.x,e.y-e.r-24,'<3','#ff7ac8');}
 }
+function leech(n){const b=Math.min(n,P.lsB||0); if(b<=0) return 0; P.lsB-=b; return heal(b);}
 function blockHit(d){
   if(S.fx.has('sofa')&&G.time-(P.sofaT||-99)>4){P.sofaT=G.time; text(P.x,P.y-30,'Plasten skyddar!','#cfe8ff'); SFX.play('clang'); return true;}
   return false;
@@ -4494,6 +4495,7 @@ function nightness(){const f=(((P&&P.clock)||0)%DAYLEN)/DAYLEN; if(f<.55) return
 function duskness(){const f=(((P&&P.clock)||0)%DAYLEN)/DAYLEN; return f>.5&&f<.68?Math.sin((f-.5)/.18*Math.PI):f>.88&&f<.98?Math.sin((f-.88)/.1*Math.PI)*.6:0;}
 function updateExtras(dt){
   if(!G||!P||!S) return;
+  P.lsB=Math.min(S.hp*.035,(P.lsB||0)+S.hp*.035*dt);
   if(P.tb){P.tb.t-=dt; if(P.tb.t<=0){P.tb=null; recalc(); P.hp=Math.min(P.hp,S.hp);}}
   if(G.town){const b=nightness(); P.clock=(P.clock||0)+dt; const a=nightness();
     if(b<.5&&a>=.5) log('Det skymmer över Lagomby. Lyktorna tänds.','#9fb8e8');
