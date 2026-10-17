@@ -216,6 +216,11 @@ html.pixel #toast{border:none;box-shadow:0 0 0 2px #f0d488,0 0 0 4px #a8783a,0 0
 @keyframes studioIn{0%{opacity:0;letter-spacing:-.4em;filter:blur(8px)}100%{opacity:1;letter-spacing:.22em;filter:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes spOut{to{opacity:0;transform:scale(.92)}}
+#title .logo{position:relative}
+.beta{position:absolute;right:-.35em;top:-.12em;font-family:var(--body);font-weight:800;font-size:.2em;letter-spacing:.12em;line-height:1;color:#ff5a4a;border:.12em solid #ff5a4a;border-radius:.18em;padding:.18em .35em .14em;transform:rotate(14deg);text-shadow:none;background:rgba(20,8,10,.55);box-shadow:0 0 0 .06em rgba(20,8,10,.6)}
+.sp-logo .beta{opacity:0;animation:stampIn .45s cubic-bezier(.2,1.6,.4,1) 5.0s forwards}
+html.pixel .beta{border-radius:0;font-family:var(--body)}
+@keyframes stampIn{0%{opacity:0;transform:rotate(14deg) scale(3)}100%{opacity:1;transform:rotate(14deg) scale(1)}}
 @keyframes logoIn{0%{opacity:0;transform:scale(.3) rotate(-8deg)}60%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:none}}
 @keyframes splashOut{to{opacity:0;visibility:hidden}}
 @media (prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important;animation-delay:0s!important}.sp-stage{opacity:0}.sp-logo{opacity:1}}
@@ -501,7 +506,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
 
 <div class="screen" id="title">
   <div class="card">
-    <h1 class="logo">Loot<span>&amp;</span>Lagom</h1>
+    <h1 class="logo">Loot<span>&amp;</span>Lagom<b class="beta">BETA</b></h1>
     <p class="tag">Ett nästan seriöst grottäventyr. Välj en hjälte, hitta loot och försök att inte dö av en kanin.</p>
     <div class="row">
       <button class="btn primary" id="btnCont" hidden>Fortsätt</button>
@@ -556,7 +561,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <p class="sp-studio">SLOBERG STUDIOS</p>
     <p class="sp-pres">presenterar</p>
   </div>
-  <h1 class="sp-logo logo">Loot<span>&amp;</span>Lagom</h1>
+  <h1 class="sp-logo logo">Loot<span>&amp;</span>Lagom<b class="beta">BETA</b></h1>
   <p class="sp-skip">Klicka eller tryck på en tangent för att hoppa över</p>
 </div>
 <script>
