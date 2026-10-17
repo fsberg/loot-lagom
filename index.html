@@ -220,6 +220,16 @@ html.pixel #toast{border:none;box-shadow:0 0 0 2px #f0d488,0 0 0 4px #a8783a,0 0
 .beta{position:absolute;right:-.35em;top:-.12em;font-family:var(--body);font-weight:800;font-size:.2em;letter-spacing:.12em;line-height:1;color:#ff5a4a;border:.12em solid #ff5a4a;border-radius:.18em;padding:.18em .35em .14em;transform:rotate(14deg);text-shadow:none;background:rgba(20,8,10,.55);box-shadow:0 0 0 .06em rgba(20,8,10,.6)}
 .sp-logo .beta{opacity:0;animation:stampIn .45s cubic-bezier(.2,1.6,.4,1) 5.0s forwards}
 html.pixel .beta{border-radius:0;font-family:var(--body)}
+.tcols{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.tcols{grid-template-columns:repeat(2,1fr)}}
+.tcol h3{margin:0 0 8px;font-size:17px}.trow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed rgba(168,153,138,.25)}
+.tnode{flex:1 1 90px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:6px 8px;background:rgba(0,0,0,.25);border:2px solid rgba(168,153,138,.3);border-radius:6px;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.tnode b{color:var(--parch);font-size:13px}.tnode span{font-size:12px}
+.tnode.on{border-color:var(--bc);color:var(--parch)}.tnode.can{box-shadow:0 0 0 1px var(--bc),0 0 10px -2px var(--bc)}.tnode.sel{background:rgba(242,160,61,.15)}
+html.pixel .tnode{border-radius:0}
+.charhead{display:flex;gap:12px;align-items:center;margin-bottom:10px}.charhead canvas{width:96px;height:96px;border:1px solid var(--edge);border-radius:6px;background:#1d1820}
+html.pixel .charhead canvas{image-rendering:pixelated;border-radius:0}
+.xpbar{height:8px;background:rgba(0,0,0,.4);border-radius:4px;overflow:hidden}.xpbar .fill{height:100%;background:var(--xp)}
 @keyframes stampIn{0%{opacity:0;transform:rotate(14deg) scale(3)}100%{opacity:1;transform:rotate(14deg) scale(1)}}
 @keyframes logoIn{0%{opacity:0;transform:scale(.3) rotate(-8deg)}60%{opacity:1;transform:scale(1.08) rotate(1deg)}100%{opacity:1;transform:none}}
 @keyframes splashOut{to{opacity:0;visibility:hidden}}
@@ -281,6 +291,9 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <button class="sk" data-skill="talk" data-slot="r" title="Pinsamt Tal (R)"><span class="k">R</span><svg viewBox="0 0 24 24"><path d="M4 5h16v10H10l-5 4v-4H4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg><span class="n"></span></button>
     <button class="sk" data-act="potion" title="Hälsodryck (F)"><span class="k">F</span><svg viewBox="0 0 24 24"><path d="M10 3h4M10 3v5l-5 8a3 3 0 0 0 3 5h8a3 3 0 0 0 3-5l-5-8V3M7.5 14h9"/></svg><span class="n" id="hPot">3</span></button>
     <button class="sk" data-act="bag" title="Väska (I)"><span class="k">I</span><svg viewBox="0 0 24 24"><path d="M9 7V5a3 3 0 0 1 6 0v2M5 8h14l-1 12H6z"/></svg><span class="n" id="hBag">0</span></button>
+    <button class="sk" data-act="char" title="Hjälten (C)"><span class="k">C</span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 4-7 8-7s7 2 8 7"/></svg><span class="n"></span></button>
+    <button class="sk" data-act="tree" title="Talanger (K)"><span class="k">K</span><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5l-5 4.5M12 11.5l5 4.5"/></svg><span class="n" id="hTree"></span></button>
+    <button class="sk" data-act="quest" title="Uppdrag (J)"><span class="k">J</span><svg viewBox="0 0 24 24"><path d="M6 3h10l3 3v15H6z"/><path d="M9 9h7M9 13h7M9 17h4"/></svg><span class="n"></span></button>
     <button class="sk" data-act="portal" title="Portalrulle (P)"><span class="k">P</span><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="6" ry="9"/><path d="M12 7a3 5 0 0 1 0 10"/></svg><span class="n" id="hScroll"></span></button>
     <button class="sk" data-act="menu" title="Meny (Esc)"><span class="k">Esc</span><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14"/></svg><span class="n"></span></button>
     <button class="sk" data-act="mute" id="muteBtn" title="Ljud (M)"><span class="k">M</span><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><span class="n"></span></button>
@@ -301,9 +314,8 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <div>
       <p class="lbl">På kroppen</p>
       <div class="eq" id="eqSlots"></div>
-      <p class="lbl" style="margin-top:16px"><span id="iName">Sir Kastrull</span>, nivå <span id="iLvl"></span></p>
-      <dl class="stats" id="statList"></dl>
-      <ul class="fxl" id="fxList"></ul>
+      <div hidden><span id="iName">Sir Kastrull</span><span id="iLvl"></span><dl class="stats" id="statList"></dl><ul class="fxl" id="fxList"></ul></div>
+      <div class="charhead" style="margin-top:14px"><canvas id="invPic" width="96" height="96"></canvas><div><p class="muted" style="margin:0 0 8px">Så här ser du ut just nu.</p><button class="btn sm" data-act="charsheet">Visa hjälten (C)</button></div></div>
     </div>
     <div>
       <p class="lbl">Packning <span id="bagCount"></span></p>
@@ -337,6 +349,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
         <button class="btn sm" data-act="gamble" id="btnGamble">Mystisk låda</button>
         <button class="btn sm" data-act="pot2" id="btnPot2">Hälsodryck</button>
         <button class="btn sm" data-act="scroll" id="btnScroll">Portalrulle</button>
+        <button class="btn sm" data-act="bagup" id="btnBagUp">Större ryggsäck</button>
       </div>
       <p class="muted" style="font-size:13px;margin:10px 0 0">Den mystiska lådan innehåller alltid minst en magisk sak. Ibland något legendariskt. Oftast inte.</p>
     </div>
@@ -385,6 +398,32 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       <p class="lbl" style="margin-top:14px">Titel</p><div id="hmTitles" class="row" style="flex-wrap:wrap;justify-content:flex-start;gap:6px;margin-bottom:14px"></div>
       <p class="lbl">Prestationer <span id="hmAchN"></span></p><ul class="fxl" id="hmAch" style="color:var(--parch)"></ul></div>
   </div>
+</div>
+<div class="panel" id="treeP" hidden style="width:min(980px,calc(100% - 32px))">
+  <div class="panel-head"><h2>Talangträdet</h2><div class="row"><span class="chip"><small>Talangpoäng:</small> <span class="gold" id="trPts">0</span></span><button class="btn sm" data-act="close">Stäng (K)</button></div></div>
+  <div class="tcols" id="treeCols"></div>
+  <div class="detail" id="treeDetail" style="margin-top:12px"></div>
+</div>
+<div class="panel" id="charP" hidden>
+  <div class="panel-head"><h2>Hjälten</h2><div class="row"><button class="btn sm" data-act="inv">Väskan (I)</button><button class="btn sm" data-act="tree">Talanger (K)</button><button class="btn sm" data-act="close">Stäng (C)</button></div></div>
+  <div class="inv-grid">
+    <div>
+      <div class="charhead"><canvas id="chPic" width="96" height="96"></canvas><div style="flex:1"><h3 id="chName" style="margin:0"></h3><p class="muted" id="chSub" style="margin:2px 0 8px"></p><div class="xpbar"><div class="fill" id="chXp"></div></div><p class="muted" id="chXpT" style="margin:4px 0 0;font-size:13px"></p></div></div>
+      <p class="lbl">Anfall</p><dl class="stats" id="chOff"></dl>
+      <p class="lbl">Försvar</p><dl class="stats" id="chDef"></dl>
+      <p class="lbl">Övrigt</p><dl class="stats" id="chMisc"></dl>
+    </div>
+    <div>
+      <p class="lbl">Effekter från utrustning</p><ul class="fxl" id="chFx"></ul>
+      <p class="lbl">Talanger</p><ul class="fxl" id="chPerks"></ul>
+      <p class="lbl">Juveler och nycklar</p><ul class="fxl" id="chGems" style="color:var(--parch)"></ul>
+      <p class="lbl">Statistik</p><dl class="stats" id="chStats"></dl>
+    </div>
+  </div>
+</div>
+<div class="panel" id="questP" hidden style="width:min(640px,calc(100% - 32px))">
+  <div class="panel-head"><h2>Uppdragsloggen</h2><div class="row"><button class="btn sm" data-act="close">Stäng (J)</button></div></div>
+  <div id="qBody"></div>
 </div>
 <div id="toast"><b id="toastT"></b><span id="toastS"></span></div>
 
@@ -624,7 +663,7 @@ function setLang(l){
 if(document.documentElement) document.documentElement.lang=LANG;
 if(LANG==='en'&&document.body) trWalk(document.body);
 const $=id=>document.getElementById(id);
-const TILE=40, MW=60, MH=60, BAG=20;
+const TILE=40, MW=60, MH=60; let BAG=20;
 const rand=(a,b)=>a+Math.random()*(b-a);
 const ri=(a,b)=>Math.floor(rand(a,b+1));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -1207,7 +1246,7 @@ const keys=new Set(), mouse={x:0,y:0,down:false};
 let touchMode=false, joy=null, touchAtk=false;
 
 function newHero(){
-  return {sk:{},runes:{},runeInv:{},furn:[],title:'',side:{},clock:60,screws:0,shards:0,scrolls:2,wps:[1],sets:0,gems:{},pets:[],pet:null,ach:{},cnt:{},para:0,keys:0,riftTier:0,food:null,hc:false,story:{pages:0,told:-1,lore:0,prolog:false,ending:false},diff:'lagom',cls:'krigare',lvl:1,xp:0,gold:0,potions:3,kills:0,deaths:0,best:1,bag:[],perks:{},pp:0,bought:0,pots:['vanlig'],pot:'vanlig',prog:{quests:0,fountain:0,ghosts:0,props:0},
+  return {sk:{},runes:{},runeInv:{},furn:[],title:'',side:{},clock:60,screws:0,shards:0,bagUp:0,scrolls:2,wps:[1],sets:0,gems:{},pets:[],pet:null,ach:{},cnt:{},para:0,keys:0,riftTier:0,food:null,hc:false,story:{pages:0,told:-1,lore:0,prolog:false,ending:false},diff:'lagom',cls:'krigare',lvl:1,xp:0,gold:0,potions:3,kills:0,deaths:0,best:1,bag:[],perks:{},pp:0,bought:0,pots:['vanlig'],pot:'vanlig',prog:{quests:0,fountain:0,ghosts:0,props:0},
     equip:{
       weapon:{id:IID++,il:1,r:0,slot:'weapon',base:'Smörkniv',name:'Rostig Smörkniv',stats:{dmg:3},flavor:'Farfars. Han använde den till smör.',value:2},
       helm:{id:IID++,il:1,r:0,slot:'helm',base:'Kastrull',name:'Kastrull',stats:{armor:2,hp:5},flavor:'Inte en hjälm. Men nästan.',value:2},
@@ -1385,7 +1424,7 @@ function newFloor(depth,opt){
   if(!(opt&&opt.rift)) sideSpawns(depth,others);
   if(depth%5!==0&&P.story.lore<LORE.length&&others.length){const [lx,ly]=roomPos(pick(others),1); G.drops.push({kind:'lore',x:lx,y:ly,sx:lx,sy:ly,t:1});}
   if(!(opt&&opt.rift)){if(depth%5===1&&!P.wps.includes(depth)){P.wps.push(depth); if(depth>1) setTimeout(()=>log(`Ny vägvisare: du kan nu resa direkt till våning ${depth} från ruinen i stan.`,'#9fd0ff'),2200);} P.best=Math.max(P.best,depth); if(depth>=10) achieve('depth10'); if(depth>=20) achieve('depth20'); if(P.food&&--P.food.floors<=0){log(`Effekten av ${FOODS[P.food.id].n} tog slut.`,'#a8998a'); P.food=null; recalc();}}
-  banner(`Våning ${depth}`,floorName(depth));
+  FADE=1; banner(`Våning ${depth}`,floorName(depth));
   if(isBoss) setTimeout(()=>log(`Det luktar boss på den här våningen.`,'#ff8b2e'),900);
   save();
 }
@@ -1559,13 +1598,13 @@ function gainXp(x){
     if(P.lvl>=MAXLVL){P.xp-=need(MAXLVL); P.para=(P.para||0)+1; paraUp=true;}
     else{P.xp-=need(P.lvl);P.lvl++;up=true;P.pp=(P.pp||0)+1;}
   }
-  if(paraUp){recalc(); banner(`Paragon ${P.para}!`,'+1% skada och liv. Det tar aldrig slut.'); SFX.play('levelup'); achieve('paragon'); save();}
+  if(paraUp){recalc(); text(P.x,P.y-50,`Paragon ${P.para}!`,'#f0d488',true); log('+1% skada och liv. Det tar aldrig slut.','#f0d488'); SFX.play('levelup'); achieve('paragon'); save();}
   if(up){
     {const f=P.hp/Math.max(1,S.hp); recalc(); P.hp=Math.min(S.hp,S.hp*f+S.hp*.25);}
     burst(P.x,P.y,'#f2a03d',30,220,4); SFX.play('levelup');
     const unlock=Object.values(mySkills()).map(id=>SKILLS[id]).find(s=>s.lvl===P.lvl);
-    banner(`Nivå ${P.lvl}!`,unlock?`Ny förmåga: ${unlock.n}`:pick(LVLQ));
-    save(); setTimeout(offerPerk,1100);
+    text(P.x,P.y-50,'NIVÅ UPP!','#f2a03d',true); log(`Nivå ${P.lvl}! Du fick en talangpoäng. Tryck K för talangträdet.`,'#f2a03d'); if(unlock) log(`Ny förmåga: ${unlock.n}`,'#9fe3d2');
+    save();
   }
 }
 function hurtPlayer(d,src){
@@ -2142,7 +2181,7 @@ function render(){
     for(let i=0;i<4;i++){cx.strokeStyle=i%2?'#b07aff':'#7a4aff'; cx.lineWidth=3; cx.beginPath(); cx.arc(ho.x,ho.y,rr+i*7,G.time*(5+i)+i,G.time*(5+i)+i+Math.PI*1.1); cx.stroke();}
     circ(ho.x,ho.y,rr*.7,'#050208'); cx.globalAlpha=1;
   }
-  drawExtrasGround();
+  drawExtrasGround(); drawLootBeams();
   for(const mk of G.marks||[]){
     const k=1-mk.t/mk.max; cx.globalAlpha=.2+.3*k; circ(mk.x,mk.y,mk.r*k,'#8a4a2a'); cx.globalAlpha=.9;
     cx.strokeStyle='#ff9a3a'; cx.lineWidth=2.5; cx.beginPath(); cx.arc(mk.x,mk.y,mk.r,0,Math.PI*2); cx.stroke(); cx.globalAlpha=1;
@@ -2189,7 +2228,7 @@ function render(){
   cx.globalAlpha=1;
   cx.restore();
 
-  lighting(ox,oy);
+  lighting(ox,oy); drawFx2();
 
   const worldCx=cx;
   ucx.setTransform(1,0,0,1,0,0); ucx.clearRect(0,0,ucv.width,ucv.height);
@@ -2544,11 +2583,13 @@ function lighting(ox,oy){
   for(const l of G.lamps||[]) hole(l.x,l.y-40,230,.9);
   if(G.town) for(const n of G.npcs) hole(n.x,n.y-20,120,.5);
   for(const p of G.proj) if(p.kind==='dikt'||p.kind==='pot') hole(p.x,p.y,50,.4);
+  extraLights(hole);
   lcx.globalCompositeOperation='source-over';
   cx.drawImage(LC,0,0,VW,VH);
   cx.globalCompositeOperation='lighter';
   const glow=(x,y,r,c)=>{x+=ox;y+=oy; const g=cx.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,c); g.addColorStop(1,'rgba(0,0,0,0)'); cx.fillStyle=g; cx.fillRect(x-r,y-r,r*2,r*2);};
   glow(P.x,P.y,280,'rgba(255,170,100,.10)');
+  extraGlows(glow);
   for(const tc of G.torches||[]){const sx=tc.x+ox,sy=tc.y+oy; if(sx>-200&&sy>-200&&sx<VW+200&&sy<VH+200) glow(tc.x,tc.y+14,170,`rgba(${TH().light},.10)`);}
   for(const d of G.decor||[]){const L=LIGHTDECOR[d.kind]; if(L){const sx=d.x+ox,sy=d.y+oy; if(sx>-150&&sy>-150&&sx<VW+150&&sy<VH+150) glow(d.x,d.y-6,L[1]*.8,`rgba(${L[0]},.14)`);}}
   const px=P.x+ox, py=P.y+oy;
@@ -3393,7 +3434,7 @@ function hud(){
     b.querySelector('.n').textContent=locked?`Nv ${sk.lvl}`:(P.cds[id]>0?P.cds[id].toFixed(P.cds[id]<1?1:0):'');
     b.style.setProperty('--cd',locked?0:(P.cds[id]/sk.cd).toFixed(3));
   }
-  setT('hScroll',String(P.scrolls||0));
+  setT('hScroll',String(P.scrolls||0)); setT('hTree',P.pp>0?String(P.pp):'');
   const hm=$('hMain'); if(hm.hidden) hm.hidden=false; setT('hMain',mainQuestText()); {const hs=$('hSide'), st=sideText(); if(hs.hidden===!st) hs.hidden=!st; if(st) setT('hSide',st);}
   const ch=G.challenge, ca=!!(ch&&ch.state==='active'), hc=$('hChal'); if(hc.hidden===ca) hc.hidden=!ca;
   if(ca) setT('hChal',`Utmaning: ${Math.max(0,Math.ceil(ch.t))} s${ch.type==='kill'?' · '+G.enemies.filter(e=>e.chal&&!e.dead).length+' kvar':''}`);
@@ -3484,6 +3525,7 @@ function renderInv(){
     h+= it?`<button class="cell r${it.r} ${sel&&sel.w==='bag'&&sel.k===i?'sel':''}" data-bag="${i}" aria-label="${esc(it.name)}">${iconHTML(it)}<span class="il">${it.il}</span></button>`
           :`<div class="cell" style="cursor:default"></div>`;}
   $('bagSlots').innerHTML=h;
+  heroPic('invPic');
   $('bagCount').textContent=`(${P.bag.length}/${BAG})`;
   $('iGold').textContent=P.gold; $('iLvl').textContent=P.lvl;
   const red=Math.round(100-100*100/(100+S.armor*1.6));
@@ -3526,6 +3568,7 @@ $('inv').addEventListener('click',e=>{
   else{
     const a=b.dataset.act;
     if(a==='close'){openInv(false);return;}
+    if(a==='charsheet'){openInv(false); openX('charP',true); return;}
     if(a==='pixel'){setPixel(!PIXEL);return;}
     if(a==='equip'&&sel&&sel.w==='bag') equipBag(sel.k);
     if(a==='unequip'&&sel&&sel.w==='eq'&&P.bag.length<BAG){const it=P.equip[sel.k]; P.bag.push(it); P.equip[sel.k]=null; recalc(); P.hp=Math.min(P.hp,S.hp); sel={w:'bag',k:P.bag.length-1};}
@@ -3717,7 +3760,7 @@ function enterTown(at){
   G=makeTown(d,!!DUNGEON);
   const b=G.portals.find(p=>p.kind==='back'), p=at==='portal'&&b?b:at==='ruin'?{x:G.ruin.x,y:G.ruin.y-60}:{x:G.fountain.x,y:G.fountain.y+70};
   P.x=p.x; P.y=p.y; P.portalLock=true; G.ruinLock=true; G.cam.x=P.x; G.cam.y=P.y; P.goto=null;
-  banner('Lagomby',at==='ruin'?'Du kliver upp ur ruinen. Solen bländar.':'Staden där inget händer. Med flit.'); save(); storyOnTown();
+  FADE=1; banner('Lagomby',at==='ruin'?'Du kliver upp ur ruinen. Solen bländar.':'Staden där inget händer. Med flit.'); save(); storyOnTown();
 }
 function descend(n){
   closePanels(); SFX.play('stairs'); newFloor(n);
@@ -3985,8 +4028,9 @@ $('bakeP').addEventListener('click',e=>{const b=e.target.closest('button'); if(!
 function openHome(v){if(!started||G.over) return; panelOpen('homeP',v); homeOpen=v; if(v) renderHome(); else save();}
 function renderHome(){
   renderHomeExtra();
-  $('hmPets').innerHTML=Object.entries(PETS).map(([id,p])=>{const own=P.pets.includes(id), act=P.pet===id;
-    return `<div class="potc ${own?'':'locked'} ${act?'active':''}"><h3 style="color:${own?p.c:'var(--muted)'}">${p.n}</h3><p>${p.d}</p><p class="how">${own?'Hittad!':'Så hittar du det: '+p.how}</p>${own?`<button class="btn sm ${act?'':'primary'}" data-pet="${id}" ${act?'disabled':''}>${act?'Följer med dig':'Ta med'}</button>`:''}</div>`;}).join('');
+  const pn=Object.keys(PETS).length, po=P.pets.length;
+  $('hmPets').innerHTML=(po?'':'<p class="muted">Inga husdjur än. Utforska grottan!</p>')+Object.entries(PETS).filter(([id])=>P.pets.includes(id)).map(([id,p])=>{const own=P.pets.includes(id), act=P.pet===id;
+    return `<div class="potc ${own?'':'locked'} ${act?'active':''}"><h3 style="color:${own?p.c:'var(--muted)'}">${p.n}</h3><p>${p.d}</p><p class="how">${own?'Hittad!':'Så hittar du det: '+p.how}</p>${own?`<button class="btn sm ${act?'':'primary'}" data-pet="${id}" ${act?'disabled':''}>${act?'Följer med dig':'Ta med'}</button>`:''}</div>`;}).join('')+(po<pn?`<p class="how" style="grid-column:1/-1">${po}/${pn} husdjur hittade. Fler finns att upptäcka.</p>`:'');
   const c=P.cnt||{};
   $('hmTroph').innerHTML=[['Kung Kladd','boss1'],['Byråkraten Bertil','boss2'],['Kaninkungen','boss3'],['Monteringsdraken','boss4'],['Grannen Gunnel','boss5'],['Den Stora Grytan','boss6']].map(([n,k])=>`<dt>${n}</dt><dd>${c[k]?c[k]+' ggr':'–'}</dd>`).join('')+
     `<dt>Besegrade fiender</dt><dd>${c.kills||0}</dd><dt>Paragonnivå</dt><dd>${P.para||0}</dd><dt>Kaosnycklar</dt><dd>${P.keys||0}</dd><dt>Kaosportalnivå</dt><dd>${P.riftTier||0}</dd><dt>Juveler</dt><dd>${gemHTMLList()||'–'}</dd>`;
@@ -3995,7 +4039,7 @@ function renderHome(){
 }
 $('homeP').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b||b.disabled) return; if(b.dataset.act==='close'){openHome(false);return;}
   if(b.dataset.pet){P.pet=b.dataset.pet; P.petE=null; SFX.play('equip'); renderHome();}});
-function closePanels(){if(wpOpen) openWp(false); if(shopOpen) openShop(false); if(smithOpen) openSmith(false); if(trainOpen) openTrainer(false); if(potsOpen) openPots(false); if(stashOpen) openStash(false); if(bakeOpen) openBake(false); if(homeOpen) openHome(false);}
+function closePanels(){if(XOPEN) openX(XOPEN,false); if(wpOpen) openWp(false); if(shopOpen) openShop(false); if(smithOpen) openSmith(false); if(trainOpen) openTrainer(false); if(potsOpen) openPots(false); if(stashOpen) openStash(false); if(bakeOpen) openBake(false); if(homeOpen) openHome(false);}
 const nearFountain=()=>G.town&&Math.hypot(P.x-G.fountain.x,P.y-G.fountain.y)<80;
 function wishFountain(){
   if(P.gold<100){SFX.play('deny'); log('En önskan kostar 100 guld. Det står på skylten. Typ.','#a8998a'); return;}
@@ -4119,11 +4163,11 @@ $('trainer').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b||b.disabled) return;
   const a=b.dataset.act;
   if(a==='close'){openTrainer(false);return;}
-  if(a==='buyperk'&&P.gold>=perkCost()){P.gold-=perkCost(); P.bought=(P.bought||0)+1; P.pp=(P.pp||0)+1; SFX.play('cash'); openTrainer(false); offerPerk(); return;}
+  if(a==='buyperk'&&P.gold>=perkCost()){P.gold-=perkCost(); P.bought=(P.bought||0)+1; P.pp=(P.pp||0)+1; SFX.play('cash'); openTrainer(false); openX('treeP',true); return;}
   if(a==='respec'){
     if(!respecArm){respecArm=true; renderTrainer(); return;}
     const total=Object.values(P.perks).reduce((x,y)=>x+y,0); P.perks={}; P.pp=(P.pp||0)+total; recalc(); P.hp=Math.min(P.hp,S.hp);
-    log(`Tore knackade dig i huvudet med en bok. Du glömde ${total} talanger.`,'#b07aff'); openTrainer(false); offerPerk(); return;
+    log(`Tore knackade dig i huvudet med en bok. Du glömde ${total} talanger.`,'#b07aff'); openTrainer(false); openX('treeP',true); return;
   }
   renderTrainer();
 });
@@ -4386,6 +4430,7 @@ function blockHit(d){
   return false;
 }
 function recalcExtra(){
+  BAG=20+5*(P.bagUp||0);
   if(S.fx.has('monday')){S.dmg=Math.round(S.dmg*1.3); S.spd-=10;}
   S.cdrAll=S.fx.has('cdr')?.8:1; if(S.fx.has('rocket')) S.cdr.dash*=.6;
   S.light=S.fx.has('lux')?1.4:1; if(S.fx.has('lux')) S.critMult+=.3;
@@ -4512,6 +4557,7 @@ function updateExtras(dt){
   for(const pl of G.epools||[]){pl.t-=dt; if(Math.hypot(P.x-pl.x,(P.y-pl.y)*1.35)<pl.r+P.r*.4){P.slowT=Math.max(P.slowT||0,.25); if(pl.dmg&&(pl.tick-=dt)<=0){pl.tick=.5; hurtPlayer(pl.dmg,pl.src||'en het soppa');}}}
   if(G.epools) G.epools=G.epools.filter(p=>p.t>0);
   for(const e of G.enemies||[]) if(e.burn&&!e.dead){e.burn.t-=dt; if((e.burn.k-=dt)<=0){e.burn.k=.5; hitEnemy(e,e.burn.dps*.5,{nocrit:1,nols:1,kb:0,noproc:1}); if(e.burn) G.parts.push({x:e.x+rand(-6,6),y:e.y-e.r,vx:rand(-10,10),vy:-rand(30,60),life:.5,max:.5,col:'#ff8b2e',size:3});} if(e.burn&&e.burn.t<=0) e.burn=null;}
+  if(P.moving&&!G.over&&Math.random()<.12) G.parts.push({x:P.x+rand(-6,6),y:P.y+14,vx:rand(-15,15),vy:-rand(5,20),life:.45,max:.45,col:G.town?'rgba(150,160,110,.55)':'rgba(140,120,100,.5)',size:3});
   P.still=P.moving||mouse.down||P.acd>0?0:(P.still||0)+dt;
   if(P.cartT>0){P.cartT-=dt; for(const e of G.enemies) if(!e.dead&&!P.cartHit.has(e)&&Math.hypot(e.x-P.x,e.y-P.y)<e.r+28){P.cartHit.add(e); RUNE_CTX=P.cartRune||null; hitEnemy(e,S.dmg*2.2,{kb:460}); RUNE_CTX=null; if(!e.dead) e.stun=Math.max(e.stun,e.T.kind==='boss'?.2:.8);}}
   if(!G.town&&!G.over){
@@ -4729,7 +4775,7 @@ Object.assign(EN_EXACT,{
 "Elitjägare":"Elite Hunter","Besegra 50 elitfiender.":"Defeat 50 elite enemies.","Tusen Små Bitar":"A Thousand Little Pieces","Besegra 1000 fiender.":"Defeat 1000 enemies.","Snålvarg":"Penny Pincher","Ha 10 000 guld på en gång.":"Have 10,000 gold at once.","Lite Erfaren":"A Bit Experienced","Nå nivå 10.":"Reach level 10.","Ganska Erfaren":"Quite Experienced","Nå nivå 20.":"Reach level 20.","Gammal och Vis":"Old and Wise","Nå nivå 30.":"Reach level 30.",
 "Förbannat Bra":"Cursedly Good","Överlev bakhållet vid en förbannad kista.":"Survive the ambush at a cursed chest.","Önsketänkande":"Wishful Thinking","Önska något vid en önskebrunn.":"Make a wish at a wishing well.","Möbelflyttare":"Furniture Mover","Fånga en rymmande byrå.":"Catch a runaway dresser.","Skattmasen":"The Tax Man","Fånga Svartjobbaren Sune.":"Catch Sune the Black Marketeer.","Torrlagd":"Dry Spell","Besegra en boss utan att dricka en enda dryck på våningen.":"Defeat a boss without drinking a single potion on that floor.","Bosskrossare":"Boss Crusher","Besegra alla sex bossar.":"Defeat all six bosses.",
 "Inredare":"Decorator","Köp fem möbler till ditt hem.":"Buy five pieces of furniture for your home.","Hemmafixare":"Home Improver","Inred hela ditt hem.":"Furnish your entire home.","Snäll Granne":"Kind Neighbor","Klara ett sidouppdrag.":"Complete a side quest.","Byns Hjälte":"Village Hero","Klara alla sidouppdrag.":"Complete all side quests.","Nattuggla":"Night Owl","Var i stan mitt i natten.":"Be in town in the middle of the night.","Runristare":"Rune Carver","Sätt en runa i en förmåga.":"Put a rune in an ability.","Omställning":"Change of Plans","Byt till en annan förmåga hos Tore.":"Switch to a different ability at Tore's.",
-"Bagar-Bosse":"Baker Bosse","Bara Sir Kastrull kastar kastruller. Men Kerstin förtrollar dina skott med den kastrull du väljer: ungefär vart tredje skott får kastrullens kraft. Wokens kraft ger mer skada.":"Only Sir Saucepan throws saucepans. But Kerstin enchants your shots with the saucepan you choose: about every third shot gets the saucepan's power. The wok's power adds damage.","Inställningar":"Settings","Grafik":"Graphics","Ljud":"Sound","Välj svårighetsgrad":"Choose difficulty","Starta äventyret":"Start the adventure","Hur ont ska det göra?":"How much should it hurt?","Zoom":"Zoom","Fröken Fluff":"Miss Fluff","en het soppa":"a hot soup","Skelettet Åke":"Åke the Skeleton","Teleporterande":"Teleporting","Kallande":"Summoning","Slemmig":"Slimy","Rasande":"Furious",
+"Bagar-Bosse":"Baker Bosse","Så här ser du ut just nu.":"This is how you look right now.","Byt-Berit":"Barter Berit","kr":"$","Bara Sir Kastrull kastar kastruller. Men Kerstin förtrollar dina skott med den kastrull du väljer: ungefär vart tredje skott får kastrullens kraft. Wokens kraft ger mer skada.":"Only Sir Saucepan throws saucepans. But Kerstin enchants your shots with the saucepan you choose: about every third shot gets the saucepan's power. The wok's power adds damage.","Inställningar":"Settings","Grafik":"Graphics","Ljud":"Sound","Välj svårighetsgrad":"Choose difficulty","Starta äventyret":"Start the adventure","Hur ont ska det göra?":"How much should it hurt?","Zoom":"Zoom","Fröken Fluff":"Miss Fluff","en het soppa":"a hot soup","Skelettet Åke":"Åke the Skeleton","Teleporterande":"Teleporting","Kallande":"Summoning","Slemmig":"Slimy","Rasande":"Furious",
 "BONK!":"BONK!","Middag är serverad!":"Dinner is served!","Stekt!":"Fried!","Akta vagnen!":"Mind the cart!","REA!":"SALE!","Ur vägen, jag har kupong!":"Out of the way, I have a coupon!","Fikadags!":"Coffee time!","Lite kaffe och en bulle, sen kör vi.":"A little coffee and a bun, then we go.","Paus!":"Break!","Kallt ute idag!":"Cold out today!","Stäng dörren, det drar!":"Close the door, there's a draft!","Frysvaror!":"Frozen goods!","Påtår till alla!":"Refills for everyone!","Nu jäklar!":"Here we go!","Siktet är inställt.":"Sights are set.",
 "Plasten skyddar!":"The plastic protects!","Hjälp! Kompisar!":"Help! Buddies!","Grabbar, kom hit!":"Guys, over here!","NU ÄR JAG RASANDE!":"NOW I'M FURIOUS!","Fas 2! Nu blir det allvar.":"Phase 2! Now it gets serious.","Sista striden!":"The final fight!","Jag ger mig aldrig!":"I'll never give up!","Det här är inte över!":"This isn't over!",
 "Kladdregn!":"Goo rain!","Blankettvirvel! Fyll i alla!":"Form whirlwind! Fill them all in!","Morotsregn!":"Carrot rain!","Eldring! Steg 13!":"Ring of fire! Step 13!","Ordningsvakt Olle":"Olle the Security Guard","Jag har ringt polisen! Och slagit på vattenspridaren!":"I called the police! And turned on the sprinkler!","Jag KOKAR ÖVER!":"I'm BOILING OVER!",
@@ -4750,6 +4796,139 @@ Object.assign(EN_EXACT,{
 });
 TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
 
+// ---- talent tree, character sheet, quest log, bigger backpack, visual polish ----
+const TREE_GEN=[
+  {id:'slag',n:'Slagkraft',c:'#ff8b2e',nodes:[[0,'tung',5],[0,'tur',5],[1,'kaffe',5],[1,'krit2',3],[2,'kedja',2],[2,'mage',1],[3,'fjarde',1]]},
+  {id:'tal',n:'Tålighet',c:'#7aa2ff',nodes:[[0,'stal',5],[0,'tjock',5],[1,'vamp',3],[1,'dryck',3],[2,'tornar',2],[2,'fotter',3],[3,'andra',1]]},
+  {id:'nytta',n:'Nytta',c:'#9ad04a',nodes:[[0,'snal',3],[0,'magnet',2],[1,'rullsk',2],[1,'eld',1],[2,'katt',3]]},
+];
+const TREE_CLS={
+  krigare:{id:'form',n:'Förmågor',c:'#f3d351',nodes:[[0,'kastrull',5],[0,'snurr',5],[1,'gjut',3],[1,'genom',3],[1,'virvel',1],[1,'dammsug',1],[2,'salva',1],[2,'solfjader',2],[2,'studs',1],[2,'bumerang',1],[3,'explo',1],[3,'ego',1]]},
+  hexa:{id:'form',n:'Förmågor',c:'#c88aff',nodes:[[0,'stickor',1],[0,'tjockgarn',3],[1,'nystan2',2],[1,'espresso',1],[2,'blick2',1]]},
+  jagare:{id:'form',n:'Förmågor',c:'#9fd8ff',nodes:[[0,'flerskott',2],[0,'skarp',2],[1,'burk2',1],[1,'algflock',1],[2,'mygg2',2]]},
+};
+const TIER_NEED=3;
+const treeBranches=()=>[TREE_CLS[(P&&P.cls)||'krigare'],...TREE_GEN];
+const branchPts=br=>br.nodes.reduce((a,[,id])=>a+((P.perks||{})[id]||0),0);
+function nodeState(br,t,id,max){
+  const p=PERKS.find(x=>x.id===id), r=(P.perks||{})[id]||0;
+  if(r>=max) return {p,r,ok:false,why:'Fullt'};
+  if(branchPts(br)<t*TIER_NEED) return {p,r,ok:false,why:`Kräver ${t*TIER_NEED} poäng i ${br.n}`};
+  if(p.req&&P.lvl<SKILLS[p.req].lvl) return {p,r,ok:false,why:`Kräver nivå ${SKILLS[p.req].lvl}`};
+  if(!(P.pp>0)) return {p,r,ok:false,why:''};
+  return {p,r,ok:true,why:''};
+}
+let treeSel=null;
+function renderTree(){
+  $('trPts').textContent=P.pp||0;
+  $('treeCols').innerHTML=treeBranches().map(br=>{
+    const tiers=[0,1,2,3].filter(t=>br.nodes.some(n=>n[0]===t));
+    return `<div class="tcol"><h3 style="color:${br.c}">${br.n} <span class="muted">${branchPts(br)}</span></h3>`+tiers.map(t=>`<div class="trow">`+br.nodes.filter(n=>n[0]===t).map(([tt,id,max])=>{
+      const s=nodeState(br,tt,id,max), on=s.r>0;
+      return `<button class="tnode ${on?'on':''} ${s.ok?'can':''} ${treeSel===id?'sel':''}" data-node="${id}" style="--bc:${br.c}"><b>${s.p.n}</b><span>${s.r}/${max}</span></button>`;}).join('')+`</div>`).join('')+`</div>`;}).join('');
+  const d=$('treeDetail');
+  if(!treeSel){d.innerHTML='<p class="muted" style="margin:0">Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.</p>'; return;}
+  const br=treeBranches().find(b=>b.nodes.some(n=>n[1]===treeSel)), nd=br.nodes.find(n=>n[1]===treeSel), s=nodeState(br,nd[0],nd[1],nd[2]);
+  d.innerHTML=`<h3 style="margin:0 0 4px;color:${br.c}">${s.p.n} <span class="muted">${s.r}/${nd[2]}</span></h3>${s.p.tag?`<p class="how" style="margin:0 0 4px">${s.p.tag}</p>`:''}<p style="margin:0 0 4px">${s.p.d}</p><p class="fl" style="margin:0 0 8px">${s.p.f}</p>`+
+    (s.ok?`<button class="btn primary sm" data-learn="${treeSel}">Lär dig (1 poäng)</button>`:`<span class="muted">${s.why||'Du har inga poäng kvar.'}</span>`);
+}
+function learnPerk(id){
+  const br=treeBranches().find(b=>b.nodes.some(n=>n[1]===id)); if(!br) return; const nd=br.nodes.find(n=>n[1]===id), s=nodeState(br,nd[0],id,nd[2]); if(!s.ok) return;
+  P.perks[id]=(P.perks[id]||0)+1; P.pp--; if(s.p.now) s.p.now();
+  const ratio=P.hp/S.hp; recalc(); P.hp=Math.max(1,Math.round(S.hp*ratio)); SFX.play('equip'); log(`Ny talang: ${s.p.n}`,'#f2a03d'); save();
+}
+function offerPerk(){}
+// generic extra panels
+let XOPEN=null;
+const XRENDER={treeP:renderTree,charP:renderChar,questP:renderQuests};
+function openX(id,v){
+  if(!G||!started||(v&&G.over)) return;
+  if(v){if(invOpen) openInv(false); closePanels();} else if(XOPEN!==id) return;
+  $(id).hidden=!v; XOPEN=v?id:null; paused=v; mouse.down=false; keys.clear&&keys.clear();
+  if(v){if(id==='treeP') treeSel=null; XRENDER[id]();} else save();
+}
+function toggleX(id){openX(id,XOPEN!==id);}
+for(const id of ['treeP','charP','questP']) $(id).addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled) return;
+  if(b.dataset.act==='close'){openX(id,false); return;}
+  if(b.dataset.node){treeSel=b.dataset.node===treeSel&&false?null:b.dataset.node; if(e.detail>=2||b.classList.contains('sel')) learnPerk(b.dataset.node); renderTree(); return;}
+  if(b.dataset.learn){learnPerk(b.dataset.learn); renderTree(); return;}
+  if(b.dataset.act==='tree'){openX('treeP',true); return;}
+  if(b.dataset.act==='inv'){openX(id,false); openInv(true); return;}
+});
+// character sheet
+function heroPic(cid){try{drawPortrait('hero'); const c=$(cid), x=c.getContext('2d'); x.imageSmoothingEnabled=!PIXEL; x.clearRect(0,0,c.width,c.height); x.drawImage($('dlgPic'),0,0,c.width,c.height);}catch(e){}}
+function renderChar(){
+  heroPic('chPic');
+  const C=CL(), red=Math.round(100-100*100/(100+S.armor*1.6)), nd=need(Math.min(P.lvl,MAXLVL));
+  $('chName').textContent=C.n+(P.title&&TITLES[P.title]&&P.ach[P.title]?` – ${TITLES[P.title]}`:'');
+  $('chSub').textContent=`${C.t}, nivå ${P.lvl}${P.para?` · Paragon ${P.para}`:''} · ${DF().n}${P.hc?' · Hardcore':''}`;
+  $('chXp').style.width=Math.min(100,P.xp/nd*100).toFixed(1)+'%'; $('chXpT').textContent=`Erfarenhet: ${Math.floor(P.xp)} / ${nd}`;
+  const dl=(id,rows)=>{$(id).innerHTML=rows.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');};
+  dl('chOff',[['Skada',S.dmg],['Attackfart',`+${S.as}%`],['Kritchans',`${S.crit}%`],['Kritisk skada',`${Math.round(S.critMult*100)}%`]]);
+  dl('chDef',[['Liv',`${Math.ceil(P.hp)} / ${S.hp}`],['Rustning',`${S.armor} (−${red}% skada)`],['Livsstöld',`${Math.min(S.ls,5)}%`],...(S.shieldMax?[['Stickad sköld',`${Math.round(P.shield||0)} / ${S.shieldMax}`]]:[]),['Hälsodrycker',`${P.potions}/9`]]);
+  dl('chMisc',[['Springfart',`+${S.spd}%`],['Guldfynd',`+${S.gf}%`],['Guld',P.gold],['Portalrullar',P.scrolls||0],['Ryggsäck',`${P.bag.length}/${BAG}`]]);
+  const fx=[...S.fx].map(f=>`<li>${FX[f]}</li>`), sets=Object.entries(SETS).map(([sid,s])=>{const n=Object.values(P.equip).filter(e=>e&&e.set===sid).length; return n?`<li style="color:#5ad06a">${s.n} (${n}/4)${n>=2?': '+s.b2:''}${n>=4?' '+s.b4:''}</li>`:'';}).filter(Boolean);
+  $('chFx').innerHTML=fx.concat(sets).join('')||'<li class="muted">Inga ännu. Hitta legendariska föremål och set.</li>';
+  const pk=Object.entries(P.perks||{}).map(([id,c])=>{const p=PERKS.find(x=>x.id===id); return p?`<li><b style="color:var(--torch)">${p.n}${c>1?' ×'+c:''}</b></li>`:'';}).join('');
+  $('chPerks').innerHTML=(pk||'<li class="muted">Inga talanger ännu.</li>')+(P.pp>0?`<li style="color:#9fe3d2">${P.pp} talangpoäng att lägga (K)</li>`:'');
+  const gl=gemHTMLList(), rn=Object.entries(P.runeInv||{}).filter(([,n])=>n>0).map(([k,n])=>`${RUNES[k].n} ×${n}`).join(', ');
+  $('chGems').innerHTML=`<li>Juveler: ${gl||'inga'}</li><li>Runor i fickan: ${rn||'inga'}</li><li style="color:#ff5a8a">Kaosnycklar: ${P.keys||0}</li>`;
+  const c=P.cnt||{};
+  dl('chStats',[['Besegrade fiender',c.kills||P.kills||0],['Elitfiender',c.elite||0],['Bossar',['boss1','boss2','boss3','boss4','boss5','boss6'].reduce((a,b)=>a+(c[b]||0),0)],['Djupast',`våning ${P.best}`],['Dödsfall',P.deaths||0],['Prestationer',`${Object.keys(P.ach||{}).filter(k=>ACH[k]).length} / ${Object.keys(ACH).length}`]]);
+}
+// quest log
+function renderQuests(){
+  const sec=(t,items)=>`<p class="lbl" style="margin-top:12px">${t}</p><ul class="fxl" style="color:var(--parch)">${items.join('')||'<li class="muted">Inget just nu.</li>'}</ul>`;
+  const s=P.story||{}, main=[`<li><b style="color:var(--torch)">${mainQuestText()}</b></li>`,`<li>Receptsidor: ${Math.min(5,s.pages||0)} av 5</li>`,`<li>Åkes dagbok: ${s.lore||0} av ${LORE.length} sidor</li>`];
+  const fl=[]; if(G&&!G.town&&G.quest){const q=G.quest; fl.push(`<li>${q.done?'Klart! ':''}Besegra ${q.need} ${QNAME[q.type]} (${q.have}/${q.need})</li>`);}
+  if(G&&G.challenge&&G.challenge.state==='active') fl.push('<li>Utmaning pågår vid obelisken!</li>');
+  if(G&&G.event&&G.event.kind==='cursed'&&G.event.state==='active') fl.push(`<li>Bakhåll: våg ${G.event.wave} av 3</li>`);
+  if(G&&G.npcs&&G.npcs.some(n=>n.type==='tobias')&&G.event&&G.event.follow&&!G.event.done) fl.push('<li>Visa Turisten Tobias till trappan.</li>');
+  const sd=P.side||{}, side=Object.entries(SIDE).map(([id,q])=>{const st=sd[id]||0, giver=WHO[q.giver]||q.giver;
+    if(st===3) return `<li class="muted">✔ ${q.n}</li>`;
+    if(st===2) return `<li style="color:#9fe3d2"><b>${q.n}</b>: ${q.back}</li>`;
+    if(st===1) return `<li><b style="color:var(--torch)">${q.n}</b>: ${q.goal}${id==='skruv'?` (${P.screws||0}/${q.need})`:id==='kristall'?` (${P.shards||0}/${q.need})`:''}</li>`;
+    return P.best>=q.req?`<li class="muted">Prata med ${giver} i stan, hon eller han har något på hjärtat.</li>`:`<li class="muted">Låses upp när du har nått våning ${q.req}.</li>`;});
+  const pots=Object.entries(POTS).map(([id,p])=>{const own=P.pots.includes(id); const pr=p.prog?` (${Math.min(p.need,(P.prog||{})[p.prog]||0)}/${p.need})`:''; return `<li class="${own?'muted':''}">${own?'✔ ':''}${p.n}${own?'':': '+p.how+pr}</li>`;});
+  $('qBody').innerHTML=sec('Huvuduppdrag',main)+sec('På den här våningen',fl)+sec('Sidouppdrag',side)+sec('Kerstins kastruller',pots);
+}
+// bigger backpack
+const bagUpCost=()=>[600,1500,3500,8000][P.bagUp||0];
+// visual polish
+let FADE=0, BOSSBARS=0;
+function drawFx2(){
+  if(!G) return;
+  const W=VW, H=VH;
+  if(P&&!G.over&&started){
+    const low=P.hp/S.hp<.3?(.25+.15*Math.sin(G.time*6)):0, hit=Math.min(1,(P.hurt||0)*4)*.35, a=Math.max(low,hit);
+    if(a>.01){const g=cx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75); g.addColorStop(0,'rgba(160,0,0,0)'); g.addColorStop(1,`rgba(160,0,0,${a.toFixed(3)})`); cx.fillStyle=g; cx.fillRect(0,0,W,H);}
+  }
+  const bossOn=!!(G.boss&&G.boss.aggro&&!G.boss.dead); BOSSBARS+=((bossOn&&(G.boss.introT=(G.boss.introT??3))>0?1:0)-BOSSBARS)*.08;
+  if(bossOn&&G.boss.introT>0) G.boss.introT-=1/60;
+  if(BOSSBARS>.01){const bh=H*.09*BOSSBARS; cx.fillStyle='#000'; cx.fillRect(0,0,W,bh); cx.fillRect(0,H-bh,W,bh);}
+  if(FADE>0){cx.fillStyle=`rgba(0,0,0,${Math.min(1,FADE).toFixed(3)})`; cx.fillRect(0,0,W,H); FADE=Math.max(0,FADE-.045);}
+}
+function drawLootBeams(){
+  for(const d of G.drops){if(d.gone||d.vis===false) continue; const r=d.kind==='item'?d.item.r:d.kind==='rune'?5:-1; if(r<3) continue;
+    const c=r===3?'255,139,46':r===4?'90,208,106':'200,138,255', h=150+Math.sin(G.time*3+d.x)*12, k=Math.min(1,(d.t||0)/.4);
+    const g=cx.createLinearGradient(0,d.y-h,0,d.y); g.addColorStop(0,`rgba(${c},0)`); g.addColorStop(1,`rgba(${c},${(.35*k).toFixed(3)})`);
+    cx.fillStyle=g; cx.fillRect(d.x-7,d.y-h,14,h); cx.fillStyle=`rgba(${c},${(.18*k).toFixed(3)})`; cx.fillRect(d.x-14,d.y-h*.7,28,h*.7);
+    if(!paused&&Math.random()<.2) G.parts.push({x:d.x+rand(-8,8),y:d.y-rand(0,40),vx:0,vy:-rand(20,50),life:.9,max:.9,col:`rgb(${c})`,size:2});}
+}
+function extraLights(hole){
+  for(const p of G.proj) if(!p.enemy||p.kind==='eld') hole(p.x,p.y,p.kind==='eld'?70:p.kind==='magic'?60:45,.45);
+  for(const r of G.rings||[]) if(r.r>40) hole(r.x,r.y,r.r*1.5,.75*Math.max(0,r.t/r.max));
+  for(const f of G.fires||[]) hole(f.x,f.y,55,.35);
+  for(const d of G.drops) if(!d.gone&&((d.kind==='item'&&d.item.r>=3)||d.kind==='rune')) hole(d.x,d.y-30,110,.6);
+  for(const pl of G.epools||[]) if(pl.kind==='soup') hole(pl.x,pl.y,pl.r*1.6,.3);
+}
+function extraGlows(glow){
+  for(const p of G.proj){if(p.enemy&&p.kind!=='eld') continue; const c=p.kind==='eld'?'255,140,60':p.kind==='magic'?'190,140,255':p.kind==='pot'?'230,220,200':'255,230,180'; glow(p.x,p.y,p.kind==='eld'?60:40,`rgba(${c},.18)`);}
+  for(const r of G.rings||[]) if(r.r>40) glow(r.x,r.y,r.r*1.3,`rgba(255,190,110,${(.25*Math.max(0,r.t/r.max)).toFixed(3)})`);
+}
+
+Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); TRD=null; TRM.clear();
 let splashDone=false;
 function endSplash(){
   if(splashDone) return; splashDone=true; const s=$('splash'); s.classList.add('done'); setTimeout(()=>{s.hidden=true;},700);
@@ -4759,7 +4938,7 @@ setTimeout(endSplash,reduceMotion?1800:5600);
 
 // ---------------- perks ----------------
 let perkChoices=null;
-function offerPerk(){
+function offerPerkOld(){
   if(!started||!(P.pp>0)||!$('perk').hidden) return;
   if(G.over||invOpen||shopOpen||smithOpen||trainOpen||potsOpen||stashOpen||bakeOpen||homeOpen||wpOpen||DLG||pauseOpen){setTimeout(offerPerk,800);return;}
   const rc=20+G.depth*12, rb=$('perkReroll'); rb.textContent=`Slå om valen (${rc} guld)`; rb.disabled=P.gold<rc;
@@ -4811,6 +4990,7 @@ function renderShop(){
   const full=P.bag.length>=BAG;
   const g=$('btnGamble'); g.textContent=`Mystisk låda (${gambleCost()} guld)`; g.disabled=P.gold<gambleCost()||full;
   const sc=scrollCost(), bs=$('btnScroll'); bs.textContent=`Portalrulle (${sc} guld) · har ${P.scrolls||0}`; bs.disabled=P.gold<sc;
+  {const bu=$('btnBagUp'), c=bagUpCost(); bu.textContent=c?`Större ryggsäck: ${BAG} → ${BAG+5} platser (${c} guld)`:'Ryggsäcken är så stor den kan bli.'; bu.disabled=!c||P.gold<c;}
   const p=$('btnPot2'); p.textContent=`Hälsodryck (${pot2Cost()} guld) · har ${P.potions}/9`; p.disabled=P.gold<pot2Cost()||P.potions>=9;
   const d=$('sDetail');
   const it=ssel?(ssel.w==='stock'?n.stock[ssel.k]:P.bag[ssel.k]):null;
@@ -4847,6 +5027,7 @@ $('shop').addEventListener('click',e=>{
     if(a==='sellgrey'){let c=0,g=0; P.bag=P.bag.filter(it=>{if(it.r===0){c++;g+=it.value;return false;}return true;}); P.gold+=g; ssel=null; if(c) SFX.play('cash'); quote(c?`${c} saker skräp för ${g} guld. Ett rån! För dig.`:'Du har inget grått skräp. Imponerande.');}
     if(a==='gamble'&&P.gold>=gambleCost()&&P.bag.length<BAG){P.gold-=gambleCost(); SFX.play('cash'); const it=makeItem(G.depth,1,.9); P.bag.push(it); ssel={w:'bag',k:P.bag.length-1};
       quote(it.r===3?'Va?! Ge tillbaka den! Nej, det är ditt nu. Suck.':pick(GAMBLEQ)); log(`Lådan innehöll: ${it.name}`,RAR[it.r].c); if(it.r===3) banner('LEGENDARISKT!',it.name);}
+    if(a==='bagup'&&bagUpCost()&&P.gold>=bagUpCost()){P.gold-=bagUpCost(); P.bagUp=(P.bagUp||0)+1; recalc(); SFX.play('cash'); quote('Nu får du plats med fem saker till. Ingen returrätt på sömmarna.');}
     if(a==='scroll'&&P.gold>=scrollCost()){P.gold-=scrollCost(); P.scrolls=(P.scrolls||0)+1; SFX.play('cash'); quote('En portalrulle! Läs den baklänges så händer ingenting. Läs den framlänges så kommer du hem.');}
     if(a==='pot2'&&P.gold>=pot2Cost()&&P.potions<9){P.gold-=pot2Cost(); SFX.play('cash'); P.potions++; quote('En dryck! Smaken heter ”Skogens ånger”.');}
   }
@@ -4857,7 +5038,7 @@ $('talkBtn').addEventListener('click',()=>interact());
 
 // ---------------- save ----------------
 const SKEY='loot-lagom-v1';
-function serialize(){const {sk,runes,runeInv,furn,title,side,clock,screws,shards,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}=P; return {v:1,depth:G?G.depth:1,town:!G||!!G.town||!!G.rift,iid:IID,P:{sk,runes,runeInv,furn,title,side,clock,screws,shards,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}};}
+function serialize(){const {sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}=P; return {v:1,depth:G?G.depth:1,town:!G||!!G.town||!!G.rift,iid:IID,P:{sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}};}
 function save(){
   if(!started) return false;
   if(P.hc&&G&&G.over) return false;
@@ -4959,8 +5140,9 @@ addEventListener('keydown',e=>{
   if(DLG){if(['enter',' ','e','t','escape'].includes(k)) nextLine(); return;}
   if(!$('perk').hidden){if(['1','2','3'].includes(k)) choosePerk(+k-1); return;}
   if(k==='i'||k==='tab'||k==='b'){closePanels(); openInv(!invOpen);return;}
-  if(k==='t'){if(invOpen) openInv(false); if(shopOpen||smithOpen||trainOpen||potsOpen||stashOpen||bakeOpen||homeOpen) closePanels(); else interact(); return;}
-  if(k==='escape'){if(invOpen||shopOpen||smithOpen||trainOpen||potsOpen||stashOpen||bakeOpen||homeOpen||wpOpen){if(invOpen) openInv(false); closePanels();} else openPause(true); return;}
+  if(k==='c'){toggleX('charP');return;} if(k==='k'){toggleX('treeP');return;} if(k==='j'||k==='l'){toggleX('questP');return;}
+  if(k==='t'){if(invOpen) openInv(false); if(shopOpen||smithOpen||trainOpen||potsOpen||stashOpen||bakeOpen||homeOpen||XOPEN) closePanels(); else interact(); return;}
+  if(k==='escape'){if(invOpen||shopOpen||smithOpen||trainOpen||potsOpen||stashOpen||bakeOpen||homeOpen||wpOpen||XOPEN){if(invOpen) openInv(false); closePanels();} else openPause(true); return;}
   if(k==='p'&&!paused){startPortal(); return;}
   if(k==='m'){toggleMute();return;}
   if(k==='g'){setPixel(!PIXEL);return;}
@@ -5001,6 +5183,7 @@ $('skills').addEventListener('pointerdown',e=>{
   if(b.dataset.skill) cast(b.dataset.skill);
   else if(b.dataset.act==='potion') drinkPotion();
   else if(b.dataset.act==='bag'){closePanels(); openInv(!invOpen);}
+  else if(b.dataset.act==='char') toggleX('charP'); else if(b.dataset.act==='tree') toggleX('treeP'); else if(b.dataset.act==='quest') toggleX('questP');
   else if(b.dataset.act==='portal') startPortal();
   else if(b.dataset.act==='mute') toggleMute();
   else if(b.dataset.act==='menu') openPause(!pauseOpen);
