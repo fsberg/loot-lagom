@@ -1487,7 +1487,7 @@ function hitEnemy(e,base,opts={}){
   if(crit&&S.chain&&!opts.chain) chainLightning(e,base);
   if(e.T.kind==='thief'&&Math.random()<.5) drop(e.x,e.y,{kind:'gold',amt:Math.max(1,Math.round(rand(1,3)*G.depth*(1+S.gf/100)))});
   text(e.x+rand(-6,6),e.y-e.r-4,d,crit?'#ffd34a':'#f4ece0',crit);
-  if(S.ls&&!opts.nols) leech(d*Math.min(S.ls,8)/100);
+  if(S.ls&&!opts.nols) leech(d*Math.min(S.ls,5)/100);
   if(crit){G.shake=Math.min(8,G.shake+3); if(S.fx.has('squeak')){e.stun=Math.max(e.stun,1); SFX.play('squeak'); text(e.x,e.y-e.r-22,'PIIP!','#ff8b2e');}}
   const a=Math.atan2(e.y-P.y,e.x-P.x), kb=e.T.kind==='boss'?40:opts.kb??220;
   e.kx+=Math.cos(a)*kb; e.ky+=Math.sin(a)*kb;
@@ -1600,13 +1600,13 @@ function respawn(){
 }
 function rangedAttack(){
   const hx=P.cls==='hexa';
-  const C=hx?{k:'magic',sp:420,d:1.55,cd:.78,r:8,n:1+2*npk('stickor'),spread:.3,pierce:0}:{k:'pellet',sp:780,d:.7,cd:.36,r:5,n:1+npk('flerskott'),spread:.1,pierce:npk('skarp')};
+  const C=hx?{k:'magic',sp:420,d:1.15,cd:.78,r:8,n:1+2*npk('stickor'),spread:.3,pierce:0}:{k:'pellet',sp:780,d:.7,cd:.36,r:5,n:1+npk('flerskott'),spread:.1,pierce:npk('skarp')};
   if(S.fx.has('multi')) C.n+=2; if(S.fx.has('pierce')) C.pierce+=3;
   P.acd=C.cd/(1+S.as/100); P.swing=.1; P.swingA=P.face; SFX.play(hx?'shoot':'sling');
   P.swingN++; const four=S.fourth&&P.swingN%4===0;
   if(four) G.rings.push({x:P.x+Math.cos(P.face)*24,y:P.y+Math.sin(P.face)*24,r:30,t:.2,max:.2,col:'#f4ece0'});
   for(let i=0;i<C.n;i++){const a=P.face+(i-(C.n-1)/2)*C.spread;
-    G.proj.push({x:P.x+Math.cos(a)*14,y:P.y+Math.sin(a)*14,vx:Math.cos(a)*C.sp,vy:Math.sin(a)*C.sp,r:C.r*(four?1.6:1),dmg:S.dmg*C.d*(four?3:1),life:.75,pierce:C.pierce+(four?2:0),hit:new Set(),kind:C.k,rot:a,norot:true,home:hx,splash:hx?50:0,hunter:!hx});}
+    G.proj.push({x:P.x+Math.cos(a)*14,y:P.y+Math.sin(a)*14,vx:Math.cos(a)*C.sp,vy:Math.sin(a)*C.sp,r:C.r*(four?1.6:1),dmg:S.dmg*C.d*(four?3:1),life:.75,pierce:C.pierce+(four?2:0),hit:new Set(),kind:C.k,rot:a,norot:true,home:hx,splash:hx?36:0,hunter:!hx,kb:hx?110:35});}
 }
 function aimPoint(maxd){
   if(touchMode){const t=nearestEnemy(340); if(t) return [t.x,t.y]; return [P.x+Math.cos(P.face)*200,P.y+Math.sin(P.face)*200];}
@@ -4496,7 +4496,7 @@ function nightness(){const f=(((P&&P.clock)||0)%DAYLEN)/DAYLEN; if(f<.55) return
 function duskness(){const f=(((P&&P.clock)||0)%DAYLEN)/DAYLEN; return f>.5&&f<.68?Math.sin((f-.5)/.18*Math.PI):f>.88&&f<.98?Math.sin((f-.88)/.1*Math.PI)*.6:0;}
 function updateExtras(dt){
   if(!G||!P||!S) return;
-  P.lsB=Math.min(S.hp*.035,(P.lsB||0)+S.hp*.035*dt);
+  P.lsB=Math.min(S.hp*.015,(P.lsB||0)+S.hp*.015*dt);
   if(P.tb){P.tb.t-=dt; if(P.tb.t<=0){P.tb=null; recalc(); P.hp=Math.min(P.hp,S.hp);}}
   if(G.town){const b=nightness(); P.clock=(P.clock||0)+dt; const a=nightness();
     if(b<.5&&a>=.5) log('Det skymmer över Lagomby. Lyktorna tänds.','#9fb8e8');
