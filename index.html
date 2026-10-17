@@ -2087,7 +2087,7 @@ const cv=$('game'), mini=$('mini'), mx2=mini.getContext('2d');
 let cx=cv.getContext('2d');
 const ucv=$('ui'), ucx=ucv.getContext('2d'); let UDPR=1;
 let DPR=1,VW=0,VH=0;
-function resize(){UDPR=PIXEL?1:Math.min(2,devicePixelRatio||1); DPR=PIXEL?.5:UDPR; cv.style.imageRendering=ucv.style.imageRendering=PIXEL?'pixelated':'auto';VW=innerWidth;VH=innerHeight;cv.width=VW*DPR;cv.height=VH*DPR;cv.style.width=VW+'px';cv.style.height=VH+'px'; ucv.width=VW*UDPR; ucv.height=VH*UDPR; ucv.style.width=VW+'px'; ucv.style.height=VH+'px';mini.width=120*DPR;mini.height=120*DPR;}
+function resize(){UDPR=Math.min(2,devicePixelRatio||1); DPR=PIXEL?.5:UDPR; cv.style.imageRendering=PIXEL?'pixelated':'auto'; ucv.style.imageRendering='auto';VW=innerWidth;VH=innerHeight;cv.width=VW*DPR;cv.height=VH*DPR;cv.style.width=VW+'px';cv.style.height=VH+'px'; ucv.width=VW*UDPR; ucv.height=VH*UDPR; ucv.style.width=VW+'px'; ucv.style.height=VH+'px';mini.width=120*DPR;mini.height=120*DPR;}
 addEventListener('resize',resize); resize();
 function applyPixelUI(){
   document.documentElement.classList.toggle('pixel',PIXEL);
@@ -2117,7 +2117,7 @@ function render(){
   cx.fillStyle='#0b080c'; cx.fillRect(0,0,VW,VH);
   if(!G) return;
   const sh=(reduceMotion||!OPT.shake)?0:G.shake;
-  const ox=Math.round(VW/2-G.cam.x+(Math.random()-.5)*sh), oy=Math.round(VH/2-G.cam.y+(Math.random()-.5)*sh);
+  const rq=PIXEL?v=>Math.round(v/2)*2:Math.round, ox=rq(VW/2-G.cam.x+(Math.random()-.5)*sh), oy=rq(VH/2-G.cam.y+(Math.random()-.5)*sh);
   cx.save(); cx.translate(ox,oy);
   drawTiles();
   if(G.town) drawTown(); else drawFog();
@@ -2169,7 +2169,7 @@ function render(){
     cx.restore();}
   cx.globalAlpha=1;
   if(S.cat&&P.cat) drawCat(P.cat);
-  drawPet(); drawTitle();
+  drawPet();
   if(G.town&&G.bunting) drawBunting();
   if(P.swarm>0) for(let i=0;i<28;i++){const a=G.time*(3+i%4)+i*2.4, rr=60+Math.sin(G.time*5+i)*55; circ(P.x+Math.cos(a)*rr,P.y+Math.sin(a)*rr*.7-8,1.5,'#1a121a');}
   for(const r of G.rings||[]){const k=1-r.t/r.max; cx.globalAlpha=r.t/r.max; cx.strokeStyle=r.col; cx.lineWidth=6*(1-k)+1; cx.beginPath(); cx.arc(r.x,r.y,r.r*(.3+.7*k),0,Math.PI*2); cx.stroke();
@@ -2186,7 +2186,7 @@ function render(){
 
   const worldCx=cx;
   ucx.setTransform(1,0,0,1,0,0); ucx.clearRect(0,0,ucv.width,ucv.height);
-  if(PIXEL){cx=ucx; cx.setTransform(UDPR,0,0,UDPR,0,0);}
+  if(PIXEL){cx=ucx; const z=frame.z||1; cx.setTransform(UDPR*z,0,0,UDPR*z,VW/2*UDPR*(1-z),VH/2*UDPR*(1-z));}
   cx.save(); cx.translate(ox,oy);
   if(!G.town&&!G.rift&&G.m.start){cx.font=`700 12px ${FONT}`; cx.textAlign='center';
     const s1=G.m.start, s2=G.m.stairs;
@@ -2216,6 +2216,7 @@ function render(){
     for(const f of G.folk||[]) if(f.say) bubble(f.x,f.y-26,f.say.t);}
   for(const pt of G.portals||[]) if(Math.hypot(P.x-pt.x,P.y-pt.y)<6*TILE){cx.font=`700 12px ${FONT}`; cx.textAlign='center'; cx.fillStyle='#9fd0ff'; cx.fillText(pt.kind==='rift'?`Kaosportal (${P.keys||0} nycklar)`:pt.kind==='riftback'?'Portal hem till Lagomby':pt.kind==='town'?'Portal till Lagomby':`Portal till våning ${DUNGEON?DUNGEON.depth:G.depth}`,pt.x,pt.y-44);}
   if(P.chan>0){cx.strokeStyle='#9fd0ff'; cx.lineWidth=4; cx.beginPath(); cx.arc(P.x,P.y,26,-Math.PI/2,-Math.PI/2+Math.PI*2*(1-P.chan/1.2)); cx.stroke();}
+  drawTitle();
   if(P.say) bubble(P.x,P.y-38,P.say.t);
   if(S.cat&&P.cat&&P.cat.say) bubble(P.cat.x,P.cat.y-20,P.cat.say.t);
   for(const t of G.texts){
@@ -3797,7 +3798,7 @@ function drawTownTiles(){
   const y0=Math.max(0,Math.floor((G.cam.y-VH/2)/TILE)-1), y1=Math.min(MH-1,Math.ceil((G.cam.y+VH/2)/TILE)+1);
   for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++){
     const v=t[y*MW+x], hh=hash(x,y), set=v===0?TEX.cobble:v===1?TEX.forest:TEX.grass;
-    cx.drawImage(set[hh%set.length],x*TILE,y*TILE,TILE,TILE);
+    cx.drawImage(set[hh%set.length],x*TILE,y*TILE,TILE+1,TILE+1);
   }
   for(let y=y0;y<=y1;y++) for(let x=x0;x<=x1;x++){
     const i=y*MW+x; if(t[i]!==0) continue;
@@ -4524,9 +4525,9 @@ function drawExtrasGround(){
 }
 function drawTitle(){
   if(!P.title||!TITLES[P.title]||!P.ach[P.title]) return;
-  cx.font=`700 10px ${FONT}`; cx.textAlign='center'; const t=TITLES[P.title];
-  cx.fillStyle='rgba(11,8,12,.6)'; const w=cx.measureText(t).width+8; rrect(P.x-w/2,P.y-62,w,13,3); cx.fill();
-  cx.fillStyle='#f0d488'; cx.fillText(t,P.x,P.y-52);
+  cx.font=`700 12px ${FONT}`; cx.textAlign='center'; const t=TITLES[P.title];
+  cx.fillStyle='rgba(11,8,12,.72)'; const w=cx.measureText(t).width+10; rrect(P.x-w/2,P.y-66,w,16,3); cx.fill();
+  cx.fillStyle='#f0d488'; cx.fillText(t,P.x,P.y-54);
 }
 const XDRAW={
   cchest(n){const t=G.time; cx.save(); cx.translate(n.x,n.y); ell(0,12,20,6,'rgba(0,0,0,.4)'); cx.shadowColor='#b07aff'; cx.shadowBlur=14+Math.sin(t*4)*6;
@@ -5011,7 +5012,7 @@ function frame(now){
       if(G.slowmo>0) G.slowmo-=dt;
     }
     else if(G&&!started){G.time+=dt; G.cam.x=P.x+Math.cos(G.time*.15)*120; G.cam.y=P.y+Math.sin(G.time*.15)*80;}
-    {const z=(G&&started)?(G.zoom||1):1; if(Math.abs((frame.z||1)-z)>.002){frame.z=z; cv.style.transform=ucv.style.transform=z===1?'':`scale(${z.toFixed(3)})`;}}
+    {const z=(G&&started)?(G.zoom||1):1; if(Math.abs((frame.z||1)-z)>.002){frame.z=z; cv.style.transform=z===1?'':`scale(${z.toFixed(3)})`; ucv.style.transform='';}}
     render(); MUSIC.tick();
     if(DLG) dlgTick(dt);
     if(G&&started){hud(); G.miniT-=dt; if(G.miniT<=0){G.miniT=.2;drawMini();}}
