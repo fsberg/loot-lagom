@@ -2930,13 +2930,13 @@ function drawPlayer(){
   let done=false;
   try{
     const T=cx.getTransform(), sc=Math.hypot(T.a,T.b), R=64, W=Math.ceil(R*2.2*sc);
-    if(sc>0&&W<2400){
+    if(!PIXEL&&sc>0&&W<2400){
       const A=plCanvas('a',W), B=plCanvas('b',W), ac=A.getContext('2d'), bc=B.getContext('2d');
       ac.setTransform(1,0,0,1,0,0); ac.clearRect(0,0,A.width,A.height); ac.setTransform(sc,0,0,sc,0,0); ac.imageSmoothingEnabled=cx.imageSmoothingEnabled; ac.lineJoin='round';
       const prev=cx; cx=ac; try{drawPlayerBody(R,R*1.2);} finally{cx=prev;}
-      const ox=x-R, oy=y-R*1.2, Sz=A.width/sc, o=Math.max(1,Math.round(sc*.75))/sc;
+      const ox=(Math.round(T.a*(x-R)+T.e)-T.e)/T.a, oy=(Math.round(T.d*(y-R*1.2)+T.f)-T.f)/T.d, Sz=A.width/sc, o=Math.max(1,Math.round(sc*.75))/sc;
       const sil=col=>{bc.setTransform(1,0,0,1,0,0); bc.globalCompositeOperation='source-over'; bc.clearRect(0,0,B.width,B.height); bc.drawImage(A,0,0); bc.globalCompositeOperation='source-in'; bc.fillStyle=col; bc.fillRect(0,0,B.width,B.height); bc.globalCompositeOperation='source-over';};
-      cx.save(); cx.globalAlpha=alpha;
+      cx.save(); cx.globalAlpha=alpha; cx.imageSmoothingEnabled=false;
       sil('rgba(8,5,10,.9)'); for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]) cx.drawImage(B,ox+dx*o,oy+dy*o,Sz,Sz);
       cx.drawImage(A,ox,oy,Sz,Sz);
       const L=rimLight(x,y), d=Math.max(1.5,sc*1.7); sil(L.col);
