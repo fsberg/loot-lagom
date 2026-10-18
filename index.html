@@ -4946,9 +4946,9 @@ function renderTree(){
   $('trPts').textContent=P.pp||0;
   $('treeCols').innerHTML=treeBranches().map(br=>{
     const tiers=[0,1,2,3].filter(t=>br.nodes.some(n=>n[0]===t));
-    return `<div class="tcol"><h3 style="color:${br.c}">${br.n} <span class="muted">${branchPts(br)}</span></h3>`+tiers.map(t=>(t?(branchPts(br)>=t*TIER_NEED?'<div class="tlink open"></div>':`<div class="tlink"><span>Låses upp vid ${t*TIER_NEED} poäng</span></div>`):'')+`<div class="trow">`+br.nodes.filter(n=>n[0]===t).map(([tt,id,max])=>{
+    return `<div class="tcol"><h3 style="color:${br.c}">${br.n} <span class="muted">${branchPts(br)}</span></h3>`+tiers.slice().reverse().map(t=>`<div class="trow">`+br.nodes.filter(n=>n[0]===t).map(([tt,id,max])=>{
       const s=nodeState(br,tt,id,max), on=s.r>0;
-      const act=s.p.req&&SKILLS[s.p.req]&&SKILLS[s.p.req].tree; return `<button class="tnode ${on?'on':''} ${s.ok?'can':''} ${act?'act':''} ${treeSel===id?'sel':''}" data-node="${id}" style="--bc:${br.c}">${act?`<i>${SKILLS[s.p.req].lvl>=18?'Ultimat':'Förmåga'}</i>`:''}<b>${s.p.n}</b><span>${s.r}/${max}</span></button>`;}).join('')+`</div>`).join('')+`</div>`;}).join('');
+      const act=s.p.req&&SKILLS[s.p.req]&&SKILLS[s.p.req].tree; return `<button class="tnode ${on?'on':''} ${s.ok?'can':''} ${act?'act':''} ${treeSel===id?'sel':''}" data-node="${id}" style="--bc:${br.c}">${act?`<i>${SKILLS[s.p.req].lvl>=18?'Ultimat':'Förmåga'}</i>`:''}<b>${s.p.n}</b><span>${s.r}/${max}</span></button>`;}).join('')+`</div>`+(t?(branchPts(br)>=t*TIER_NEED?'<div class="tlink open"></div>':`<div class="tlink"><span>Låses upp vid ${t*TIER_NEED} poäng</span></div>`):'')).join('')+`</div>`;}).join('');
   const d=$('treeDetail');
   if(!treeSel){d.innerHTML='<p class="muted" style="margin:0">Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.</p>'; return;}
   const br=treeBranches().find(b=>b.nodes.some(n=>n[1]===treeSel)), nd=br.nodes.find(n=>n[1]===treeSel), s=nodeState(br,nd[0],nd[1],nd[2]);
