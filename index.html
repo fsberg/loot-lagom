@@ -2393,28 +2393,31 @@ const TEX=(()=>{
   const cobble=[];
   for(let v=0;v<8;v++){
     const c=mk(T,T), g=c.getContext('2d');
-    g.fillStyle='#6a5e52'; g.fillRect(0,0,T,T);
+    g.fillStyle='#3a3634'; g.fillRect(0,0,T,T);
     for(let i=0;i<9;i++){const x=(i%3)*T/3+rnd()*8-4+T/6, y=((i/3)|0)*T/3+rnd()*8-4+T/6, rx=T/6.5+rnd()*3, ry=T/7.5+rnd()*3;
-      g.fillStyle=`hsl(${28+rnd()*18},${12+rnd()*10}%,${46+rnd()*12}%)`; g.beginPath(); g.ellipse(x,y,rx,ry,rnd()*3,0,Math.PI*2); g.fill();
-      g.fillStyle='rgba(255,240,220,.1)'; g.beginPath(); g.ellipse(x-2,y-3,rx*.6,ry*.4,0,0,Math.PI*2); g.fill();}
+      g.fillStyle=`hsl(${210+rnd()*40},${3+rnd()*6}%,${27+rnd()*10}%)`; g.beginPath(); g.ellipse(x,y,rx,ry,rnd()*3,0,Math.PI*2); g.fill();
+      g.fillStyle='rgba(200,215,235,.07)'; g.beginPath(); g.ellipse(x-2,y-3,rx*.6,ry*.4,0,0,Math.PI*2); g.fill();}
     speck(g,T,T,50,['rgba(0,0,0,.3)','rgba(255,255,255,.06)']);
-    if(v===3){g.fillStyle='rgba(80,120,50,.3)'; for(let i=0;i<10;i++) g.fillRect(rnd()*T,rnd()*T,2,3);}
+    if(v===3){g.fillStyle='rgba(60,80,40,.35)'; for(let i=0;i<10;i++) g.fillRect(rnd()*T,rnd()*T,2,3);}
+    if(v%3===0){const px=T*(.3+rnd()*.4), py=T*(.3+rnd()*.4); g.fillStyle='rgba(10,12,18,.45)'; g.beginPath(); g.ellipse(px,py,T*.22,T*.1,0,0,Math.PI*2); g.fill(); g.strokeStyle='rgba(170,185,210,.18)'; g.lineWidth=1; g.beginPath(); g.ellipse(px-2,py-1,T*.12,T*.04,0,0,Math.PI*2); g.stroke();}
     cobble.push(c);
   }
   const grass=[], forest=[];
   for(let v=0;v<8;v++){
     const c=mk(T,T), g=c.getContext('2d');
-    g.fillStyle=`hsl(${95+rnd()*12},${38+rnd()*8}%,${30+rnd()*4}%)`; g.fillRect(0,0,T,T);
+    g.fillStyle=`hsl(${62+rnd()*14},${14+rnd()*8}%,${19+rnd()*4}%)`; g.fillRect(0,0,T,T);
     mottle(g,T,T,8,.05);
-    for(let i=0;i<70;i++){const x=rnd()*T,y=rnd()*T; g.strokeStyle=`hsla(${90+rnd()*25},${40+rnd()*20}%,${rnd()<.5?22:42}%,.7)`; g.lineWidth=1.4; g.beginPath(); g.moveTo(x,y); g.lineTo(x+rnd()*3-1.5,y-4-rnd()*4); g.stroke();}
-    if(v<4) for(let i=0;i<(v+1)*2;i++){const x=6+rnd()*(T-12),y=6+rnd()*(T-12),col=['#f4f4f0','#f3d351','#e85a7a','#9fb8ff'][(rnd()*4)|0]; for(let k=0;k<5;k++){g.fillStyle=col; g.beginPath(); g.arc(x+Math.cos(k*1.26)*2.4,y+Math.sin(k*1.26)*2.4,1.8,0,Math.PI*2); g.fill();} g.fillStyle='#f3d351'; g.beginPath(); g.arc(x,y,1.3,0,Math.PI*2); g.fill();}
+    for(let i=0;i<70;i++){const x=rnd()*T,y=rnd()*T; g.strokeStyle=`hsla(${50+rnd()*30},${14+rnd()*12}%,${rnd()<.5?13:29}%,.7)`; g.lineWidth=1.4; g.beginPath(); g.moveTo(x,y); g.lineTo(x+rnd()*3-1.5,y-4-rnd()*4); g.stroke();}
+    if(v<3){g.fillStyle='rgba(34,24,16,.45)'; g.beginPath(); g.ellipse(T*(.3+rnd()*.4),T*(.3+rnd()*.4),T*(.18+rnd()*.1),T*.09,rnd()*3,0,Math.PI*2); g.fill();}
+    if(v>=3&&v<6) for(let i=0;i<3;i++){const x=6+rnd()*(T-12),y=8+rnd()*(T-12); g.strokeStyle='rgba(90,70,45,.8)'; g.lineWidth=1.2; g.beginPath(); g.moveTo(x,y); g.lineTo(x-2,y-6); g.moveTo(x,y); g.lineTo(x+3,y-5); g.moveTo(x,y); g.lineTo(x,y-7); g.stroke();}
+    if(v===6){g.fillStyle='rgba(225,215,195,.75)'; g.fillRect(T*.4,T*.5,7,2); g.beginPath(); g.arc(T*.4,T*.5+1,1.6,0,Math.PI*2); g.arc(T*.4+7,T*.5+1,1.6,0,Math.PI*2); g.fill();}
     grass.push(c);
     const f=mk(T,T), q=f.getContext('2d');
-    q.fillStyle=`hsl(${110+rnd()*15},${30+rnd()*8}%,${17+rnd()*4}%)`; q.fillRect(0,0,T,T); mottle(q,T,T,8,.06);
-    for(let i=0;i<40;i++){const x=rnd()*T,y=rnd()*T; q.strokeStyle='rgba(20,50,25,.6)'; q.lineWidth=1.4; q.beginPath(); q.moveTo(x,y); q.lineTo(x+rnd()*3-1.5,y-4-rnd()*3); q.stroke();}
+    q.fillStyle=`hsl(${115+rnd()*25},${10+rnd()*6}%,${10+rnd()*3}%)`; q.fillRect(0,0,T,T); mottle(q,T,T,8,.06);
+    for(let i=0;i<40;i++){const x=rnd()*T,y=rnd()*T; q.strokeStyle='rgba(8,18,12,.6)'; q.lineWidth=1.4; q.beginPath(); q.moveTo(x,y); q.lineTo(x+rnd()*3-1.5,y-4-rnd()*3); q.stroke();}
     forest.push(f);
   }
-  const edge=(dir)=>{const c=mk(T,T), g=c.getContext('2d'); for(let i=0;i<18;i++){const x=rnd()*T, y=dir==='n'?rnd()*8:T-rnd()*8; g.fillStyle=`hsla(${95+rnd()*15},40%,${30+rnd()*8}%,.9)`; g.beginPath(); g.arc(x,y,3+rnd()*4,0,Math.PI*2); g.fill();} return c;};
+  const edge=(dir)=>{const c=mk(T,T), g=c.getContext('2d'); for(let i=0;i<18;i++){const x=rnd()*T, y=dir==='n'?rnd()*8:T-rnd()*8; g.fillStyle=`hsla(${60+rnd()*15},16%,${19+rnd()*6}%,.9)`; g.beginPath(); g.arc(x,y,3+rnd()*4,0,Math.PI*2); g.fill();} return c;};
   const edgeN=edge('n'), edgeS=edge('s');
   const wallTop=[], wallFace=[];
   for(let v=0;v<4;v++){
@@ -3757,7 +3760,7 @@ function makeTown(depth,withBack){
   m.start=m.rooms[0];
   const g={town:true,depth,m,tb:{X0,Y0,W,H},enemies:[],proj:[],drops:[],parts:[],texts:[],boss:null,shake:0,time:0,cam:{x:0,y:0},over:false,auraT:0,bunT:0,miniT:0,stairMsg:0,
     props:[],altars:[],decals:[],torches:[],rings:[],bolts:[],fires:[],timers:[],clouds:[],holes:[],marks:[],stinks:[],emarks:[],traps:[],quest:null,npcs:[],stalls:[],lamps:[],trees,
-    houses:[{x:X0+.5,w:5,c:'#a8382a'},{x:X0+6,w:5.5,c:'#d8a84a'},{x:X0+14,w:6,c:'#e8e0cc',flag:true},{x:X0+20.5,w:5,c:'#a8382a'},{x:X0+26,w:5.5,c:'#5a8a8a'}],
+    houses:[{x:X0+.5,w:5,c:'#5a2e28'},{x:X0+6,w:5.5,c:'#5e5034',board:1,crow:1},{x:X0+14,w:6,c:'#6e685e',flag:true},{x:X0+20.5,w:5,c:'#4a2a2a',board:1},{x:X0+26,w:5.5,c:'#34423f',crow:1}],
     fountain:{x:cxT*TILE,y:cyT*TILE},portals:withBack?[{x:cxT*TILE,y:(cyT+4.6)*TILE,kind:'back'}]:[],ruin:{x:cxT*TILE,y:(Y0+H-1.2)*TILE},pond,may,well,garden,folk:[],tall:[],tufts:[]};
   const npc=(type,x,y,title,hi,lines)=>({npc:true,type,x:(x+.5)*TILE,y:(y+.5)*TILE,r:14,title,hi,lines,say:null,qt:rand(3,8),greeted:false});
   const kj=npc('kjell',spots[0][0],spots[0][1],'Kjell-Åke (handlare)',NPCHI,NPCQ);
@@ -3778,7 +3781,7 @@ function makeTown(depth,withBack){
   for(const tr of trees) g.tall.push({y:tr.y,draw:()=>drawTree(tr)});
   for(const l of g.lamps) g.tall.push({y:l.y,draw:()=>drawLamp(l)});
   g.tall.push({y:may.y,draw:()=>drawMaypole()},{y:well.y,draw:()=>drawWell()});
-  for(let y=Y0;y<Y0+H;y++) for(let x=X0;x<X0+W;x++) if(t[y*MW+x]===4&&Math.random()<.5) g.tufts.push({x:(x+Math.random())*TILE,y:(y+Math.random())*TILE,c:pick(['#3a7a32','#4a8a3a','#5a9a44'])});
+  for(let y=Y0;y<Y0+H;y++) for(let x=X0;x<X0+W;x++) if(t[y*MW+x]===4&&Math.random()<.5) g.tufts.push({x:(x+Math.random())*TILE,y:(y+Math.random())*TILE,c:pick(['#4a4a2a','#5a5232','#3a3a26'])});
   g.walk=[]; for(let y=Y0;y<Y0+H;y++) for(let x=X0;x<X0+W;x++) if(t[y*MW+x]===0) g.walk.push([(x+.5)*TILE,(y+.5)*TILE]);
   const skins=['#f0c8a0','#d8a880','#a8784a','#f8d8c0'], cols=['#5a8ad9','#d9603a','#7ad06a','#c84a9a','#e8c84a','#4a6a8a'], hairs=['#3a2a1a','#8a5a2a','#e8c87a','#c8c4cc','#1a1214'];
   const folk=(kind,o)=>Object.assign({kind,x:0,y:0,ph:Math.random()*6,dir:1,say:null,draw(){drawFolk(this);}},o);
@@ -3864,10 +3867,10 @@ function drawPond(){
   const p=G.pond, t=G.time;
   ell(p.x,p.y+4,p.rx+10,p.ry+8,'rgba(70,50,30,.35)');
   for(let i=0;i<22;i++){const a=i/22*Math.PI*2; blob(E(p.x+Math.cos(a)*(p.rx+5),p.y+Math.sin(a)*(p.ry+4),6+(i%3),4),sh(p.x,p.y,8,'#8a8090'),1);}
-  const g=cx.createRadialGradient(p.x-p.rx*.3,p.y-p.ry*.3,4,p.x,p.y,p.rx); g.addColorStop(0,'#5aaae0'); g.addColorStop(1,'#2a5a8a');
+  const g=cx.createRadialGradient(p.x-p.rx*.3,p.y-p.ry*.3,4,p.x,p.y,p.rx); g.addColorStop(0,'#4a6258'); g.addColorStop(1,'#1e2e2a');
   blob(E(p.x,p.y,p.rx,p.ry),g,1.8);
   for(let i=0;i<3;i++){const k=((t*.35+i/3)%1); cx.strokeStyle=`rgba(220,240,255,${.4*(1-k)})`; cx.lineWidth=1.2; cx.beginPath(); cx.ellipse(p.x+20,p.y+6,6+k*30,3+k*14,0,0,Math.PI*2); cx.stroke();}
-  for(const [ox,oy] of [[-40,10],[30,-14],[-10,-20],[44,16]]){blob(()=>{cx.moveTo(p.x+ox,p.y+oy);cx.arc(p.x+ox,p.y+oy,8,.4,Math.PI*2-.1);cx.closePath();},'#4a9a4a',1); if(ox<0) circ(p.x+ox+2,p.y+oy-2,2.6,'#f4a8c8');}
+  for(const [ox,oy] of [[-40,10],[30,-14],[-10,-20],[44,16]]){blob(()=>{cx.moveTo(p.x+ox,p.y+oy);cx.arc(p.x+ox,p.y+oy,8,.4,Math.PI*2-.1);cx.closePath();},'#33503a',1);}
   for(let i=0;i<7;i++){const rx=p.x-p.rx+6+i*5, sw=Math.sin(t*1.6+i)*3; line(rx,p.y+p.ry-2,rx+sw,p.y+p.ry-30-(i%3)*6,'#4a7a32',2); blob(E(rx+sw,p.y+p.ry-30-(i%3)*6,2,5),'#6a4a2a',.8);}
 }
 function drawGarden(){
@@ -3903,7 +3906,7 @@ function enterTown(at){
   G=makeTown(d,!!DUNGEON);
   const b=G.portals.find(p=>p.kind==='back'), p=at==='portal'&&b?b:at==='ruin'?{x:G.ruin.x,y:G.ruin.y-60}:{x:G.fountain.x,y:G.fountain.y+70};
   P.x=p.x; P.y=p.y; P.portalLock=true; G.ruinLock=true; G.cam.x=P.x; G.cam.y=P.y; P.goto=null;
-  FADE=1; banner('Lagomby',at==='ruin'?'Du kliver upp ur ruinen. Solen bländar.':'Staden där inget händer. Med flit.'); save(); storyOnTown();
+  FADE=1; banner('Lagomby',at==='ruin'?'Du kliver upp ur ruinen. Himlen är grå. Som vanligt.':'Staden där inget gott händer. Med flit.'); save(); storyOnTown();
 }
 function descend(n){
   closePanels(); SFX.play('stairs'); newFloor(n);
@@ -3976,6 +3979,7 @@ function drawRuin(){
   for(let s=0;s<5;s++){const w=56-s*8; cx.fillStyle=`hsl(270,8%,${30-s*5}%)`; cx.fillRect(x-w/2,y-6-s*7,w,5);}
   blob(RR(x-62,y-30,14,30,2),sh(x-55,y-15,10,'#7a7080'),1.6); blob(RR(x+48,y-22,14,22,2),sh(x+55,y-11,10,'#7a7080'),1.6); blob(E(x+40,y+4,8,5),'#7a7080',1.4);
   for(const [vx,vy] of [[x-40,y-60],[x+36,y-64],[x-48,y-30]]) for(let i=0;i<4;i++) blob(E(vx+Math.sin(i*2+t)*2,vy+i*7,4,2.5,i%2?.5:-.5),'#4a8a3a',1);
+  for(const s of [-1,1]){const kx=x+s*84; ell(kx,y+6,8,3,'rgba(0,0,0,.35)'); line(kx,y+6,kx+s*2,y-42,OL,4.5); line(kx,y+6,kx+s*2,y-42,'#5a4632',2.6); blob(E(kx+s*2,y-48,7,6.5),sh(kx+s*2,y-50,7,'#d8d0bc'),1.3); blob(RR(kx+s*2-4,y-44,8,5,1.5),'#c8c0ac',1); circ(kx+s*2-2.5,y-49,1.8,'#141012'); circ(kx+s*2+2.5,y-49,1.8,'#141012'); line(kx+s*2-2,y-41.5,kx+s*2+2,y-41.5,'#141012',.8);}
   for(const s of [-1,1]){const fx=x+s*38, fy=y-48; cx.fillStyle='#3a3438'; cx.fillRect(fx-2,fy,4,10); const fl=1+Math.sin(t*12+s)*.15; ell(fx,fy-4,3.5*fl,6*fl,'#ff7a2a'); ell(fx,fy-3,2,3.5*fl,'#ffd890');}
 }
 function drawTownExtras(){
@@ -4000,24 +4004,43 @@ function drawTownTiles(){
   }
 }
 function drawHouse(hs){
-  const {X0,Y0}=G.tb, hx=(hs.x)*TILE, w=hs.w*TILE, hy=Y0*TILE-6, H=78, c=hs.c, trim='#f4ecd8';
+  const {X0,Y0}=G.tb, hx=(hs.x)*TILE, w=hs.w*TILE, hy=Y0*TILE-6, H=78, c=hs.c, trim='#7e7668';
   ell(hx+w/2,hy+4,w*.55,8,'rgba(0,0,0,.25)');
   blob(RR(hx,hy-H,w,H,2),sh(hx+w*.4,hy-H*.6,w*.7,c),2);
   for(let x=hx+9;x<hx+w-4;x+=9) line(x,hy-H+3,x,hy-3,dk(c,.18),1.2);
   cx.fillStyle=trim; cx.fillRect(hx,hy-H,4,H); cx.fillRect(hx+w-4,hy-H,4,H); cx.fillRect(hx,hy-H,w,4);
-  blob(()=>{cx.moveTo(hx-12,hy-H+6);cx.lineTo(hx+w/2,hy-H-46);cx.lineTo(hx+w+12,hy-H+6);cx.closePath();},sh(hx+w/2,hy-H-24,w*.6,'#4a3a3a'),2);
-  for(let k=1;k<5;k++){const yy=hy-H+6-k*10, f=k*10/52; line(hx-12+(w/2+12)*f,yy,hx+w+12-(w/2+12)*f,yy,'#3a2a2a',1.2);}
+  blob(()=>{cx.moveTo(hx-12,hy-H+6);cx.lineTo(hx+w/2,hy-H-46);cx.lineTo(hx+w+12,hy-H+6);cx.closePath();},sh(hx+w/2,hy-H-24,w*.6,'#2a2426'),2);
+  for(let k=1;k<5;k++){const yy=hy-H+6-k*10, f=k*10/52; line(hx-12+(w/2+12)*f,yy,hx+w+12-(w/2+12)*f,yy,'#161214',1.2);}
   blob(RR(hx+w*.72,hy-H-38,12,24,1),sh(hx+w*.72+6,hy-H-28,10,'#7a4a3a'),1.6);
   if(!paused&&Math.random()<.06) G.parts.push({x:hx+w*.72+6+rand(-2,2),y:hy-H-40,vx:rand(5,15),vy:-rand(15,30),life:1.6,max:1.6,col:'rgba(220,220,230,.5)',size:6});
   for(const wx of [hx+w*.14,hx+w*.66]){
-    blob(RR(wx,hy-H+18,22,22,1),trim,2); blob(RR(wx+3,hy-H+21,16,16,1),'#ffe0a0',1);
+    const boarded=hs.board&&wx>hx+w*.5, fl=.85+.15*Math.sin(G.time*7+wx);
+    blob(RR(wx,hy-H+18,22,22,1),trim,2); blob(RR(wx+3,hy-H+21,16,16,1),boarded?'#141012':`rgba(${Math.round(232*fl)},${Math.round(176*fl)},90,1)`,1);
     line(wx+11,hy-H+21,wx+11,hy-H+37,trim,2); line(wx+3,hy-H+29,wx+19,hy-H+29,trim,2);
-    blob(RR(wx-2,hy-H+40,26,6,1),'#6a4a3a',1.2); circ(wx+5,hy-H+40,3,'#e85a7a'); circ(wx+12,hy-H+39,3,'#f3d351'); circ(wx+19,hy-H+40,3,'#e85a7a');
+    if(boarded){blob(RR(wx-3,hy-H+22,28,5,1),'#5a4632',1.1); blob(RR(wx-3,hy-H+31,28,5,1),'#4e3c2a',1.1); circ(wx,hy-H+24.5,.9,OL); circ(wx+22,hy-H+33.5,.9,OL);}
+    blob(RR(wx-2,hy-H+40,26,6,1),'#3e2e24',1.2); for(const k of [5,12,19]){line(wx+k,hy-H+40,wx+k-2,hy-H+33,'#5a4a32',1.2); line(wx+k-2,hy-H+33,wx+k-4,hy-H+35,'#5a4a32',1);}
   }
-  blob(RR(hx+w*.43,hy-40,20,40,3),sh(hx+w*.43+10,hy-20,14,'#3a6a4a'),1.8); circ(hx+w*.43+15,hy-20,1.8,'#e8c84a');
+  line(hx+w*.3,hy-H+8,hx+w*.34,hy-H+20,'rgba(0,0,0,.35)',1.2); line(hx+w*.34,hy-H+20,hx+w*.31,hy-H+30,'rgba(0,0,0,.35)',1.2);
+  if(hs.crow) drawCrow(hx+w/2+4,hy-H-44,hs.x);
+  blob(RR(hx+w*.43,hy-40,20,40,3),sh(hx+w*.43+10,hy-20,14,'#32281f'),1.8); circ(hx+w*.43+15,hy-20,1.8,'#e8c84a');
   cx.fillStyle=trim; cx.fillRect(hx+w*.43-3,hy-43,26,3);
 }
+function drawCrow(x,y,seed){
+  const t=G.time+seed, peck=Math.sin(t*1.3)>.85?2:0, d=Math.sin(t*.4)>0?1:-1;
+  blob(E(x,y,6,4.2),'#16121a',1.2); blob(E(x+d*5,y-3+peck,3.4,3.2),'#16121a',1.1);
+  blob(()=>{cx.moveTo(x+d*7.5,y-3.5+peck);cx.lineTo(x+d*11.5,y-2+peck);cx.lineTo(x+d*7.5,y-1.5+peck);cx.closePath();},'#3a3438',.8);
+  circ(x+d*5.8,y-4+peck,.9,'#e8d050'); line(x-d*5,y+1,x-d*10,y+3,'#16121a',2.2); line(x-1,y+4,x-1,y+7,'#3a3438',1); line(x+2,y+4,x+2,y+7,'#3a3438',1);
+}
 function drawTree(tr){
+  const s=tr.s, sway=Math.sin(G.time*.9+tr.ph)*1, C='#3a3029';
+  ell(tr.x+6,tr.y+10,22*s,8*s,'rgba(0,0,0,.3)');
+  line(tr.x,tr.y+8*s,tr.x+sway*.5,tr.y-32*s,OL,7.5*s); line(tr.x,tr.y+8*s,tr.x+sway*.5,tr.y-32*s,C,5*s);
+  const ends=[];
+  for(const [a,l,y0] of [[-.95,22,-12],[.85,25,-18],[-.45,19,-26],[.5,17,-31],[-1.2,13,-6]]){const bx=tr.x+sway*.4, by=tr.y+y0*s, ex=bx+Math.sin(a)*l*s+sway, ey=by-Math.cos(a)*l*.8*s;
+    line(bx,by,ex,ey,OL,3.8*s); line(bx,by,ex,ey,C,2.2*s); line(ex,ey,ex+Math.sin(a*1.7)*7*s,ey-6*s,C,1.4*s); line(ex,ey,ex+Math.sin(a)*6*s,ey+3*s,C,1.2*s); ends.push([ex,ey]);}
+  if(tr.ph>3.5){const [ex,ey]=ends[1]; drawCrow(ex-4,ey-3,tr.ph*10);}
+}
+function drawTreeOld(tr){
   const s=tr.s, sway=Math.sin(G.time*1.2+tr.ph)*1.5;
   ell(tr.x+6,tr.y+10,26*s,9*s,'rgba(0,0,0,.25)');
   blob(RR(tr.x-4*s,tr.y-18*s,8*s,26*s,2),'#6a4a32',1.6);
@@ -4026,8 +4049,8 @@ function drawTree(tr){
 }
 function drawPine(x,y,s){
   ell(x+4,y+6,18*s,6*s,'rgba(0,0,0,.3)');
-  blob(RR(x-3*s,y-10*s,6*s,14*s,1),'#4a3222',1.3);
-  for(let k=0;k<3;k++){const yy=y-10*s-k*13*s, ww=(20-k*5)*s; blob(()=>{cx.moveTo(x-ww,yy);cx.lineTo(x,yy-22*s);cx.lineTo(x+ww,yy);cx.closePath();},sh(x,yy-10*s,ww,k%2?'#2a5a32':'#2f6a38'),1.6);}
+  blob(RR(x-3*s,y-10*s,6*s,14*s,1),'#2a1e16',1.3);
+  for(let k=0;k<3;k++){const yy=y-10*s-k*13*s, ww=(20-k*5)*s; blob(()=>{cx.moveTo(x-ww,yy);cx.lineTo(x,yy-22*s);cx.lineTo(x+ww,yy);cx.closePath();},sh(x,yy-10*s,ww,k%2?'#1a2e22':'#1e3628'),1.6);}
 }
 function drawTown(){
   const {X0,Y0,W,H}=G.tb;
@@ -4060,29 +4083,35 @@ function drawTown(){
   const f=G.fountain;
   cx.save(); cx.translate(f.x,f.y);
   ell(0,12,50,20,'rgba(0,0,0,.2)');
-  blob(E(0,0,44,30),sh(0,0,44,'#9a90a0'),2.4);
-  blob(E(0,-2,36,23),sh(-6,-6,30,'#3a8ac8'),1.6);
-  for(let i=0;i<3;i++){const k=((G.time*.5+i/3)%1); cx.strokeStyle=`rgba(220,240,255,${.5*(1-k)})`; cx.lineWidth=1.5; cx.beginPath(); cx.ellipse(0,-2,8+k*26,5+k*16,0,0,Math.PI*2); cx.stroke();}
+  blob(E(0,0,44,30),sh(0,0,44,'#5e5a5e'),2.4);
+  blob(E(0,-2,36,23),sh(-6,-6,30,'#3a5046'),1.6);
+  for(let i=0;i<3;i++){const k=((G.time*.5+i/3)%1); cx.strokeStyle=`rgba(150,180,160,${.4*(1-k)})`; cx.lineWidth=1.5; cx.beginPath(); cx.ellipse(0,-2,8+k*26,5+k*16,0,0,Math.PI*2); cx.stroke();}
   for(let i=0;i<5;i++){const a=G.time*.3+i*1.3; circ(Math.cos(a)*22,-2+Math.sin(a)*13,1.6,'#f3d351');}
-  blob(RR(-7,-22,14,20,2),sh(0,-12,10,'#b0a8b8'));
-  blob(RR(11,-34,9,3,1),'#c8a83a',1.2); blob(RR(-10,-37,20,11,3),sh(0,-32,11,'#f3c64a')); blob(E(0,-37,11,3),'#c8a83a',1.4);
+  blob(RR(-7,-22,14,20,2),sh(0,-12,10,'#6e6a70')); line(-3,-20,1,-10,'rgba(0,0,0,.4)',1.2);
+  blob(RR(11,-34,9,3,1),'#7a6a3a',1.2); blob(RR(-10,-37,20,11,3),sh(0,-32,11,'#9a8444')); blob(E(0,-37,11,3),'#7a6a3a',1.4);
   cx.restore();
-  if(!paused&&Math.random()<.7) G.parts.push({x:f.x+rand(-3,3),y:f.y-38,vx:rand(-35,35),vy:rand(-50,-15),life:.6,max:.6,col:'#cfe8ff',size:2});
+  if(!paused&&Math.random()<.7) G.parts.push({x:f.x+rand(-3,3),y:f.y-38,vx:rand(-35,35),vy:rand(-50,-15),life:.6,max:.6,col:'#8aa094',size:2});
   cx.font=`800 15px ${FONT}`; cx.textAlign='center';
   const sx=f.x, sy=(Y0+H-1)*TILE+6; blob(RR(sx-60,sy-26,120,22,3),sh(sx,sy-15,50,'#8a5a32'),1.6); line(sx-40,sy-4,sx-40,sy+10,OL,3); line(sx+40,sy-4,sx+40,sy+10,OL,3);
-  cx.fillStyle='#fff4dc'; cx.fillText('LAGOMBY',sx,sy-10);
+  cx.fillStyle='#e8dcc4'; cx.fillText('LAGOMBY',sx,sy-10);
+  blob(RR(sx-58,sy+12,116,16,2),sh(sx,sy+20,50,'#5a3e26'),1.3); line(sx-30,sy-4,sx-30,sy+12,'#3a2a1a',1); line(sx+30,sy-4,sx+30,sy+12,'#3a2a1a',1);
+  cx.font=`700 10px ${FONT}`; cx.fillStyle='#c8b89c'; cx.fillText('Invånare: färre än igår',sx,sy+23);
 }
 function townAmbience(ox,oy){
   const f=G.fountain, t=G.time;
   for(let i=0;i<4;i++){const wx=G.tb.X0*TILE-500+((t*16+i*620)%(G.tb.W*TILE+1000)), wy=G.tb.Y0*TILE+((i*263)%(G.tb.H*TILE))+Math.sin(t*.1+i)*40, sx=wx+ox, sy=wy+oy, r=200+i*40;
-    if(sx<-r||sy<-r||sx>VW+r||sy>VH+r) continue; const g2=cx.createRadialGradient(sx,sy,0,sx,sy,r); g2.addColorStop(0,'rgba(20,30,50,.17)'); g2.addColorStop(1,'rgba(20,30,50,0)'); cx.fillStyle=g2; cx.fillRect(sx-r,sy-r,r*2,r*2);}
-  const g=cx.createLinearGradient(0,0,VW,VH); g.addColorStop(0,'rgba(255,236,190,.10)'); g.addColorStop(1,'rgba(255,236,190,0)');
+    if(sx<-r||sy<-r||sx>VW+r||sy>VH+r) continue; const g2=cx.createRadialGradient(sx,sy,0,sx,sy,r); g2.addColorStop(0,'rgba(34,38,46,.26)'); g2.addColorStop(1,'rgba(34,38,46,0)'); cx.fillStyle=g2; cx.fillRect(sx-r,sy-r,r*2,r*2);}
+  cx.save(); cx.globalCompositeOperation='saturation'; cx.fillStyle='rgba(128,128,128,.5)'; cx.fillRect(0,0,VW,VH);
+  cx.globalCompositeOperation='multiply'; cx.fillStyle='#a4a6b2'; cx.fillRect(0,0,VW,VH); cx.restore();
+  const g=cx.createLinearGradient(0,0,0,VH); g.addColorStop(0,'rgba(16,20,30,.3)'); g.addColorStop(.5,'rgba(16,20,30,0)'); g.addColorStop(1,'rgba(16,20,30,.18)');
   cx.fillStyle=g; cx.fillRect(0,0,VW,VH);
-  const cols=['#ffffff','#f3d351','#9fd8ff','#f4a8c8','#ff8b2e'];
-  for(let i=0;i<9;i++){
-    const x=f.x+Math.cos(t*.35+i*2.1)*(140+i*30)+Math.sin(t*1.3+i)*24+ox, y=f.y+Math.sin(t*.27+i*1.7)*(100+i*14)+oy, fl=Math.abs(Math.sin(t*14+i));
-    cx.fillStyle=cols[i%cols.length]; cx.beginPath(); cx.ellipse(x-3,y,4,3*fl+.6,-.4,0,Math.PI*2); cx.ellipse(x+3,y,4,3*fl+.6,.4,0,Math.PI*2); cx.fill();
+  cx.strokeStyle='#120e14'; cx.fillStyle='#120e14'; cx.lineWidth=2.2; cx.lineCap='round';
+  for(let i=0;i<5;i++){
+    const a=t*.22+i*1.26, R=240+i*45, x=f.x+Math.cos(a)*R+ox, y=f.y-170+Math.sin(a)*R*.35+Math.sin(t*.7+i)*20+oy, fl=Math.sin(t*8+i*2);
+    if(x<-20||y<-20||x>VW+20||y>VH+20) continue;
+    cx.beginPath(); cx.moveTo(x-9,y-fl*4); cx.quadraticCurveTo(x-3,y-2,x,y); cx.quadraticCurveTo(x+3,y-2,x+9,y-fl*4); cx.stroke(); cx.beginPath(); cx.ellipse(x,y,2.6,1.8,0,0,Math.PI*2); cx.fill();
   }
+  for(let i=0;i<40;i++){const x=((i*97.3+t*(6+i%4*3))%(VW+40))-20+Math.sin(t*.8+i)*6, y=((i*53.1+t*(12+i%5*4))%(VH+40))-20; cx.fillStyle=`rgba(200,200,206,${(.16+(i%3)*.07).toFixed(2)})`; cx.fillRect(x,y,1.8,1.8);}
 }
 function drawKerstin(n){
   const dir=P.x<n.x?-1:1, t=G.time;
@@ -4755,7 +4784,7 @@ function petFluff(pe,dt){
 }
 // ---- day and night in town ----
 function townNight(ox,oy){
-  const nf=nightness(), du=duskness();
+  const nf=Math.max(.4,nightness()), du=duskness();
   if(du>.01){cx.fillStyle=`rgba(255,120,60,${(.14*du).toFixed(3)})`; cx.fillRect(0,0,VW,VH);}
   if(nf<.02) return;
   const w=Math.ceil(VW/2), h=Math.ceil(VH/2); if(LC.width!==w||LC.height!==h){LC.width=w;LC.height=h;}
@@ -4841,7 +4870,7 @@ const MUSIC=(()=>{
   let bus=null, mode=null, next=0, step=0, bar=0, timer=null, wantMode=null;
   const NOTE=n=>440*Math.pow(2,(n-69)/12);
   const SONGS={
-    town:{bpm:92,root:60,scale:[0,2,4,7,9],prog:[0,9,5,7],lead:'triangle',pad:'sine',lv:.05,density:.55,drum:false},
+    town:{bpm:72,root:57,scale:[0,3,5,7,10],prog:[0,8,3,10],lead:'triangle',pad:'sine',lv:.045,density:.45,drum:false},
     night:{bpm:66,root:57,scale:[0,3,5,7,10],prog:[0,5,8,7],lead:'sine',pad:'sine',lv:.045,density:.35,drum:false},
     dungeon:{bpm:72,root:45,scale:[0,2,3,7,8],prog:[0,8,5,7],lead:'triangle',pad:'sawtooth',lv:.035,density:.3,drum:false},
     boss:{bpm:136,root:50,scale:[0,1,3,5,7,8],prog:[0,1,8,7],lead:'square',pad:'sawtooth',lv:.03,density:.7,drum:true},
@@ -5129,7 +5158,7 @@ function extraGlows(glow){
   for(const r of G.rings||[]) if(r.r>40) glow(r.x,r.y,r.r*1.3,`rgba(255,190,110,${(.25*Math.max(0,r.t/r.max)).toFixed(3)})`);
 }
 
-Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
+Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
 let splashDone=false;
 function endSplash(){
   if(splashDone) return; splashDone=true; const s=$('splash'); s.classList.add('done'); setTimeout(()=>{s.hidden=true;},700);
