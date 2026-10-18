@@ -4587,7 +4587,7 @@ function updatePet(dt){
   const pe=P.petE||(P.petE={x:P.x-30,y:P.y,cd:1,at:0,tx:0,ty:0,say:null,dir:1});
   let tx=P.x-Math.cos(P.face)*34, ty=P.y-Math.sin(P.face)*20+8, sp=230;
   if(id==='doris'&&!G.town){let best=null,bd=280; for(const d of G.drops){if(d.gone||d.t<.35||!['gold','potion','gem'].includes(d.kind)) continue; const dd=Math.hypot(d.x-pe.x,d.y-pe.y); if(dd<bd&&Math.hypot(d.x-P.x,d.y-P.y)<320){bd=dd;best=d;}} if(best){tx=best.x;ty=best.y;sp=320; if(bd<16) pickup(best);}}
-  if(id==='pip'&&!G.town){pe.cd-=dt; const t=nearestEnemy(220); if(t){tx=t.x-14;ty=t.y; sp=280; if(pe.cd<=0&&Math.hypot(t.x-pe.x,t.y-pe.y)<40){pe.cd=.8; hitEnemy(t,S.dmg*.5,{kb:60}); if(Math.random()<.15) say(pe,pick(['För Lagomby!','Ta det här!','Pip-pip, hurra!']),1.2);}}}
+  if(id==='pip'&&!G.town){pe.cd-=dt; const t=nearestEnemy(220); if(t){tx=t.x-14;ty=t.y; sp=280; if(pe.cd<=0&&Math.hypot(t.x-pe.x,t.y-pe.y)<40){pe.cd=1.1; hitEnemy(t,S.dmg*.3,{kb:40,nols:1,noproc:1,nocrit:1}); if(Math.random()<.15) say(pe,pick(['För Lagomby!','Ta det här!','Pip-pip, hurra!']),1.2);}}}
   if(id==='fluff'&&!G.town){const t=petFluff(pe,dt); if(t){tx=t.x-12; ty=t.y; sp=280;}}
   if(id==='agda'&&!G.town){pe.cd-=dt; if(pe.cd<=0){const near=G.enemies.filter(e=>!e.dead&&Math.hypot(e.x-pe.x,e.y-pe.y)<130); if(near.length){pe.cd=5; for(const e of near) e.stun=Math.max(e.stun,e.T.kind==='boss'?.3:1.2); text(pe.x,pe.y-20,'KVACK!','#f3d351',true); SFX.play('squeak'); G.rings.push({x:pe.x,y:pe.y,r:130,t:.3,max:.3,col:'#f3d351'});} else pe.cd=.5;}}
   const d=Math.hypot(tx-pe.x,ty-pe.y); if(d>4){const k=Math.min(1,sp*dt/d); pe.dir=tx<pe.x?-1:1; pe.x+=(tx-pe.x)*k; pe.y+=(ty-pe.y)*k;}
