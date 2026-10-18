@@ -379,11 +379,11 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
 
 <div class="panel" id="potsPanel" hidden>
   <div class="panel-head">
-    <h2>Kerstins Kastrullsamling</h2>
-    <div class="row"><span class="chip"><small>Kastruller</small><span id="ptCount">1/8</span></span><button class="btn sm" data-act="close">Stäng (T)</button></div>
+    <h2>Kerstins Loppisbord</h2>
+    <div class="row"><span class="chip"><small>Fynd</small><span id="ptCount">1/8</span></span><button class="btn sm" data-act="close">Stäng (T)</button></div>
   </div>
   <p class="quote" id="potQuote"></p>
-  <p style="margin:-6px 0 12px">Den kastrull du väljer här använder du i Kastrullkast. Varje kastrull hittas på sitt eget sätt.</p>
+  <p style="margin:-6px 0 12px">Kerstin samlar kuriosa från ruinerna. Varje fynd blir en berlock som du kan bära, oavsett klass. Du får fler platser för berlocker ju fler fynd du hittar.</p>
   <div class="potgrid" id="ptGrid"></div>
 </div>
 
@@ -897,7 +897,7 @@ const ACH={
   depth10:['Djupdykare','Nå våning 10.'],depth20:['Avgrunden','Nå våning 20.'],secret:['Väggknackare','Hitta ett hemligt rum.'],challenge:['Utmanare','Klara en utmaning vid en obelisk.'],
   party:['Partyprisse','Dansa på skelettfesten.'],trade:['Affärsgeni','Byt med Byt-Berit.'],tourist:['Reseledare','Hjälp Turisten Tobias till trappan.'],mini:['Minibossjägare','Besegra en miniboss.'],
   lore:['Arkeolog','Läs hela Åkes dagbok.'],legend:['Legendarisk','Hitta ett legendariskt föremål.'],set:['Matchande Kläder','Bär ett helt set.'],gem:['Juvelerare','Fatta in en juvel hos smeden.'],
-  pots:['Kastrullkung','Hitta alla kastruller.'],pets:['Djurvän','Hitta alla husdjur.'],rift:['Kaosresenär','Klara en kaosportal.'],paragon:['Bortom Toppen','Nå din första paragonnivå.'],
+  pots:['Loppiskung','Hitta alla Kerstins loppisfynd.'],pets:['Djurvän','Hitta alla husdjur.'],rift:['Kaosresenär','Klara en kaosportal.'],paragon:['Bortom Toppen','Nå din första paragonnivå.'],
 };
 const MAXLVL=30;
 const RIFTMODS={kaniner:'Bara kaniner',snabba:'Snabba fiender',jattar:'Jättefiender',morker:'Kolsvart mörker',lava:'Det regnar lava'};
@@ -988,17 +988,17 @@ const SKICON={
   dash:'<path d="M3 12h11M10 7l5 5-5 5M19 5v14"/>',
 };
 const POTS={
-  vanlig:{n:'Vanlig Kastrull',c:'#a4abb3',c2:'#6d7279',d:'Pålitlig. Tråkig. Din.',how:'Du har alltid haft den.'},
-  wok:{n:'Wok-n-Roll',c:'#4a4248',c2:'#9a6a3a',d:'Snurrar runt dig och slår allt i närheten.',how:'Kung Kladd den Klibbige gömmer en wok i sin krona. Besegra honom på våning 5.'},
-  is:{n:'Glasskastrullen',c:'#9fd8ff',c2:'#f4a8c8',d:'Fryser fiender den träffar. De blir långsamma och lite ledsna.',how:'Svartjobbaren Sune har en i säcken. Fånga honom innan han smiter genom sin portal.'},
-  fondue:{n:'Fonduegrytan',c:'#d9603a',c2:'#f3d351',d:'Lämnar ett spår av het ost som bränner och saktar ner fiender.',how:'Kjell-Åke ger bort sin fonduegryta när du klarat 4 av hans uppdrag.',prog:'quests',need:4,unit:'uppdrag'},
-  guld:{n:'Guldkastrullen',c:'#f3c64a',c2:'#c8a83a',d:'Fiender den träffar tappar guld. Gör lite mindre skada.',how:'Kasta 500 guld i fontänen mitt i stan. Önska något fint.',prog:'fountain',need:500,unit:'guld'},
-  spok:{n:'Spökkastrullen',c:'#d8e8ff',c2:'#9fb8e8',d:'Flyger genom väggar och letar själv upp fiender.',how:'Besegra 25 Spöken med Skatteskuld. De betalar sin skuld i kastruller.',prog:'ghosts',need:25,unit:'spöken'},
-  mormor:{n:'Mormors Kopparkastrull',c:'#c87a4a',c2:'#8a4a2a',d:'Varje träff helar dig lite, och fienderna flyger långt.',how:'Byråkraten Bertil har konfiskerat den. Besegra honom på våning 10.'},
-  kosmisk:{n:'Kosmiska Kastrullen',c:'#3a2a6a',c2:'#b07aff',d:'Skapar ett litet svart hål som suger in fiender och sedan smäller.',how:'Ligger alltid i den hundrade tunnan eller krukan du slår sönder.',prog:'props',need:100,unit:'krossade'},
+  vanlig:{n:'Dalahästen',c:'#d9473a',c2:'#f3d351',d:'+6% springfart och +6% attackfart.',how:'Du har alltid haft den. Den luktar farmors vind.'},
+  wok:{n:'Kung Kladds Klibbiga Krona',c:'#5fbf58',c2:'#f3c64a',d:'Dina träffar har 20% chans att klistra fast fienden. Den blir långsam i 2 sekunder.',how:'Kung Kladd den Klibbige bär den. Besegra honom på våning 5.'},
+  is:{n:'Snöglob från Sune',c:'#9fd8ff',c2:'#f4f8ff',d:'Dina träffar har 12% chans att frysa fienden en kort stund.',how:'Svartjobbaren Sune har en i säcken. Fånga honom innan han smiter genom sin portal.'},
+  fondue:{n:'Kjell-Åkes Fondueset',c:'#d9603a',c2:'#f3d351',d:'Dina kritiska träffar sätter eld på fienden.',how:'Kjell-Åke ger bort sitt fondueset när du klarat 4 av hans uppdrag.',prog:'quests',need:4,unit:'uppdrag'},
+  guld:{n:'Spargrisen',c:'#f4a8c8',c2:'#f3c64a',d:'+30% guldfynd. Fiender du besegrar tappar ibland en extra guldhög.',how:'Kasta 500 guld i fontänen mitt i stan. Önska något fint.',prog:'fountain',need:500,unit:'guld'},
+  spok:{n:'Spökbrädet',c:'#b8c8e8',c2:'#8a6a4a',d:'Dina träffar har 10% chans att skicka iväg en spökskalle som letar upp en fiende.',how:'Besegra 25 Spöken med Skatteskuld. De betalar sin skuld i kuriosa.',prog:'ghosts',need:25,unit:'spöken'},
+  mormor:{n:'Bertils Gummistämpel',c:'#c8302a',c2:'#8a5a32',d:'Var åttonde träff stämplar fienden. Den tar 40% mer skada i 4 sekunder.',how:'Byråkraten Bertil stämplar allt han ser. Besegra honom på våning 10.'},
+  kosmisk:{n:'Det Kosmiska Kaffefatet',c:'#3a2a6a',c2:'#b07aff',d:'Fiender du besegrar har 12% chans att lämna ett litet svart hål som suger in andra och smäller.',how:'Ligger alltid i den hundrade tunnan eller krukan du slår sönder.',prog:'props',need:100,unit:'krossade'},
 };
-const KERHI=['Kastruller! Jag älskar kastruller! Vill du se min samling?','Hej hjärtat! Har du hittat några nya kastruller?'];
-const KERQ=['En kastrull är en hjälm man kan koka soppa i.','Jag har hört att Kung Kladd gömmer en wok i kronan.','Fontänen? Kasta i lite guld, så får du se!','Spöken med skatteskuld betalar i kastruller. Helt sant.','Sune säljer allt. Även saker han inte äger.','Den hundrade krukan... den är speciell.','Bertil har konfiskerat min mormors kastrull. Den byråkraten!'];
+const KERHI=['Välkommen till Kerstins loppis! Allt är unikt. Inget är till salu.','Hej hjärtat! Har du hittat något fint i ruinerna?'];
+const KERQ=['En dalahäst är aldrig fel. Utom när den biter.','Kung Kladd har en krona. Den är klibbig. Jag VILL ha den.','Fontänen? Kasta i lite guld, så får du se!','Spöken betalar sina skulder i kuriosa. Helt sant.','Sune säljer allt. Även snöglober han inte äger.','Den hundrade krukan... den är speciell.','Bertil stämplar allt. Till och med sin lunch.','Bär dina fynd nära hjärtat. Eller i fickan.'];
 const TIERS=[['kanin','skelett','slem','fladdermus'],['bageskelett','kultist'],['mygga','svamp'],['vildsvin'],['troll','mattant'],['spoke','snogubbe'],['gnom'],['golem']];
 const SMEDHI=['Svetsa-Svea, till er tjänst! Nio fingrar kvar.','Har du något som behöver bankas på?'];
 const SMEDQ=['Jag kan smida allt. Utom relationer.','Slå på den tills den blir bättre. Det är hela hemligheten.','Tjugo år i branschen. Tjugo år av tinnitus.','Inga reklamationer. Inga frågor.'];
@@ -1030,7 +1030,7 @@ Object.assign(SKILLS,{
   traps:{n:'Saxkastet',lvl:2,cd:5,sfx:'clang'},volley:{n:'Hagelskuren',lvl:4,cd:7,sfx:'sling'},hunt:{n:'Jaktlycka',lvl:6,cd:18,sfx:'wish'},
 });
 const SKDESC={
-  pot:'Kastar en kastrull som studsar mellan fiender. Byt kastrull hos Kerstin.',spin:'Snurrar runt och slår alla omkring dig.',talk:'Ett så pinsamt tal att alla fiender i närheten blir bedövade.',
+  pot:'Kastar en kastrull som studsar mellan fiender.',spin:'Snurrar runt och slår alla omkring dig.',talk:'Ett så pinsamt tal att alla fiender i närheten blir bedövade.',
   pan:'Ett rejält slag med stekpannan framåt. Gör stor skada och bedövar.',cart:'Du rusar framåt med en shoppingvagn och mejar ner allt i vägen.',fika:'Du läker en fjärdedel av ditt liv och får 60% mer rustning i 6 sekunder.',
   yarn:'Ett garnnystan som studsar mellan väggar och fiender och saktar ner dem.',coffee:'Kokande kaffe faller från himlen och bränner allt det träffar.',glare:'Fienderna flyr i skam och tar mer skada en stund.',
   knit:'Sju stickor flyger ut i en solfjäder och letar upp fiender.',frost:'En iskall våg runt dig skadar och fryser alla fiender i närheten.',storm:'Sju kaffekoppar regnar ner över fienderna runt dig.',
@@ -1076,7 +1076,7 @@ Object.assign(FX,{
   charm:'Ibland blir fiender du träffar så kära att de springer iväg.',lux:'Du ser 40% längre i mörkret och kritiska träffar gör mer skada.',bush:'Står du still en stund gör ditt nästa anfall 50% mer skada.',
   monday:'+30% skada, men du går 10% långsammare. Det är ju måndag.',rocket:'Din undanmanöver laddas om 40% snabbare.',goldheal:'Du läker lite varje gång du plockar upp guld.',gift:'Fiender du besegrar tappar ibland en julklapp.',
 });
-PETS.fluff={n:'Katten Fröken Fluff',how:'Hjälp Kastrullkerstin att hitta henne på ett sidouppdrag.',d:'Klöser fiender och hittar ibland en dryck åt dig.',c:'#f4f0f4'};
+PETS.fluff={n:'Katten Fröken Fluff',how:'Hjälp Loppis-Kerstin att hitta henne på ett sidouppdrag.',d:'Klöser fiender och hittar ibland en dryck åt dig.',c:'#f4f0f4'};
 const FURN={
   matta:{n:'Trasmatta',cost:150,d:'+3% liv.'},krukvaxt:{n:'Krukväxt (Nästan Levande)',cost:120,d:'+2 springfart.'},
   fatolj:{n:'Farmors Fåtölj',cost:300,d:'+5% erfarenhet.'},tavla:{n:'Tavla av en Älg',cost:350,d:'+3% skada.'},
@@ -1277,7 +1277,7 @@ const keys=new Set(), mouse={x:0,y:0,down:false};
 let touchMode=false, joy=null, touchAtk=false;
 
 function newHero(){
-  return {cleared:[],sk:{},runes:{},runeInv:{},furn:[],title:'',side:{},clock:60,screws:0,shards:0,bagUp:0,scrolls:2,wps:[1],sets:0,gems:{},pets:[],pet:null,ach:{},cnt:{},para:0,keys:0,riftTier:0,food:null,hc:false,story:{pages:0,told:-1,lore:0,prolog:false,ending:false},diff:'lagom',cls:'krigare',lvl:1,xp:0,gold:0,potions:3,kills:0,deaths:0,best:1,bag:[],perks:{},pp:0,bought:0,pots:['vanlig'],pot:'vanlig',prog:{quests:0,fountain:0,ghosts:0,props:0},
+  return {charmOn:['vanlig'],cleared:[],sk:{},runes:{},runeInv:{},furn:[],title:'',side:{},clock:60,screws:0,shards:0,bagUp:0,scrolls:2,wps:[1],sets:0,gems:{},pets:[],pet:null,ach:{},cnt:{},para:0,keys:0,riftTier:0,food:null,hc:false,story:{pages:0,told:-1,lore:0,prolog:false,ending:false},diff:'lagom',cls:'krigare',lvl:1,xp:0,gold:0,potions:3,kills:0,deaths:0,best:1,bag:[],perks:{},pp:0,bought:0,pots:['vanlig'],pot:'vanlig',prog:{quests:0,fountain:0,ghosts:0,props:0},
     equip:{
       weapon:{id:IID++,il:1,r:0,slot:'weapon',base:'Smörkniv',name:'Rostig Smörkniv',stats:{dmg:3},flavor:'Farfars. Han använde den till smör.',value:2},
       helm:{id:IID++,il:1,r:0,slot:'helm',base:'Kastrull',name:'Kastrull',stats:{armor:2,hp:5},flavor:'Inte en hjälm. Men nästan.',value:2},
@@ -1587,7 +1587,7 @@ function hitEnemy(e,base,opts={}){
   const a=Math.atan2(e.y-P.y,e.x-P.x), kb=e.T.kind==='boss'?40:opts.kb??90;
   e.kx+=Math.cos(a)*kb; e.ky+=Math.sin(a)*kb;
   burst(e.x,e.y,e.T.kind==='melee'&&e.type==='slem'?'#7ccf6a':'#c94a3a',4,90);
-  afterHit(e,d,opts);
+  afterHit(e,d,opts); charmHit(e,d,opts,crit);
   if(e.hp<=0) killEnemy(e);
 }
 function wake(e){e.sleeping=false;e.aggro=true;SFX.play('chomp');say(e,pick(e.T.q));text(e.x,e.y-30,'!','#ff8b2e',true);}
@@ -1615,6 +1615,7 @@ function killEnemy(e){
   if(e.T.kind==='bomber'){const x=e.x,y=e.y; G.timers.push({t:.1,f:()=>explode(x,y,75,S.dmg*1.5,'#ff9a3a')});}
   if(hasAff(e,'explo')) G.emarks.push({x:e.x,y:e.y,r:85,t:.8,max:.8,dmg:e.dmg*1.6,src:e.name,col:'#ff8b2e'});
   if(e.nodrop) return;
+  charmKill(e);
   extraLoot(e);
   const gm=(1+S.gf/100)*(1+DF().loot), k=e.T.kind;
   if(Math.random()<.5||e.elite||k!=='melee') drop(e.x,e.y,{kind:'gold',amt:Math.max(1,Math.round(rand(2,6)*G.depth*gm*(e.elite?4:k==='boss'?15:k==='mimic'?6:k==='thief'?10:1)))});
@@ -1703,8 +1704,7 @@ function rangedAttack(){
   if(four) G.rings.push({x:P.x+Math.cos(P.face)*24,y:P.y+Math.sin(P.face)*24,r:30,t:.2,max:.2,col:'#f4ece0'});
   for(let i=0;i<C.n;i++){const a=P.face+(i-(C.n-1)/2)*C.spread;
     G.proj.push({x:P.x+Math.cos(a)*14,y:P.y+Math.sin(a)*14,vx:Math.cos(a)*C.sp,vy:Math.sin(a)*C.sp,r:C.r*(four?1.6:1),dmg:S.dmg*C.d*(four?3:1),life:.75,pierce:C.pierce+(four?2:0),hit:new Set(),kind:C.k,rot:a,norot:true,home:hx,splash:hx?36:0,hunter:!hx,kb:hx?110:35});
-    const pt=P.pot||'vanlig', pp=G.proj[G.proj.length-1];
-    if(pt!=='vanlig'&&Math.random()<(pt==='kosmisk'?.08:.3)){pp.pt=pt; pp.ench=true; if(pt==='wok') pp.dmg*=1.3; else if(pt==='spok'){pp.ghost=true; pp.pierce+=1;} else if(pt==='guld') pp.dmg*=.85;}}
+}
 }
 function aimPoint(maxd){
   if(touchMode){const t=nearestEnemy(340); if(t) return [t.x,t.y]; return [P.x+Math.cos(P.face)*200,P.y+Math.sin(P.face)*200];}
@@ -1791,11 +1791,27 @@ function castRaw(id){
     for(const e of G.enemies) if(!e.dead&&Math.hypot(e.x-P.x,e.y-P.y)<460){e.stun=Math.max(e.stun,e.T.kind==='boss'?1.2:2.8); if(e.sleeping) e.sleeping=false; e.aggro=true; if(Math.random()<.45) say(e,pick(CRINGE),2);}
   }
 }
+function charmSlots(){const n=(P.pots||[]).length; return 1+(n>=3?1:0)+(n>=6?1:0);}
+function hasCh(id){return !!(P&&P.charmOn&&P.charmOn.includes(id)&&P.pots&&P.pots.includes(id));}
+function charmHit(e,d,opts,crit){
+  if(!P.charmOn||!P.charmOn.length||opts.noproc||opts.chain||opts.charm||opts.env) return;
+  if(hasCh('wok')&&Math.random()<.2){e.slowT=Math.max(e.slowT||0,2); e.yarnT=Math.max(e.yarnT||0,2);}
+  if(hasCh('is')&&Math.random()<.12){e.iceT=Math.max(e.iceT||0,1.5); e.slowT=Math.max(e.slowT||0,1.5); if(e.T.kind!=='boss') e.stun=Math.max(e.stun||0,.5);}
+  if(hasCh('fondue')&&crit&&!e.dead) e.burn={t:3,dps:Math.max(2,d*.35),k:.5};
+  if(hasCh('spok')&&Math.random()<.1&&G.time-(P.chSpT||-9)>.35){P.chSpT=G.time; const a=Math.random()*Math.PI*2; G.proj.push({x:P.x,y:P.y-12,vx:Math.cos(a)*240,vy:Math.sin(a)*240,r:7,dmg:S.dmg,life:1.8,pierce:0,hit:new Set([e]),kind:'magic',rot:0,norot:true,ghost:true,charm:true});}
+  if(hasCh('mormor')&&!e.dead&&(P.chHit=(P.chHit||0)+1)%8===0){e.vuln=4; e.vulnK=1; text(e.x,e.y-e.r-26,'STÄMPLAD!','#c8302a');}
+}
+function charmKill(e){
+  if(e.nodrop) return;
+  if(hasCh('guld')&&Math.random()<.25) drop(e.x,e.y,{kind:'gold',amt:Math.max(1,Math.round(rand(2,5)*G.depth*(1+S.gf/100)))});
+  if(hasCh('kosmisk')&&Math.random()<.12&&G.time-(P.chHoT||-9)>.5){P.chHoT=G.time; G.holes.push({x:e.x,y:e.y,t:2.2,tick:0,dmg:S.dmg*1.2});}
+}
 function unlockPot(id){
   if(P.pots.includes(id)) return;
   P.pots.push(id); const p=POTS[id]; if(P.pots.length>=Object.keys(POTS).length) achieve('pots');
-  banner('NY KASTRULL!',p.n); SFX.play('legend'); burst(P.x,P.y,p.c,40,240,4);
-  log(`${p.n}: ${p.d} Byt kastrull hos Kastrullkerstin i stan.`,p.c);
+  banner('NYTT LOPPISFYND!',p.n); SFX.play('legend'); burst(P.x,P.y,p.c,40,240,4);
+  P.charmOn=P.charmOn||[]; const worn=P.charmOn.length<charmSlots()&&!P.charmOn.includes(id); if(worn){P.charmOn.push(id); recalc();}
+  log(`${p.n}: ${p.d} ${worn?'Du bär den redan.':'Byt berlocker hos Loppis-Kerstin i stan.'}`,p.c);
   save();
 }
 function progPot(key,n,at){
@@ -1817,7 +1833,7 @@ function potHit(p,e){
 function firePot(a){
   const c=Math.cos(a),s=Math.sin(a);
   G.proj.push({x:P.x+c*16,y:P.y+s*16,vx:c*520,vy:s*520,r:S.potBig?15:11,dmg:S.dmg*1.6*S.potMul,life:S.potBoomer?1.7:.8,pierce:S.potPierce,hit:new Set(),kind:'pot',rot:0,
-    big:S.potBig,bounce:S.potBounce,boom:S.potBoom,boomer:S.potBoomer,ret:false,pt:P.pot||'vanlig'});
+    big:S.potBig,bounce:S.potBounce,boom:S.potBoom,boomer:S.potBoomer,ret:false,pt:'vanlig'});
   const p=G.proj[G.proj.length-1];
   if(p.pt==='wok'){p.orbit=true; p.oa=a; p.life=2.4; p.pierce=999; p.dmg*=.75; p.boomer=false; p.bounce=0;}
   else if(p.pt==='guld') p.dmg*=.8;
@@ -2204,7 +2220,7 @@ function updateProj(dt){
     }else{
       for(const e of G.enemies){
         if(p.nohit||e.dead||p.hit.has(e)) continue;
-        if(Math.hypot(p.x-e.x,p.y-e.y)<e.r+p.r){p.hit.add(e); RUNE_CTX=p.rune||null; hitEnemy(e,p.dmg*(p.hunter&&Math.hypot(e.x-P.x,e.y-P.y)>220?1.35:1),p.kb?{kb:p.kb}:undefined); potHit(p,e); RUNE_CTX=null; if(p.splash) magicSplash(p,e); if(p.pierce>0) p.pierce--; else {p.dead=true; if(p.boom) explode(p.x,p.y,80,p.dmg*.8,'#ff9a3a'); break;}}
+        if(Math.hypot(p.x-e.x,p.y-e.y)<e.r+p.r){p.hit.add(e); RUNE_CTX=p.rune||null; hitEnemy(e,p.dmg*(p.hunter&&Math.hypot(e.x-P.x,e.y-P.y)>220?1.35:1),p.charm?{kb:60,charm:1}:p.kb?{kb:p.kb}:undefined); potHit(p,e); RUNE_CTX=null; if(p.splash) magicSplash(p,e); if(p.pierce>0) p.pierce--; else {p.dead=true; if(p.boom) explode(p.x,p.y,80,p.dmg*.8,'#ff9a3a'); break;}}
       }
       for(const q of G.props||[]) if(!q.broken&&Math.hypot(p.x-q.x,p.y-q.y)<q.r+p.r) breakProp(q);
     }
@@ -2727,7 +2743,7 @@ function drawDrop(d){
     const g=cx.createLinearGradient(0,y-200,0,y); g.addColorStop(0,'rgba(255,255,255,0)'); g.addColorStop(1,Q.c2+'99');
     cx.fillStyle=g; cx.fillRect(x-12,y-200,24,200);
     ell(x,y+12,12,4,'rgba(0,0,0,.45)');
-    cx.save(); cx.translate(x,y-4+bob); cx.scale(1.5,1.5); cx.rotate(Math.sin(G.time*2)*.2); drawPotShape(d.id); cx.restore();
+    cx.save(); cx.translate(x,y-4+bob); cx.scale(1.3,1.3); cx.rotate(Math.sin(G.time*2)*.2); drawCharm(d.id); cx.restore();
     cx.font=`800 13px ${FONT}`; cx.textAlign='center'; cx.lineWidth=3; cx.strokeStyle='rgba(0,0,0,.8)'; cx.strokeText(Q.n,x,y-30); cx.fillStyle=Q.c2; cx.fillText(Q.n,x,y-30);
     return;
   }
@@ -3683,7 +3699,7 @@ function hud(){
   if(np) setT('talkBtn',`Plocka upp ${dropName(np)} (T)`);
   if(ts) setT('talkBtn',{stash:'Öppna förrådskistan (T)',home:'Gå in i ditt hem (T)',memorial:'Läs minnesstenarna (T)'}[ts]);
   if(tb.hidden===near) tb.hidden=!near;
-  if(nn) setT('talkBtn',{kjell:'Handla med Kjell-Åke (T)',smed:'Smida hos Svetsa-Svea (T)',tore:'Lär dig av Tore (T)',kerstin:'Visa kastruller för Kerstin (T)',sibylla:'Fråga Sibylla om framtiden (T)',bosse:'Köp bakverk av Bosse (T)',berit:'Byt med Berit (T)',tobias:'Prata med Tobias (T)',...XTALK}[nn.type]);
+  if(nn) setT('talkBtn',{kjell:'Handla med Kjell-Åke (T)',smed:'Smida hos Svetsa-Svea (T)',tore:'Lär dig av Tore (T)',kerstin:'Titta på Kerstins loppisbord (T)',sibylla:'Fråga Sibylla om framtiden (T)',bosse:'Köp bakverk av Bosse (T)',berit:'Byt med Berit (T)',tobias:'Prata med Tobias (T)',...XTALK}[nn.type]);
   else if(nf) setT('talkBtn','Kasta 100 guld i fontänen (T)');
   const bb=$('bossbar'), show=!!(G.boss&&G.boss.aggro);
   if(bb.hidden===show) bb.hidden=!show;
@@ -3857,7 +3873,7 @@ function makeTown(depth,withBack){
   kj.stock=[]; for(let i=0;i<5;i++){const it=makeItem(depth,i<3?1:0,i===4?.9:.35); it.price=Math.round(it.value*3.5); kj.stock.push(it);} kj.stock.sort((a,b)=>a.r-b.r);
   const sm=npc('smed',spots[1][0],spots[1][1],'Svetsa-Svea (smed)',SMEDHI,SMEDQ);
   const to=npc('tore',spots[2][0],spots[2][1],'Tore (talangtränare)',TOREHI,TOREQ);
-  const ke=npc('kerstin',spots[3][0],spots[3][1],'Kastrullkerstin (samlare)',KERHI,KERQ);
+  const ke=npc('kerstin',spots[3][0],spots[3][1],'Loppis-Kerstin (samlare)',KERHI,KERQ);
   const sib=npc('sibylla',X0+4,cyT,'Spåkvinnan Sibylla',SIBHI,SIBQ);
   const bo=npc('bosse',X0+W-5,cyT,'Bagar-Bosse (bageri)',BOSSEHI,BOSSEQ);
   g.npcs.push(kj,sm,to,ke,sib,bo);
@@ -4166,7 +4182,7 @@ function drawTown(){
     line(-34,-2,34,-2,'#5a3a22',1.5);
     for(let i=0;i<6;i++){const x0=-38+i*12.67; blob(()=>{cx.moveTo(x0,-54);cx.lineTo(x0+12.67,-54);cx.lineTo(x0+12.67,-42);cx.quadraticCurveTo(x0+6.33,-36,x0,-42);cx.closePath();},i%2?s.c1:s.c2,1.4);}
     if(s.buns){for(let i=0;i<5;i++){blob(E(-24+i*12,-12,5,4),sh(-24+i*12,-12,5,['#c8742a','#f4ecd8','#7ad06a','#f3c64a','#c8742a'][i]),1.1);}}
-    else if(s.pots){let i=0; for(const id of Object.keys(POTS)){const own=P.pots.includes(id); cx.save(); cx.translate(-28+i*8,-12); cx.scale(.42,.42); if(!own) cx.globalAlpha=.25; drawPotShape(own?id:'vanlig'); cx.globalAlpha=1; cx.restore(); i++;}}
+    else if(s.pots){let i=0; for(const id of Object.keys(POTS)){const own=P.pots.includes(id); cx.save(); cx.translate(-28+i*8,-12); cx.scale(.38,.38); if(!own) cx.globalAlpha=.22; drawCharm(id); cx.globalAlpha=1; cx.restore(); i++;}}
     else{circ(-20,-11,4,'#d9473a'); circ(-12,-12,3.5,'#f3d351'); blob(RR(10,-16,8,8,1),'#7aa2ff',1); blob(RR(20,-15,6,7,1),'#9ad04a',1);}
     cx.restore();
   }
@@ -4211,7 +4227,7 @@ function drawKerstin(n){
   blob(E(0,2,13,14),sh(0,2,14,'#2a8a8a'));
   blob(RR(-8,-2,16,17,4),'#f8f6f0',1.4); circ(-3,6,1.5,'#d9473a'); circ(3,9,1.5,'#d9473a');
   blob(E(-dir*12,4,3.6,3.6),'#f0c8a8',1.3);
-  cx.save(); cx.translate(dir*12,2); cx.rotate(dir*(.3+Math.sin(t*3)*.3)); line(0,0,0,-16,'#8a8f96',2.2); blob(E(0,-18,4,3),'#8a8f96',1.2); blob(E(0,0,3.6,3.6),'#f0c8a8',1.3); cx.restore();
+  cx.save(); cx.translate(dir*12,-2+Math.sin(t*2)*1.5); cx.scale(.55*dir,.55); drawCharm('vanlig'); cx.restore(); blob(E(dir*12,2,3.6,3.6),'#f0c8a8',1.3);
   blob(E(0,-10,9.5,9),sh(0,-10,9,'#f0c8a8'));
   blob(E(-9,-8,3.5,5),'#7a4a2a',1.2); blob(E(9,-8,3.5,5),'#7a4a2a',1.2);
   const lx=dir*1.6; eye(-3.5+lx,-10,2.3,dir,0); eye(3.5+lx,-10,2.3,dir,0);
@@ -4309,9 +4325,28 @@ function wishFountain(){
   for(let i=0;i<10;i++) G.parts.push({x:f.x+rand(-10,10),y:f.y-24,vx:rand(-70,70),vy:rand(-130,-40),life:.7,max:.7,col:'#f3d351',size:3});
   const had=P.pots.includes('guld'); progPot('fountain',100);
   if(!had&&!P.pots.includes('guld')) text(f.x,f.y-56,`${P.prog.fountain}/500 guld`,'#f3d351',true);
-  else if(had) log(pick(['Plask. Ingenting händer. Men det kändes bra.','Du önskade dig en till kastrull. Fontänen låtsas inte höra.','Fontänen tackar för bidraget.']),'#a8998a');
+  else if(had) log(pick(['Plask. Ingenting händer. Men det kändes bra.','Du önskade dig en till spargris. Fontänen låtsas inte höra.','Fontänen tackar för bidraget.']),'#a8998a');
 }
-function potSvg(p,own){
+function drawCharm(id){
+  const P2=POTS[id]||POTS.vanlig, c=P2.c, c2=P2.c2;
+  switch(id){
+    case 'vanlig': blob(()=>{cx.moveTo(-9,4);cx.lineTo(-7,-3);cx.lineTo(-2,-4);cx.lineTo(2,-10);cx.lineTo(7,-9);cx.lineTo(9,-5);cx.lineTo(5,-5);cx.lineTo(5,0);cx.lineTo(8,4);cx.lineTo(8,9);cx.lineTo(5,9);cx.lineTo(3,4);cx.lineTo(-4,4);cx.lineTo(-5,9);cx.lineTo(-8,9);cx.closePath();},sh(0,0,10,c),1.4); line(-5,-1,1,-1,c2,1.4); circ(-2,1.5,1.2,'#3a6ad9'); circ(5,-7,.9,OL); break;
+    case 'wok': blob(()=>{cx.moveTo(-10,6);cx.lineTo(-11,-6);cx.lineTo(-5,-1);cx.lineTo(0,-9);cx.lineTo(5,-1);cx.lineTo(11,-6);cx.lineTo(10,6);cx.closePath();},sh(0,0,11,c2),1.4); blob(E(-4,7,2.4,3.6),c,1); blob(E(5,8,2,4.5),c,1); circ(0,-1,1.8,'#d9473a'); break;
+    case 'is': blob(RR(-8,5,16,5,1.5),'#8a5a32',1.2); blob(E(0,-2,9,9),'rgba(200,235,255,.75)',1.4); blob(()=>{cx.moveTo(-4,4);cx.lineTo(0,-5);cx.lineTo(4,4);cx.closePath();},'#2f6a38',.8); for(const [a,b] of [[-5,-6],[3,-8],[6,-2],[-6,0]]) circ(a,b,.9,'#ffffff'); ell(-3,-6,2.4,1.2,'rgba(255,255,255,.7)'); break;
+    case 'fondue': line(-6,-6,-1,4,OL,2.4); line(-6,-6,-1,4,'#c8ccd2',1.2); line(7,-8,2,4,OL,2.4); line(7,-8,2,4,'#c8ccd2',1.2); blob(()=>{cx.moveTo(-9,0);cx.lineTo(9,0);cx.quadraticCurveTo(9,9,0,9);cx.quadraticCurveTo(-9,9,-9,0);cx.closePath();},sh(0,4,9,c),1.4); ell(0,0,9,2.4,c2); break;
+    case 'guld': blob(E(0,1,10,7.5),sh(-2,-1,10,c),1.4); blob(E(9,0,3,3.2),c,1.2); circ(9.6,-.4,.6,OL); circ(9.6,.8,.6,OL); blob(()=>{cx.moveTo(-3,-6);cx.lineTo(-1,-10);cx.lineTo(1,-6);cx.closePath();},c,1); line(-2,-5.5,3,-5.5,OL,1.4); for(const x of [-6,-2,3,6]) line(x,7,x,10,OL,2.2); circ(4,-3,1,OL); break;
+    case 'spok': blob(RR(-10,-7,20,14,2),sh(0,0,12,c2),1.4); for(let i=0;i<5;i++) circ(-6+i*3,-3,.8,'#f4ecd8'); for(let i=0;i<4;i++) circ(-4.5+i*3,1,.8,'#f4ecd8'); blob(E(3,4,3.4,2.4),c,1); break;
+    case 'mormor': blob(RR(-2.5,-11,5,9,2),sh(0,-6,5,c2),1.2); blob(E(0,-11,4,2.5),c2,1.2); blob(RR(-8,-3,16,6,1.5),'#3a3438',1.2); blob(RR(-9,3,18,4,1),c,1.2); break;
+    case 'kosmisk': blob(E(0,4,11,3.5),sh(0,4,11,'#c8c4cc'),1.3); blob(()=>{cx.moveTo(-7,-6);cx.lineTo(7,-6);cx.lineTo(5,3);cx.lineTo(-5,3);cx.closePath();},sh(0,-2,8,'#e8e4f0'),1.3); cx.strokeStyle=c2; cx.lineWidth=1.6; cx.beginPath(); cx.arc(0,-2,3.5,G?G.time*3:0,(G?G.time*3:0)+4.5); cx.stroke(); circ(0,-2,1.3,c); cx.strokeStyle=OL; cx.lineWidth=1.3; cx.beginPath(); cx.arc(8.5,-2,3,-1.2,1.2); cx.stroke(); break;
+  }
+}
+const CHIMG={};
+function charmImg(id){
+  if(CHIMG[id]) return CHIMG[id];
+  let url=''; try{const c=document.createElement('canvas'); c.width=c.height=64; const prev=cx; cx=c.getContext('2d'); try{cx.translate(32,34); cx.scale(2.4,2.4); drawCharm(id);}finally{cx=prev;} url=c.toDataURL()||'';}catch(e){}
+  return CHIMG[id]=url;
+}
+function potSvgOld(p,own){
   const c=own?p.c:'#4a4248', c2=own?p.c2:'#3a3438';
   return `<svg viewBox="0 0 46 32" aria-hidden="true"><rect x="31" y="13" width="13" height="5" rx="2" fill="${c2}" stroke="#150d15" stroke-width="1.5"/><path d="M5 11h27v10a7 7 0 0 1-7 7H12a7 7 0 0 1-7-7z" fill="${c}" stroke="#150d15" stroke-width="2"/><ellipse cx="18.5" cy="11" rx="15" ry="4" fill="${c2}" stroke="#150d15" stroke-width="2"/></svg>`;
 }
@@ -4322,20 +4357,23 @@ function openPots(v){
   if(v){$('potQuote').textContent='”'+pick(KERQ)+'”'; renderPots(); SFX.play('clang');} else save();
 }
 function renderPots(){
-  const ids=Object.keys(POTS);
+  const ids=Object.keys(POTS), on=P.charmOn||(P.charmOn=[]), slots=charmSlots();
   $('ptCount').textContent=`${P.pots.length}/${ids.length}`;
-  $('ptGrid').innerHTML=(P.cls!=='krigare'?`<p class="how" style="grid-column:1/-1">Bara Sir Kastrull kastar kastruller. Men Kerstin förtrollar dina skott med den kastrull du väljer: ungefär vart tredje skott får kastrullens kraft. Wokens kraft ger mer skada.</p>`:'')+ids.map(id=>{
-    const p=POTS[id], own=P.pots.includes(id), act=P.pot===id;
+  const next=P.pots.length<3?3:P.pots.length<6?6:0;
+  $('ptGrid').innerHTML=`<p class="how" style="grid-column:1/-1">Berlocker på: ${on.length}/${slots}${next?` · En plats till när du har ${next} fynd.`:''}</p>`+ids.map(id=>{
+    const p=POTS[id], own=P.pots.includes(id), act=on.includes(id), full=!act&&on.length>=slots;
     const pr=p.prog&&!own?`<div class="bar" aria-hidden="true"><i style="width:${Math.min(100,(P.prog[p.prog]||0)/p.need*100)}%"></i></div><p class="how">${Math.min(P.prog[p.prog]||0,p.need)} / ${p.need} ${p.unit}</p>`:'';
-    return `<div class="potc ${own?'':'locked'} ${act?'active':''}"><div class="ph">${potSvg(p,own)}<h3 class="${own?'t3':''}">${p.n}</h3></div>
+    const im=charmImg(id);
+    return `<div class="potc ${own?'':'locked'} ${act?'active':''}"><div class="ph">${im?`<img src="${im}" alt="" width="48" height="48" style="${own?'':'filter:grayscale(1) brightness(.5)'}">`:''}<h3 class="${own?'t3':''}">${p.n}</h3></div>
       <p>${p.d}</p><p class="how">${own?'Hittad!':'Så hittar du den: '+p.how}</p>${pr}
-      ${own?`<button class="btn sm ${act?'':'primary'}" data-pot="${id}" ${act?'disabled':''}>${act?'Används nu':'Använd den här'}</button>`:''}</div>`;
+      ${own?`<button class="btn sm ${act?'':'primary'}" data-charm="${id}" ${full?'disabled':''}>${act?'Ta av':full?'Alla platser är fulla':'Bär den'}</button>`:''}</div>`;
   }).join('');
 }
 $('potsPanel').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b||b.disabled) return;
   if(b.dataset.act==='close'){openPots(false);return;}
-  if(b.dataset.pot&&P.pots.includes(b.dataset.pot)){P.pot=b.dataset.pot; SFX.play('equip'); $('potQuote').textContent='”'+pick(['Utmärkt val! Den kommer att flyga fint.','Ta väl hand om den. Och kasta den hårt.','Åh, den är min favorit! Nej, den här. Alla är mina favoriter.'])+'”'; log(`Du kastar nu med ${POTS[P.pot].n}.`,POTS[P.pot].c); renderPots();}
+  if(b.dataset.charm&&P.pots.includes(b.dataset.charm)){const id=b.dataset.charm, on=P.charmOn||(P.charmOn=[]); if(on.includes(id)) on.splice(on.indexOf(id),1); else if(on.length<charmSlots()) on.push(id); recalc(); SFX.play('equip'); $('potQuote').textContent='”'+pick(['Den klär dig! Nästan.','Ta väl hand om den. Den är ett original.','Åh, den är min favorit! Nej, den här. Alla är mina favoriter.'])+'”'; renderPots(); return;}
+  if(false){ SFX.play('equip'); $('potQuote').textContent='”'+pick(['Utmärkt val! Den kommer att flyga fint.','Ta väl hand om den. Och kasta den hårt.','Åh, den är min favorit! Nej, den här. Alla är mina favoriter.'])+'”'; log(`Du kastar nu med ${POTS[P.pot].n}.`,POTS[P.pot].c); renderPots();}
 });
 function townSpot(){
   if(!G.town) return null;
@@ -4437,7 +4475,7 @@ $('trainer').addEventListener('click',e=>{
 
 // ---------------- story & dialog ----------------
 let DLG=null;
-const WHO={berit:'Byt-Berit',tobias:'Turisten Tobias',narrator:'Berättaren',kjell:'Kjell-Åke',smed:'Svetsa-Svea',tore:'Tore',kerstin:'Kastrullkerstin',sibylla:'Spåkvinnan Sibylla',ake:'Åkes dagbok',sune:'Svartjobbaren Sune'};
+const WHO={berit:'Byt-Berit',tobias:'Turisten Tobias',narrator:'Berättaren',kjell:'Kjell-Åke',smed:'Svetsa-Svea',tore:'Tore',kerstin:'Loppis-Kerstin',sibylla:'Spåkvinnan Sibylla',ake:'Åkes dagbok',sune:'Svartjobbaren Sune'};
 function whoName(w){return w==='hero'?CL().n:(WHO[w]||(ET[w]&&ET[w].name)||w);}
 function storyDialog(lines,onEnd){
   if(!started) return;
@@ -4702,6 +4740,7 @@ function recalcExtra(){
   S.xpMul=has('fatolj')?1.05:1;
   if(has('matta')) S.hp=Math.round(S.hp*1.03); if(has('saeng')) S.hp=Math.round(S.hp*1.05);
   if(has('tavla')) S.dmg=Math.round(S.dmg*1.03); if(has('krukvaxt')) S.spd+=2; if(has('radio')) S.as+=3;
+  if(hasCh('vanlig')){S.spd+=6; S.as+=6;} if(hasCh('guld')) S.gf+=30;
   if(has('bokhylla')) S.crit+=3; if(has('akvarium')) S.gf+=10; if(has('kattkorg')) S.gf+=5; if(has('kamin')) S.armor=Math.round(S.armor*1.08);
   const tb=P.tb;
   if(tb&&tb.id==='fika') S.armor=Math.round(S.armor*1.6);
@@ -5212,7 +5251,7 @@ function renderQuests(){
     if(st===1) return `<li><b style="color:var(--torch)">${q.n}</b>: ${q.goal}${id==='skruv'?` (${P.screws||0}/${q.need})`:id==='kristall'?` (${P.shards||0}/${q.need})`:''}</li>`;
     return P.best>=q.req?`<li class="muted">Prata med ${giver} i stan, hon eller han har något på hjärtat.</li>`:`<li class="muted">Låses upp när du har nått våning ${q.req}.</li>`;});
   const pots=Object.entries(POTS).map(([id,p])=>{const own=P.pots.includes(id); const pr=p.prog?` (${Math.min(p.need,(P.prog||{})[p.prog]||0)}/${p.need})`:''; return `<li class="${own?'muted':''}">${own?'✔ ':''}${p.n}${own?'':': '+p.how+pr}</li>`;});
-  $('qBody').innerHTML=sec('Huvuduppdrag',main)+sec('På den här våningen',fl)+sec('Sidouppdrag',side)+sec('Kerstins kastruller',pots);
+  $('qBody').innerHTML=sec('Huvuduppdrag',main)+sec('På den här våningen',fl)+sec('Sidouppdrag',side)+sec('Kerstins loppisfynd',pots);
 }
 // bigger backpack
 const bagUpCost=()=>[600,1500,3500,8000][P.bagUp||0];
@@ -5249,7 +5288,7 @@ function extraGlows(glow){
   for(const r of G.rings||[]) if(r.r>40) glow(r.x,r.y,r.r*1.3,`rgba(255,190,110,${(.25*Math.max(0,r.t/r.max)).toFixed(3)})`);
 }
 
-Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); Object.assign(EN_EXACT,{"Pixelgrafik på. Du kan byta i inställningarna.":"Pixel graphics on. You can switch in the settings."}); Object.assign(EN_EXACT,{"Våningen är rensad!":"Floor cleared!","Här kommer inga fler fiender.":"No more enemies will come here.","Rensad. Tyst och lugnt.":"Cleared. Nice and quiet."}); Object.assign(EN_EXACT,{"Sälj alla blå vapen och rustningar":"Sell all blue weapons and armor","Sälj alla blå ringar":"Sell all blue rings","Jag smälter ner dem till något vettigt.":"I'll melt them into something useful.","blå prylar för":"blue items for","”Du har inga blå vapen eller rustningar. Inget att smälta.”":"“You have no blue weapons or armor. Nothing to melt.”","blå ringar för":"blue rings for","De glittrar nästan.":"They almost sparkle.","Du har inga blå ringar. Svea tar vapen och rustningar.":"You have no blue rings. Svea takes weapons and armor.","Sålde":"Sold","blå saker till Svetsa-Svea för":"blue items to Svetsa-Svea for","blå ringar till Kjell-Åke för":"blue rings to Kjell-Åke for"}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
+Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); Object.assign(EN_EXACT,{"Pixelgrafik på. Du kan byta i inställningarna.":"Pixel graphics on. You can switch in the settings."}); Object.assign(EN_EXACT,{"Våningen är rensad!":"Floor cleared!","Här kommer inga fler fiender.":"No more enemies will come here.","Rensad. Tyst och lugnt.":"Cleared. Nice and quiet."}); Object.assign(EN_EXACT,{"Sälj alla blå vapen och rustningar":"Sell all blue weapons and armor","Sälj alla blå ringar":"Sell all blue rings","Jag smälter ner dem till något vettigt.":"I'll melt them into something useful.","blå prylar för":"blue items for","”Du har inga blå vapen eller rustningar. Inget att smälta.”":"“You have no blue weapons or armor. Nothing to melt.”","blå ringar för":"blue rings for","De glittrar nästan.":"They almost sparkle.","Du har inga blå ringar. Svea tar vapen och rustningar.":"You have no blue rings. Svea takes weapons and armor.","Sålde":"Sold","blå saker till Svetsa-Svea för":"blue items to Svetsa-Svea for","blå ringar till Kjell-Åke för":"blue rings to Kjell-Åke for"}); Object.assign(EN_EXACT,{"Dalahästen":"The Dala Horse","+6% springfart och +6% attackfart.":"+6% move speed and +6% attack speed.","Du har alltid haft den. Den luktar farmors vind.":"You've always had it. It smells like grandma's attic.","Kung Kladds Klibbiga Krona":"King Kladd's Sticky Crown","Dina träffar har 20% chans att klistra fast fienden. Den blir långsam i 2 sekunder.":"Your hits have a 20% chance to glue the enemy in place. It's slowed for 2 seconds.","Kung Kladd den Klibbige bär den. Besegra honom på våning 5.":"King Kladd the Sticky wears it. Defeat him on floor 5.","Snöglob från Sune":"Snow Globe from Sune","Dina träffar har 12% chans att frysa fienden en kort stund.":"Your hits have a 12% chance to freeze the enemy for a moment.","Svartjobbaren Sune har en i säcken. Fånga honom innan han smiter genom sin portal.":"Sune the Moonlighter has one in his sack. Catch him before he slips through his portal.","Kjell-Åkes Fondueset":"Kjell-Åke's Fondue Set","Dina kritiska träffar sätter eld på fienden.":"Your critical hits set the enemy on fire.","Kjell-Åke ger bort sitt fondueset när du klarat 4 av hans uppdrag.":"Kjell-Åke gives away his fondue set once you've finished 4 of his quests.","Spargrisen":"The Piggy Bank","+30% guldfynd. Fiender du besegrar tappar ibland en extra guldhög.":"+30% gold find. Enemies you defeat sometimes drop an extra pile of gold.","Spökbrädet":"The Ouija Board","Dina träffar har 10% chans att skicka iväg en spökskalle som letar upp en fiende.":"Your hits have a 10% chance to send out a ghost skull that seeks an enemy.","Besegra 25 Spöken med Skatteskuld. De betalar sin skuld i kuriosa.":"Defeat 25 Ghosts with Tax Debt. They pay their debt in curios.","Bertils Gummistämpel":"Bertil's Rubber Stamp","Var åttonde träff stämplar fienden. Den tar 40% mer skada i 4 sekunder.":"Every eighth hit stamps the enemy. It takes 40% more damage for 4 seconds.","Byråkraten Bertil stämplar allt han ser. Besegra honom på våning 10.":"Bertil the Bureaucrat stamps everything he sees. Defeat him on floor 10.","Det Kosmiska Kaffefatet":"The Cosmic Saucer","Fiender du besegrar har 12% chans att lämna ett litet svart hål som suger in andra och smäller.":"Enemies you defeat have a 12% chance to leave a tiny black hole that pulls others in and pops.","Välkommen till Kerstins loppis! Allt är unikt. Inget är till salu.":"Welcome to Kerstin's flea market! Everything is unique. Nothing is for sale.","Hej hjärtat! Har du hittat något fint i ruinerna?":"Hi sweetie! Found anything nice in the ruins?","En dalahäst är aldrig fel. Utom när den biter.":"A Dala horse is never wrong. Except when it bites.","Kung Kladd har en krona. Den är klibbig. Jag VILL ha den.":"King Kladd has a crown. It's sticky. I WANT it.","Spöken betalar sina skulder i kuriosa. Helt sant.":"Ghosts pay their debts in curios. Totally true.","Sune säljer allt. Även snöglober han inte äger.":"Sune sells everything. Even snow globes he doesn't own.","Bertil stämplar allt. Till och med sin lunch.":"Bertil stamps everything. Even his lunch.","Bär dina fynd nära hjärtat. Eller i fickan.":"Keep your finds close to your heart. Or in your pocket.","NYTT LOPPISFYND!":"NEW FLEA MARKET FIND!","Du bär den redan.":"You're already wearing it.","Byt berlocker hos Loppis-Kerstin i stan.":"Swap charms at Flea Market Kerstin in town.","STÄMPLAD!":"STAMPED!","Kerstins Loppisbord":"Kerstin's Flea Market Table","Fynd":"Finds","Kerstin samlar kuriosa från ruinerna. Varje fynd blir en berlock som du kan bära, oavsett klass. Du får fler platser för berlocker ju fler fynd du hittar.":"Kerstin collects curios from the ruins. Every find becomes a charm you can wear, whatever your class. You get more charm slots the more finds you collect.","Berlocker på:":"Charms worn:","En plats till när du har":"One more slot when you have","fynd.":"finds.","Ta av":"Remove","Alla platser är fulla":"All slots are full","Bär den":"Wear it","Den klär dig! Nästan.":"It suits you! Almost.","Ta väl hand om den. Den är ett original.":"Take good care of it. It's an original.","Loppis-Kerstin (samlare)":"Flea Market Kerstin (collector)","Titta på Kerstins loppisbord (T)":"Browse Kerstin's flea market (T)","Loppis-Kerstin":"Flea Market Kerstin","Loppiskung":"Flea Market King","Hitta alla Kerstins loppisfynd.":"Find all of Kerstin's flea market finds.","Hjälp Loppis-Kerstin att hitta henne på ett sidouppdrag.":"Help Flea Market Kerstin find her on a side quest.","Kerstins loppisfynd":"Kerstin's flea market finds","Du önskade dig en till spargris. Fontänen låtsas inte höra.":"You wished for another piggy bank. The fountain pretends not to hear.","Kastar en kastrull som studsar mellan fiender.":"Throws a saucepan that bounces between enemies.","uppdrag":"quests","spöken":"ghosts","krossade":"smashed","Hittad!":"Found!","Så hittar du den:":"How to find it:"}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
 let splashDone=false;
 function endSplash(){
   if(splashDone) return; splashDone=true; const s=$('splash'); s.classList.add('done'); setTimeout(()=>{s.hidden=true;},700);
@@ -5360,7 +5399,7 @@ $('talkBtn').addEventListener('click',()=>interact());
 
 // ---------------- save ----------------
 const SKEY='loot-lagom-v1';
-function serialize(){const {cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}=P; return {v:1,depth:G?G.depth:1,town:!G||!!G.town||!!G.rift,iid:IID,P:{cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}};}
+function serialize(){const {charmOn,cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}=P; return {v:1,depth:G?G.depth:1,town:!G||!!G.town||!!G.rift,iid:IID,P:{charmOn,cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}};}
 function save(){
   if(!started) return false;
   if(P.hc&&G&&G.over) return false;
