@@ -5450,7 +5450,7 @@ function townNight(ox,oy){
 // ---- skills & runes at Tore's ----
 function renderSkillPick(){
   const el=$('trSkills'); if(!el) return;
-  const cls=P.cls||'krigare', base=mySkills(), alt=ALTSK[cls], cur=mySkills(), keys={e:'E',q:'Q',r:'R'}, inv=P.runeInv||{};
+  const cls=P.cls||'krigare', base=CL().skills, alt=ALTSK[cls], cur=mySkills(), keys={e:'E',q:'Q',r:'R'}, inv=P.runeInv||{};
   el.innerHTML=['e','q','r'].map(s=>{
     const opts=[base[s],alt[s]].map(id=>{const sk=SKILLS[id], on=cur[s]===id; return `<button class="btn sm ${on?'primary':''}" data-skp="${s}:${id}" ${on?'disabled':''} title="${esc(SKDESC[id]||'')}">${sk.n}${P.lvl<sk.lvl?` (nivå ${sk.lvl})`:''}</button>`;}).join('');
     const rn=(P.runes||{})[s], own=Object.keys(RUNES).filter(k=>inv[k]>0);
