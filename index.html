@@ -4314,7 +4314,7 @@ $('inv').addEventListener('dblclick',e=>{const b=e.target.closest('[data-bag]');
 // ---------------- town & portals ----------------
 let DUNGEON=null, smithOpen=false, trainOpen=false, smsel=null, respecArm=false;
 const npcOf=t=>G.npcs&&G.npcs.find(n=>n.type===t);
-const npcNear=()=>G.npcs&&G.npcs.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<90);
+const npcNear=()=>G.npcs&&G.npcs.find(n=>Math.hypot(P.x-n.x,P.y-n.y)<90&&!(n.type==='tobias'&&G.event&&G.event.follow));
 const FOLKQ=['Hej {hero}!','Vilket väder, va?','Har du sett min katt? Hon sover nog igen.','Grytan, säger du? Usch.','Köp bullar hos Bosse, de är fantastiska!','Det är midsommar varje dag här.','Akta dig för kaninerna där nere.','Min farbror Åke gick ner i grottan. Han kom aldrig upp.'];
 function makeTown(depth,withBack){
   const t=new Uint8Array(MW*MH).fill(1), X0=13,Y0=18,W=34,H=21, cxT=X0+17, cyT=Y0+10;
