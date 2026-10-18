@@ -228,19 +228,20 @@ html.pixel .beta{border-radius:0;font-family:var(--body)}
 .hwdeco{display:none;position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 html.hw .hwdeco{display:block}
 #title .card{position:relative;z-index:1}
-.hwp{position:absolute;bottom:4%;width:clamp(70px,12vw,140px);filter:drop-shadow(0 0 22px rgba(255,140,40,.55))}
-.hwp1{left:4%}.hwp2{right:5%;width:clamp(56px,9vw,110px)}
-.hwglow{animation:hwFlick 1.6s infinite}
-.hwbat{position:absolute;width:56px;opacity:.85;animation:hwFly 14s linear infinite}
-.hwb1{top:12%;animation-delay:-2s}.hwb2{top:26%;width:40px;animation-duration:18s;animation-delay:-9s}.hwb3{top:8%;width:32px;animation-duration:22s;animation-delay:-14s}.hwb4{top:40%;width:46px;animation-duration:16s;animation-delay:-5s}
-@keyframes hwFly{0%{transform:translate(-12vw,0) scaleY(1)}25%{transform:translate(25vw,-4vh) scaleY(.6)}50%{transform:translate(55vw,3vh) scaleY(1)}75%{transform:translate(85vw,-3vh) scaleY(.6)}100%{transform:translate(115vw,0) scaleY(1)}}
+.hwp{position:absolute;bottom:3%;width:clamp(90px,14vw,170px);filter:drop-shadow(0 0 26px rgba(255,140,40,.55));animation:hwBob 2.4s ease-in-out infinite}
+.hwdeco img{image-rendering:auto}html.pixel .hwdeco img{image-rendering:pixelated}
+@keyframes hwBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hwp1{left:4%}.hwp2{right:5%;width:clamp(70px,11vw,130px);animation-delay:-1.1s}
+.hwbat{position:absolute;width:72px;animation:hwFly 14s linear infinite}
+.hwb1{top:12%;animation-delay:-2s}.hwb2{top:26%;width:54px;animation-duration:18s;animation-delay:-9s}.hwb3{top:8%;width:44px;animation-duration:22s;animation-delay:-14s}.hwb4{top:40%;width:60px;animation-duration:16s;animation-delay:-5s}
+@keyframes hwFly{0%{transform:translate(-12vw,0)}25%{transform:translate(25vw,-4vh)}50%{transform:translate(55vw,3vh)}75%{transform:translate(85vw,-3vh)}100%{transform:translate(115vw,0)}}
 @keyframes hwFlick{0%,100%{opacity:1}45%{opacity:.75}55%{opacity:.95}70%{opacity:.6}}
 html.hw #splash{background:radial-gradient(ellipse at center,#2e1622,#07030a 70%)}
 html.hw .sp-logo,html.hw #title .logo{color:#ff9a3a;text-shadow:0 0 40px rgba(255,120,30,.5),0 5px 0 #3a1a40}
 html.hw .sp-studio{color:#ff9a3a}
 html.hw #title{background:radial-gradient(ellipse at center,rgba(40,14,30,.55),rgba(10,5,12,.95) 70%)}
 html.pixel.hw .sp-logo,html.pixel.hw #title .logo{text-shadow:5px 5px 0 #3a1a40}
-@media (prefers-reduced-motion:reduce){.hwbat,.hwglow{animation:none}}
+@media (prefers-reduced-motion:reduce){.hwbat,.hwp{animation:none}}
 .btn.rr{padding:1px 8px;font-size:11px;margin-left:8px;min-height:0}
 .dyes{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.dyes button{width:30px;height:30px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;padding:0}.dyes button.on{border-color:var(--torch);box-shadow:0 0 0 2px var(--torch)}
 .bprow{display:flex;gap:12px;align-items:center;padding:8px;border-bottom:1px dashed rgba(168,153,138,.25)}.bprow div{flex:1}.bprow b{display:block;color:var(--parch)}.bprow.done{opacity:.6}.bprow.locked{opacity:.4}.bprow em{font-style:normal;color:#7ad06a}
@@ -634,7 +635,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
 </div>
 
 <div class="screen" id="title">
-  <div class="hwdeco" aria-hidden="true"><svg class="hwp hwp1" viewBox="0 0 60 50"><ellipse cx="20" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="40" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="30" cy="30" rx="15" ry="19" fill="#f08a3a"/><path d="M30 12l3-9" stroke="#3a6a2a" stroke-width="4" stroke-linecap="round"/><path class="hwglow" d="M19 26l5-7 5 7zM31 26l5-7 5 7zM18 36q12 9 24 0l-4 1-3-3-4 3-4-3-3 3z" fill="#ffd060"/></svg><svg class="hwp hwp2" viewBox="0 0 60 50"><ellipse cx="20" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="40" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="30" cy="30" rx="15" ry="19" fill="#f08a3a"/><path d="M30 12l-2-9" stroke="#3a6a2a" stroke-width="4" stroke-linecap="round"/><path class="hwglow" d="M20 24l4 6 4-6zM32 24l4 6 4-6zM20 36h20l-3 4h-14z" fill="#ffd060"/></svg><svg class="hwbat hwb1" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg><svg class="hwbat hwb2" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg><svg class="hwbat hwb3" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg><svg class="hwbat hwb4" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg></div>
+  <div class="hwdeco" aria-hidden="true"></div>
   <div class="card tcard">
     <h1 class="logo">Loot<span>&amp;</span>Lagom<b class="beta">BETA</b></h1>
     <p class="tag">Ett nästan seriöst grottäventyr. Välj en hjälte, hitta loot och försök att inte dö av en kanin.</p>
@@ -681,7 +682,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <p class="sp-pres">presenterar</p>
   </div>
   <h1 class="sp-logo logo">Loot<span>&amp;</span>Lagom<b class="beta">BETA</b></h1>
-  <div class="hwdeco" aria-hidden="true"><svg class="hwp hwp1" viewBox="0 0 60 50"><ellipse cx="20" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="40" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="30" cy="30" rx="15" ry="19" fill="#f08a3a"/><path d="M30 12l3-9" stroke="#3a6a2a" stroke-width="4" stroke-linecap="round"/><path class="hwglow" d="M19 26l5-7 5 7zM31 26l5-7 5 7zM18 36q12 9 24 0l-4 1-3-3-4 3-4-3-3 3z" fill="#ffd060"/></svg><svg class="hwp hwp2" viewBox="0 0 60 50"><ellipse cx="20" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="40" cy="30" rx="13" ry="17" fill="#d8641e"/><ellipse cx="30" cy="30" rx="15" ry="19" fill="#f08a3a"/><path d="M30 12l-2-9" stroke="#3a6a2a" stroke-width="4" stroke-linecap="round"/><path class="hwglow" d="M20 24l4 6 4-6zM32 24l4 6 4-6zM20 36h20l-3 4h-14z" fill="#ffd060"/></svg><svg class="hwbat hwb1" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg><svg class="hwbat hwb2" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg><svg class="hwbat hwb3" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg><svg class="hwbat hwb4" viewBox="0 0 40 20"><path d="M20 8q-4-6-10-6 2 4 0 7-4-3-10 0 6 2 8 6 3-3 6 0 3 4 6 4 3 0 6-4 3-3 6 0 2-4 8-6-6-3-10 0-2-3 0-7-6 0-10 6z" fill="#1a1020"/></svg></div>
+  <div class="hwdeco" aria-hidden="true"></div>
   <p class="sp-skip">Klicka eller tryck på en tangent för att hoppa över</p>
 </div>
 <script>
@@ -1538,6 +1539,21 @@ function stackDetail(id){
 }
 function riftOpen(){return !!(P&&((P.ach&&P.ach.boss2)||(P.riftTier||0)>0||(P.best||0)>10));}
 // ---- costumed kids (Halloween) ----
+let HWFR=null, HWPX=null, HWON=false;
+function modelImg(type,t,flip){
+  const S=PIXEL?40:128, c=document.createElement('canvas'); c.width=c.height=S;
+  const prev=cx, pf=FLASH, keepT=G&&G.time, keepP=P&&{x:P.x,y:P.y}; cx=c.getContext('2d'); FLASH=false;
+  try{if(G) G.time=t; if(P){P.x=flip?-999:999; P.y=0;} const e=fakeEnemy(type); e.ph=0; const k=S*.36/e.r; cx.translate(S/2,S*.58); cx.scale(k,k); drawEnemy(e);}
+  catch(err){} finally{cx=prev; FLASH=pf; if(G) G.time=keepT; if(P&&keepP){P.x=keepP.x; P.y=keepP.y;}}
+  return c.toDataURL();
+}
+function buildHwDeco(){
+  if(evNow()!=='halloween'||!G||!P) return;
+  if(!HWFR||HWPX!==PIXEL){HWPX=PIXEL; HWFR={bat:[0,.071,.143,.214].map(t=>modelImg('fladdermus',t)), p1:modelImg('pumpa',.3,false), p2:modelImg('pumpa',1.1,true)};}
+  const html=`<img class="hwp hwp1" src="${HWFR.p1}" alt=""><img class="hwp hwp2" src="${HWFR.p2}" alt="">`+[1,2,3,4].map(i=>`<img class="hwbat hwb${i}" src="${HWFR.bat[i%4]}" alt="" data-f="${i}">`).join('');
+  document.querySelectorAll('.hwdeco').forEach(d=>{if(!d.firstChild||d.dataset.px!==String(PIXEL)){d.innerHTML=html; d.dataset.px=String(PIXEL);}});
+}
+{const hwIv=setInterval(()=>{if(!HWFR||!HWON) return; document.querySelectorAll('.hwbat').forEach(b=>{const f=((+b.dataset.f||0)+1)%4; b.dataset.f=f; b.src=HWFR.bat[f];});},90); if(hwIv&&hwIv.unref) hwIv.unref();}
 function isMidsummer(){const d=new Date(), v=d.getMonth()*100+d.getDate(); return v>=519&&v<=526;}
 function trickOrTreat(f,dt){
   if(!f.door||f.door.done){const hs=pick(G.houses); f.door={x:(hs.x+hs.w*.43)*TILE+10+rand(-8,8),y:G.tb.Y0*TILE+16,wait:rand(1.5,3)};}
@@ -2565,6 +2581,7 @@ function setPixel(v){
   $('btnPixel').textContent=t;
   if(invOpen) renderInv(); if(shopOpen) renderShop(); if(smithOpen) renderSmith();
   if(!$('classPick').hidden) try{renderPortraits();}catch(e){}
+  try{buildHwDeco();}catch(e){}
   if(started) log(v?'Pixelgrafik på. Du kan byta i inställningarna.':'Pixelgrafik av. Mjukt och fint igen.','#a8998a');
 }
 $('btnPixel').addEventListener('click',()=>setPixel(!PIXEL));
@@ -5973,7 +5990,7 @@ function attract(){
   renderTitle(sv);
 }
 function renderTitle(sv){
-  document.documentElement.classList.toggle('hw',evNow()==='halloween');
+  HWON=evNow()==='halloween'; document.documentElement.classList.toggle('hw',HWON); buildHwDeco();
   const s=$('tSave'); s.hidden=!sv;
   if(sv){const p=sv.P, C=CLASSES[p.cls]||CLASSES.krigare;
     $('tSaveName').textContent=C.n+(p.title&&TITLES[p.title]?' '+TITLES[p.title]:'');
@@ -5993,7 +6010,7 @@ function goTitle(doSave){
   attract();
 }
 function boot(data){
-  try{document.documentElement.classList.toggle('hw',evNow()==='halloween');}catch(e){}
+
   // Attract-mode floor behind the title screen
   P=newHero(); initRuntime(); recalc(); P.hp=S.hp;
   G={depth:1,m:genFloor(1),enemies:[],proj:[],drops:[],parts:[],texts:[],boss:null,shake:0,time:0,cam:{x:0,y:0},over:false,auraT:0,bunT:0,miniT:0,stairMsg:0};
