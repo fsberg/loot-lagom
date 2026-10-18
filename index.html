@@ -1593,16 +1593,16 @@ function stackDetail(id){
 function riftOpen(){return !!(P&&((P.ach&&P.ach.boss2)||(P.riftTier||0)>0||(P.best||0)>10));}
 // ---- costumed kids (Halloween) ----
 let HWFR=null, HWPX=null, HWON=false;
-function modelImg(type,t,flip){
-  const S=PIXEL?40:128, c=document.createElement('canvas'); c.width=c.height=S;
+function modelImg(type,t,flip,ps){
+  const S=PIXEL?(ps||28):128, c=document.createElement('canvas'); c.width=c.height=S;
   const prev=cx, pf=FLASH, keepT=G&&G.time, keepP=P&&{x:P.x,y:P.y}; cx=c.getContext('2d'); FLASH=false;
-  try{if(G) G.time=t; if(P){P.x=flip?-999:999; P.y=0;} const e=fakeEnemy(type); e.ph=0; const k=S*.36/e.r; cx.translate(S/2,S*.58); cx.scale(k,k); drawEnemy(e);}
+  try{if(G) G.time=t; if(P){P.x=flip?-999:999; P.y=0;} const e=fakeEnemy(type); e.ph=0; const bat=type==='fladdermus', k=S*(bat?.42:.36)/(bat?24:e.r); cx.translate(S/2,S*(bat?.62:.58)); cx.scale(k,k); if(bat){cx.beginPath(); cx.rect(-40,-60,80,64); cx.clip();} drawEnemy(e);}
   catch(err){} finally{cx=prev; FLASH=pf; if(G) G.time=keepT; if(P&&keepP){P.x=keepP.x; P.y=keepP.y;}}
   return c.toDataURL();
 }
 function buildHwDeco(){
   if(evNow()!=='halloween'||!G||!P) return;
-  if(!HWFR||HWPX!==PIXEL){HWPX=PIXEL; HWFR={bat:[0,.071,.143,.214].map(t=>modelImg('fladdermus',t)), p1:modelImg('pumpa',.3,false), p2:modelImg('pumpa',1.1,true)};}
+  if(!HWFR||HWPX!==PIXEL){HWPX=PIXEL; HWFR={bat:[0,.071,.143,.214].map(t=>modelImg('fladdermus',t,false,34)), p1:modelImg('pumpa',.3,false,40), p2:modelImg('pumpa',1.1,true,36)};}
   const html=`<img class="hwp hwp1" src="${HWFR.p1}" alt=""><img class="hwp hwp2" src="${HWFR.p2}" alt="">`+[1,2,3,4].map(i=>`<img class="hwbat hwb${i}" src="${HWFR.bat[i%4]}" alt="" data-f="${i}">`).join('');
   document.querySelectorAll('.hwdeco').forEach(d=>{if(!d.firstChild||d.dataset.px!==String(PIXEL)){d.innerHTML=html; d.dataset.px=String(PIXEL);}});
 }
@@ -3336,7 +3336,7 @@ function drawHeld(cls,wp){
 const SETCOL={kock:'#ecebe4',pension:'#c84a6a',alg:'#d9603a',viking:'#3a5a8a',bingo:'#e8c84a',fiske:'#4a7a9a'};
 function setTint(){const c={}; for(const k in P.equip){const it=P.equip[k]; if(it&&it.set) c[it.set]=(c[it.set]||0)+1;} let best=null,n=1; for(const s in c) if(c[s]>n){n=c[s]; best=s;} return best?SETCOL[best]:null;}
 const PLC={};
-function plCanvas(k,W){let c=PLC[k]; if(!c) c=PLC[k]=document.createElement('canvas'); if(c.width<W||c.height<W){c.width=W; c.height=W;} return c;}
+function plCanvas(k,W){let c=PLC[k]; if(!c) c=PLC[k]=document.createElement('canvas'); if(c.width!==c.height||c.width<W){const s=Math.max(W,c.width); c.width=s; c.height=s;} return c;}
 function rimLight(x,y){
   let best=null,bd=420; const L=G&&(G.town?G.lamps:G.torches)||[];
   for(const l of L){const d=Math.hypot(l.x-x,l.y-y); if(d<bd){bd=d; best=l;}}
@@ -3361,11 +3361,11 @@ function drawPlayer(){
       const ox=(Math.round(T.a*(x-R)+T.e)-T.e)/T.a, oy=(Math.round(T.d*(y-R*1.2)+T.f)-T.f)/T.d, Sz=A.width/sc, o=Math.max(1,Math.round(sc*.75))/sc;
       const sil=col=>{bc.setTransform(1,0,0,1,0,0); bc.globalCompositeOperation='source-over'; bc.clearRect(0,0,B.width,B.height); bc.drawImage(A,0,0); bc.globalCompositeOperation='source-in'; bc.fillStyle=col; bc.fillRect(0,0,B.width,B.height); bc.globalCompositeOperation='source-over';};
       cx.save(); cx.globalAlpha=alpha; cx.imageSmoothingEnabled=false;
-      sil('rgba(8,5,10,.9)'); for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]) cx.drawImage(B,ox+dx*o,oy+dy*o,Sz,Sz);
-      cx.drawImage(A,ox,oy,Sz,Sz);
+      sil('rgba(8,5,10,.9)'); for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]) cx.drawImage(B,0,0,A.width,A.width,ox+dx*o,oy+dy*o,Sz,Sz);
+      cx.drawImage(A,0,0,A.width,A.width,ox,oy,Sz,Sz);
       const L=rimLight(x,y), d=Math.max(1,sc*.85); sil(L.col);
       bc.globalCompositeOperation='destination-out'; bc.drawImage(A,-L.dx*d,-L.dy*d); bc.globalCompositeOperation='source-over';
-      cx.globalAlpha=alpha*L.a; cx.drawImage(B,ox,oy,Sz,Sz);
+      cx.globalAlpha=alpha*L.a; cx.drawImage(B,0,0,A.width,A.width,ox,oy,Sz,Sz);
       cx.restore(); done=true;
     }
   }catch(e){done=false;}
