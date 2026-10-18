@@ -342,7 +342,6 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       </div>
       <details class="savebox" id="saveBox" hidden>
         <summary>Sparning och grafik</summary>
-        <div class="row" style="justify-content:flex-start;margin-top:6px"><button class="btn sm" data-act="pixel" id="invPixel">Pixelgrafik: av (G)</button></div>
         <p class="muted">Spelet sparas automatiskt i den här webbläsaren när du byter våning och var tolfte sekund. Du fortsätter alltid från början av den våning du var på. Spar-koden tar med hjälten till en annan dator eller webbläsare.</p>
         <div class="row" style="justify-content:flex-start"><button class="btn sm" data-act="save">Spara nu</button><button class="btn sm" data-act="code">Kopiera spar-kod</button></div>
         <textarea id="codeOut" readonly hidden rows="3" aria-label="Spar-kod"></textarea>
@@ -577,7 +576,7 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       <button class="btn" data-pm="quit" id="pmQuit">Avsluta till startmenyn</button>
     </div>
     <div class="keys">
-      <b>WASD</b><span>Gå</span><b>Vänsterklick</b><span>Attack</span><b>E · Q · R</b><span>Förmågor</span><b>Shift</b><span>Undanmanöver</span>
+      <b>WASD</b><span>Gå</span><b>Vänsterklick</b><span>Attack</span><b>E · Q · R · 2 · 3</b><span>Förmågor</span><b>Shift</b><span>Undanmanöver</span>
       <b>F</b><span>Hälsodryck</span><b>I</b><span>Väska</span><b>T</b><span>Prata och använda</span><b>P</b><span>Portal till stan</span><b>G · M</b><span>Pixelgrafik · Ljud</span>
     </div>
   </div>
@@ -605,7 +604,6 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
       <b>P</b><span>Öppna en portal till staden, var som helst</span>
       <b>T / klick</b><span>Prata med folk och plocka upp saker (guld plockas automatiskt)</span>
       <b>M</b><span>Ljud av och på</span>
-      <b>G</b><span>Pixelgrafik av och på</span>
     </div>
 
     <p class="muted" style="margin:0;font-size:14px">Hitta trappan ner på varje våning. Var femte våning sitter en boss och trycker på den.</p>
@@ -2222,13 +2220,13 @@ function applyPixelUI(){
 function setPixel(v){
   PIXEL=v; try{localStorage.setItem('loot-lagom-pixel',v?'1':'0');}catch(e){}
   resize(); applyPixelUI(); const t='Pixelgrafik: '+(v?'på':'av');
-  $('btnPixel').textContent=t; $('invPixel').textContent=t+' (G)';
+  $('btnPixel').textContent=t;
   if(invOpen) renderInv(); if(shopOpen) renderShop(); if(smithOpen) renderSmith();
   if(!$('classPick').hidden) try{renderPortraits();}catch(e){}
-  if(started) log(v?'Pixelgrafik på. Tryck G för att byta tillbaka.':'Pixelgrafik av. Mjukt och fint igen.','#a8998a');
+  if(started) log(v?'Pixelgrafik på. Du kan byta i inställningarna.':'Pixelgrafik av. Mjukt och fint igen.','#a8998a');
 }
 $('btnPixel').addEventListener('click',()=>setPixel(!PIXEL));
-$('btnPixel').textContent='Pixelgrafik: '+(PIXEL?'på':'av'); $('invPixel').textContent='Pixelgrafik: '+(PIXEL?'på':'av')+' (G)';
+$('btnPixel').textContent='Pixelgrafik: '+(PIXEL?'på':'av');
 const SMOOTHFONT='"Alegreya Sans","Segoe UI",system-ui,sans-serif', PIXFONT='"Pixelify Sans","Courier New",monospace';
 let FONT=PIXEL?PIXFONT:SMOOTHFONT;
 applyPixelUI();
@@ -2826,7 +2824,7 @@ function drawHeadgear(it,B,dir){
   const r=it.r, rc=RAR[r].c, acc=c=>r>0?rc:c;
   if(r>=2){cx.shadowColor=rc; cx.shadowBlur=r===3?12:6;}
   switch(k){
-    case 'Kastrull':{const hc=['#a4abb3','#7f9ee8','#e8c84a','#f08a3a','#6ad07a'][r]; blob(RR(dir>0?8:-21,-18+B,13,3.5,1.5),dk(hc,.35),1.6); blob(()=>{cx.moveTo(-11,-14+B);cx.lineTo(-10,-23+B);cx.quadraticCurveTo(0,-26+B,10,-23+B);cx.lineTo(11,-14+B);cx.closePath();},sh(0,-19+B,12,hc)); blob(E(0,-14+B,13,3),dk(hc,.15),1.8); line(-6,-22+B,-6,-17+B,'rgba(255,255,255,.55)',1.6); break;}
+    case 'Kastrull':{const hc=['#a4abb3','#7f9ee8','#e8c84a','#f08a3a','#6ad07a'][r]; blob(RR(dir>0?8:-21,-18+B,13,3.5,1.5),dk(hc,.35),1.6); blob(()=>{cx.moveTo(-11,-14+B);cx.lineTo(-10,-23+B);cx.quadraticCurveTo(0,-26+B,10,-23+B);cx.lineTo(11,-14+B);cx.closePath();},sh(0,-19+B,12,hc)); blob(E(0,-14+B,13,3),dk(hc,.15),1.8); line(-6,-22+B,-6,-17+B,'rgba(255,255,255,.55)',1.6); cx.strokeStyle='rgba(0,0,0,.35)'; cx.lineWidth=1; cx.beginPath(); cx.arc(4,-20+B,2.2,.4,2.7); cx.stroke(); cx.beginPath(); cx.arc(-1,-16.5+B,1.6,3.6,5.9); cx.stroke(); break;}
     case 'Hjälm':{blob(()=>{cx.ellipse(0,-12+B,11.5,10,0,Math.PI,0);cx.closePath();},sh(0,-17+B,12,'#a4abb3')); blob(RR(-12,-13+B,24,3.5,1.5),'#7a8088',1.4); line(dir*2,-12+B,dir*2,-5+B,'#7a8088',2.4); if(r>0) blob(()=>{cx.moveTo(-3,-21+B);cx.quadraticCurveTo(0,-32+B,-dir*11,-28+B);cx.lineTo(3,-21+B);cx.closePath();},rc,1.2); break;}
     case 'Vikingahjälm':{for(const s of [-1,1]) blob(()=>{cx.moveTo(s*9,-16+B);cx.quadraticCurveTo(s*20,-18+B,s*17,-30+B);cx.quadraticCurveTo(s*15,-21+B,s*6,-20+B);cx.closePath();},'#f4ecd8',1.4); blob(()=>{cx.ellipse(0,-12+B,11.5,10,0,Math.PI,0);cx.closePath();},sh(0,-17+B,12,acc('#a4abb3'))); blob(RR(-12,-13+B,24,3.5,1.5),'#7a5a32',1.4); break;}
     case 'Durkslag':{blob(()=>{cx.ellipse(0,-12+B,12,10,0,Math.PI,0);cx.closePath();},sh(0,-17+B,12,acc('#c8ccd2'))); for(let i=0;i<6;i++) circ(-7.5+i*3,-16+B-(2.5-Math.abs(i-2.5))*1.2,1.1,OL); blob(RR(-17,-14+B,6,3,1),'#8a9098',1); blob(RR(11,-14+B,6,3,1),'#8a9098',1); break;}
@@ -2849,7 +2847,7 @@ function drawHeadgear(it,B,dir){
 function drawTorso(it,cls,B,dir){
   const k=gk(it), r=it?it.r:0, rc=it?RAR[it.r].c:null;
   const c=GEARCOL[k]||{krigare:'#6a5446',hexa:'#6a3a7a',jagare:'#4a6a3a'}[cls]||'#6a5446';
-  if(r===3){cx.shadowColor=rc; cx.shadowBlur=10;}
+  if(r>=3){cx.shadowColor=rc; cx.shadowBlur=10;}
   blob(()=>{cx.moveTo(-10,-3+B);cx.quadraticCurveTo(-14,10,-11,14);cx.lineTo(11,14);cx.quadraticCurveTo(14,10,10,-3+B);cx.quadraticCurveTo(0,-7+B,-10,-3+B);},sh(0,4+B,14,c));
   cx.shadowBlur=0;
   switch(k){
@@ -2885,6 +2883,7 @@ function drawFeet(it,st,cls){
       case 'Farmors Tofflor': blob(E(fx,fy,6,4),'#f4a8c8',1.5); circ(fx-2,fy-2,2,'#fff0f6'); circ(fx+2,fy-2,2,'#fff0f6'); break;
       default: blob(E(fx,fy,5,3.4),cls==='jagare'?'#3a4a2a':'#3a2a22',1.8);
     }
+    if(it&&it.r>=2) line(fx-4,fy-3.4,fx+4,fy-3.4,rc,1.6);
   }
 }
 function drawHeld(cls,wp){
@@ -2910,54 +2909,120 @@ function drawHeld(cls,wp){
   }
   cx.shadowBlur=0;
 }
+const SETCOL={kock:'#ecebe4',pension:'#c84a6a',alg:'#d9603a',viking:'#3a5a8a',bingo:'#e8c84a',fiske:'#4a7a9a'};
+function setTint(){const c={}; for(const k in P.equip){const it=P.equip[k]; if(it&&it.set) c[it.set]=(c[it.set]||0)+1;} let best=null,n=1; for(const s in c) if(c[s]>n){n=c[s]; best=s;} return best?SETCOL[best]:null;}
+const PLC={};
+function plCanvas(k,W){let c=PLC[k]; if(!c) c=PLC[k]=document.createElement('canvas'); if(c.width<W||c.height<W){c.width=W; c.height=W;} return c;}
+function rimLight(x,y){
+  let best=null,bd=420; const L=G&&(G.town?G.lamps:G.torches)||[];
+  for(const l of L){const d=Math.hypot(l.x-x,l.y-y); if(d<bd){bd=d; best=l;}}
+  let dx=-.55,dy=-.83; if(best){const d=bd||1; dx=(best.x-x)/d; dy=(best.y-y)/d;}
+  const col=!G||G.town?'rgb(205,218,255)':`rgb(${TH().light})`;
+  return {dx,dy,col,a:best?.5+.3*(1-bd/420):.32};
+}
 function drawPlayer(){
-  const x=P.x,y=P.y,f=P.face, mv=P.moving&&!G.over, cls=P.cls||'krigare', melee=cls==='krigare';
-  const st=mv?Math.sin(G.time*15):0, bob=mv?-Math.abs(st)*2:Math.sin(G.time*2.2)*.7;
-  const dir=Math.cos(f)<0?-1:1, up=Math.sin(f)<-.55;
-  const skin={krigare:'#e6c29a',hexa:'#f0d0b8',jagare:'#d8a880'}[cls];
+  const x=P.x,y=P.y, cls=P.cls||'krigare', melee=cls==='krigare';
   ell(x,y+15,15,5,'rgba(0,0,0,.4)');
   if(S.fx.has('aura')){cx.strokeStyle=`rgba(217,71,58,${.25+.15*Math.sin(G.time*4)})`;cx.lineWidth=2;cx.beginPath();cx.arc(x,y,110,0,Math.PI*2);cx.stroke();}
   if(S.shieldMax&&P.shield>0){const k=P.shield/S.shieldMax; cx.strokeStyle=`rgba(200,138,255,${.25+.5*k})`; cx.lineWidth=2+2*k; cx.beginPath(); cx.arc(x,y-2,24,0,Math.PI*2); cx.stroke(); cx.strokeStyle=`rgba(255,255,255,${.2*k})`; cx.lineWidth=1; cx.beginPath(); cx.arc(x,y-2,24,G.time*2,G.time*2+1.2); cx.stroke();}
   if(P.spin>0){cx.strokeStyle=`rgba(244,236,224,${P.spin*2})`;cx.lineWidth=10;cx.beginPath();cx.arc(x,y,90*(1-P.spin)+30,0,Math.PI*2);cx.stroke();}
-  cx.globalAlpha=(P.inv>0&&Math.floor(G.time*12)%2)?.5:1;
+  const alpha=(P.inv>0&&Math.floor(G.time*12)%2)?.5:1;
+  let done=false;
+  try{
+    const T=cx.getTransform(), sc=Math.hypot(T.a,T.b), R=64, W=Math.ceil(R*2.2*sc);
+    if(sc>0&&W<2400){
+      const A=plCanvas('a',W), B=plCanvas('b',W), ac=A.getContext('2d'), bc=B.getContext('2d');
+      ac.setTransform(1,0,0,1,0,0); ac.clearRect(0,0,A.width,A.height); ac.setTransform(sc,0,0,sc,0,0); ac.imageSmoothingEnabled=cx.imageSmoothingEnabled; ac.lineJoin='round';
+      const prev=cx; cx=ac; try{drawPlayerBody(R,R*1.2);} finally{cx=prev;}
+      const ox=x-R, oy=y-R*1.2, Sz=A.width/sc, o=Math.max(1,Math.round(sc*.75))/sc;
+      const sil=col=>{bc.setTransform(1,0,0,1,0,0); bc.globalCompositeOperation='source-over'; bc.clearRect(0,0,B.width,B.height); bc.drawImage(A,0,0); bc.globalCompositeOperation='source-in'; bc.fillStyle=col; bc.fillRect(0,0,B.width,B.height); bc.globalCompositeOperation='source-over';};
+      cx.save(); cx.globalAlpha=alpha;
+      sil('rgba(8,5,10,.9)'); for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]) cx.drawImage(B,ox+dx*o,oy+dy*o,Sz,Sz);
+      cx.drawImage(A,ox,oy,Sz,Sz);
+      const L=rimLight(x,y), d=Math.max(1.5,sc*1.7); sil(L.col);
+      bc.globalCompositeOperation='destination-out'; bc.drawImage(A,-L.dx*d,-L.dy*d); bc.globalCompositeOperation='source-over';
+      cx.globalAlpha=alpha*L.a; cx.drawImage(B,ox,oy,Sz,Sz);
+      cx.restore(); done=true;
+    }
+  }catch(e){done=false;}
+  if(!done){cx.globalAlpha=alpha; drawPlayerBody(x,y); cx.globalAlpha=1;}
+  FLASH=false;
+  const low=S.hp>0&&P.hp/S.hp<.3&&!G.over;
+  if(!paused&&G.parts){
+    if(low&&Math.random()<.05) G.parts.push({x:x+rand(-9,9),y:y-30,vx:rand(-12,12),vy:rand(20,40),life:.55,max:.55,col:'#9fd8ff',size:2});
+    if(S.set4&&Math.random()<.12){const a=Math.random()*Math.PI*2; G.parts.push({x:x+Math.cos(a)*16,y:y-6+Math.sin(a)*14,vx:0,vy:-rand(14,30),life:.7,max:.7,col:SETCOL[S.set4]||'#5ad06a',size:2});}
+  }
+  if(melee&&P.swing>0){
+    const cl=S.fx.has('cleave'), span=cl?1.25:.9, prog=1-P.swing/.16, a0=P.swingA-span, a1=a0+2*span*Math.min(1,prog*1.2);
+    cx.lineCap='round';
+    for(const [rr,lw,al] of [[cl?62:46,14,.18],[cl?70:52,6,.4],[cl?76:57,2,.8]]){cx.strokeStyle=`rgba(255,248,230,${al*Math.min(1,P.swing*8)})`; cx.lineWidth=lw; cx.beginPath(); cx.arc(x,y,rr,Math.max(a0,a1-1.4),a1); cx.stroke();}
+  }
+}
+function drawPlayerBody(x,y){
+  const f=P.face, mv=P.moving&&!G.over, cls=P.cls||'krigare', melee=cls==='krigare';
+  const low=S.hp>0&&P.hp/S.hp<.3&&!G.over;
+  const st=mv?Math.sin(G.time*15):0, br=Math.sin(G.time*(low?5.5:2.2)), bob=mv?-Math.abs(st)*2:br*(low?1.3:.7);
+  const dir=Math.cos(f)<0?-1:1, up=Math.sin(f)<-.55;
+  const skin={krigare:'#e6c29a',hexa:'#f0d0b8',jagare:'#d8a880'}[cls], tint=setTint();
   FLASH=P.hurt>.1;
   cx.save(); cx.translate(x,y); if(P.buff&&P.buff.id==='jatte') cx.scale(1.35,1.35);
+  if(P.swing>0){const sw=melee?.16:.1, pr=clamp(1-P.swing/sw,0,1), lk=melee?(pr<.2?-pr*10:Math.sin((pr-.2)/.8*Math.PI)*4.5):-(1-pr)*2.5; cx.translate(Math.cos(P.swingA)*lk,Math.sin(P.swingA)*lk*.6);}
+  if(P.hurt>0){const k=clamp(P.hurt/.18,0,1); cx.translate(-Math.cos(f)*2.5*k,0); cx.translate(0,14); cx.scale(1+.1*k,1-.09*k); cx.translate(0,-14);}
+  const lean=(mv?dir*.07:0)+(low?dir*.11:0); if(lean){cx.translate(0,14); cx.rotate(lean); cx.translate(0,-14);}
+  if(low) cx.translate(0,1.5);
+  if(!mv){const k=br*(low?.035:.016); cx.translate(0,14); cx.scale(1-k*.6,1+k); cx.translate(0,-14);}
   drawFeet(P.equip.boots,st,cls);
   const cs=Math.sin(G.time*(mv?12:2))*(mv?3:1);
-  if(cls==='krigare') blob(()=>{cx.moveTo(-9,-4+bob);cx.quadraticCurveTo(-14-cs,8,-12-cs*1.5,17);cx.lineTo(12+cs*1.5,17);cx.quadraticCurveTo(14+cs,8,9,-4+bob);cx.closePath();},sh(0,6,15,'#8a2a2a'),2);
+  if(cls==='krigare'){const cc=tint||'#8a2a2a', tr=mv?-dir*3:0; blob(()=>{cx.moveTo(-9,-4+bob);cx.quadraticCurveTo(-14-cs+tr,8,-12-cs*1.5+tr*1.6,17+Math.abs(cs)*.3);cx.lineTo(12+cs*1.5+tr*1.6,17+Math.abs(cs)*.3);cx.quadraticCurveTo(14+cs+tr,8,9,-4+bob);cx.closePath();},sh(0,6,15,cc),2); line(-8+tr,15,8+tr,15,dk(cc,.3),1.2);}
   if(cls==='hexa'){const sk=dk(GEARCOL[gk(P.equip.armor)]||'#6a3a7a',.35); blob(()=>{cx.moveTo(-10,2+bob);cx.quadraticCurveTo(-15-cs*.5,12,-14,17);cx.lineTo(14,17);cx.quadraticCurveTo(15+cs*.5,12,10,2+bob);cx.closePath();},sh(0,10,15,sk),2);}
+  if(cls!=='krigare'){
+    const sc2=tint||(cls==='hexa'?'#c84a6a':'#d9603a'), ph=G.time*(mv?14:3.5), len=mv?18:9, pts=[];
+    for(let i=0;i<=4;i++){const t=i/4; pts.push([-dir*(4+t*len), -2+bob+t*(mv?3:9)+Math.sin(ph-i*1.2)*t*(mv?3.5:1.2)]);}
+    for(let i=0;i<4;i++) line(pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1],OL,6.2-i*1.1);
+    for(let i=0;i<4;i++) line(pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1],FLASH?'#fff':sc2,4.4-i*.9);
+    line(pts[3][0],pts[3][1]+1.5,pts[4][0]-dir*1.5,pts[4][1]+3,dk(sc2,.25),1);
+  }
+  if(cls==='jagare'){cx.save(); cx.translate(-dir*7,-1+bob); cx.rotate(-dir*.38);
+    blob(RR(-3.6,-11,7.2,19,2.2),sh(0,-2,7,'#6a4a2a'),1.3); line(-3.6,-7,3.6,-7,'#4a3420',1.2);
+    for(const [k,fc] of [[-2,'#e8e4dc'],[0,'#c8302a'],[2,'#e8e4dc']]){line(k,-11,k,-16,'#8a5a32',1.2); blob(()=>{cx.moveTo(k,-15);cx.lineTo(k-1.8,-19);cx.lineTo(k,-18);cx.lineTo(k+1.8,-19);cx.closePath();},fc,.8);}
+    cx.restore();}
   const wa=melee?(P.swing>0?P.swingA-.9+(1-P.swing/.16)*1.8:f+.5):(P.swing>0?f:f+.35);
   const arm=()=>{cx.save(); cx.translate(0,2+bob); cx.rotate(wa); cx.translate(12-(!melee&&P.swing>0?3:0),0); drawHeld(cls,P.equip.weapon);
     blob(E(0,0,3.8,3.8),skin,1.6); const rg=P.equip.ring; if(rg&&rg.r>=1) circ(1.5,-2.5,1.4,RAR[rg.r].c); cx.restore();};
   const behind=Math.sin(wa)<-.15;
   if(behind) arm();
   drawTorso(P.equip.armor,cls,bob,dir);
-  if(cls==='jagare') blob(RR(-dir*16-4,-6+bob,8,14,2),'#5a4a2a',1.3);
-  blob(E(-dir*12,5+bob,3.6,3.6),skin,1.6);
+  const ar=P.equip.armor, ak=gk(ar);
+  if(cls==='krigare'&&!['Förkläde','Morgonrock','Reflexväst','Fiskeväst'].includes(ak)){blob(RR(-7,9+bob,14,7,2),FLASH?'#fff':'#ece4d4',1.1); circ(2.5,12.5+bob,1.3,'#b8584a'); circ(-2,14+bob,.9,'#b8584a');}
+  if(ar&&ar.r>=2){const ac2=RAR[ar.r].c, base=GEARCOL[ak]||{krigare:'#6a5446',hexa:'#6a3a7a',jagare:'#4a6a3a'}[cls]; for(const s of [-1,1]){blob(E(s*10,-2+bob,4.8,3.4),sh(s*10,-3+bob,4.5,lt(base,.12)),1.3); line(s*7,-1+bob,s*13.5,-.5+bob,ac2,1.4);}}
+  if(cls==='jagare') line(-dir*9,-3+bob,dir*8,11+bob,'#4a3420',1.8);
+  if(cls!=='krigare'){const sc2=tint||(cls==='hexa'?'#c84a6a':'#d9603a'); blob(RR(-9,-5+bob,18,4.5,2),sh(0,-3+bob,9,sc2),1.2); line(-6,-3+bob,6,-3+bob,dk(sc2,.25),.8);}
+  if(cls==='hexa'){const hx=-dir*7, hy=6+bob; line(hx-3,hy-1,hx-1,hy-9,'#c8ccd2',1.1); line(hx+1,hy-1,hx+3,hy-9,'#c8ccd2',1.1); circ(hx-1,hy-9.5,1,'#f3d351'); circ(hx+3,hy-9.5,1,'#f3d351');
+    blob(E(hx+2.5,hy-2,3,3),sh(hx+2.5,hy-2,3,'#e86a9a'),1); blob(RR(hx-5,hy-2,10,8,2),sh(hx,hy+1,6,'#7a3a4a'),1.2); cx.strokeStyle=OL; cx.lineWidth=1.1; cx.beginPath(); cx.arc(hx,hy-2,3.4,Math.PI,0); cx.stroke();}
+  const sw=mv?st*1.6:0;
+  blob(E(-dir*12+(mv?-dir*sw*.4:0),5+bob+sw,3.6,3.6),skin,1.6);
   blob(E(0,-10+bob,10,9.5),sh(0,-10+bob,10,skin));
-  const lx=Math.cos(f),ly=Math.sin(f)*.6, blink=(G.time%3.7)<.12, ex=lx*2.5, ey=-10+bob+ly*2;
+  const lx=Math.cos(f),ly=Math.sin(f)*.6, blink=(G.time%3.7)<.12||low&&(G.time%1.6)<.1, ex=lx*2.5, ey=-10+bob+ly*2;
   if(!up){
     eye(-4+ex,ey,2.8,lx,ly,null,blink); eye(4+ex,ey,2.8,lx,ly,null,blink);
-    if(cls==='krigare'){const my=-5+bob+ly*2; cx.fillStyle=FLASH?'#fff':'#6a3e22'; cx.beginPath(); cx.ellipse(ex-3,my,3.6,1.8,-.35,0,Math.PI*2); cx.ellipse(ex+3,my,3.6,1.8,.35,0,Math.PI*2); cx.fill();}
+    if(low) line(-6.5+ex,ey-4.2,-1.5+ex,ey-3,OL,1.2), line(6.5+ex,ey-4.2,1.5+ex,ey-3,OL,1.2);
+    if(cls==='krigare'){const my=-5+bob+ly*2; cx.fillStyle=FLASH?'#fff':'#6a3e22'; cx.beginPath(); cx.ellipse(ex-3,my,3.6,1.8,-.35,0,Math.PI*2); cx.ellipse(ex+3,my,3.6,1.8,.35,0,Math.PI*2); cx.fill(); if(low) blob(E(ex,my+2.6,1.6,1.2+Math.abs(br)*.8),'#3a1a1a',.8);}
     else if(cls==='hexa'){
       cx.strokeStyle=OL; cx.lineWidth=1.3; cx.beginPath(); cx.arc(-4+ex,ey,3.8,0,Math.PI*2); cx.stroke(); cx.beginPath(); cx.arc(4+ex,ey,3.8,0,Math.PI*2); cx.stroke(); line(-.2+ex,ey,.2+ex,ey,OL,1.3);
+      {const gt=G.time%4.5; if(gt<.3){const g=gt/.3; line(-6+ex+g*4,ey-2.5,-4.5+ex+g*4,ey+1.5,'rgba(255,255,255,.95)',1.2); line(2+ex+g*4,ey-2.5,3.5+ex+g*4,ey+1.5,'rgba(255,255,255,.95)',1.2);}}
       circ(-6+ex,ey+4.5,2,'rgba(232,110,120,.45)'); circ(6+ex,ey+4.5,2,'rgba(232,110,120,.45)');
-      cx.strokeStyle=OL; cx.lineWidth=1.2; cx.beginPath(); cx.arc(ex,ey+5,2.4,.3,Math.PI-.3); cx.stroke();
+      cx.strokeStyle=OL; cx.lineWidth=1.2; cx.beginPath(); if(low) cx.ellipse(ex,ey+5.5,1.6,1.1+Math.abs(br),0,0,Math.PI*2); else cx.arc(ex,ey+5,2.4,.3,Math.PI-.3); cx.stroke();
     }else{
       cx.fillStyle='rgba(70,50,30,.55)'; for(const [a,b] of [[-5,4],[-2,6],[2,6],[5,4],[-4,6.5],[4,6.5],[0,7]]) cx.fillRect(ex+a,ey+b,1.4,1.4);
       line(-6.5+ex,ey-4,-1.5+ex,ey-3.6,OL,1.8); line(6.5+ex,ey-4,1.5+ex,ey-3.6,OL,1.8);
-      cx.strokeStyle=OL; cx.lineWidth=1.3; cx.beginPath(); cx.arc(ex+1,ey+4.5,2.6,.2,Math.PI-.6); cx.stroke();
+      cx.strokeStyle=OL; cx.lineWidth=1.3; cx.beginPath(); if(low) cx.ellipse(ex+1,ey+5,1.6,1.1+Math.abs(br),0,0,Math.PI*2); else cx.arc(ex+1,ey+4.5,2.6,.2,Math.PI-.6); cx.stroke();
     }
+    if(low) circ(dir*8+ex,-15+bob+((G.time*1.5)%1)*5,1.4,'rgba(150,210,255,.9)');
   }
   drawHair(cls,bob,!!P.equip.helm);
   drawHeadgear(P.equip.helm,bob,dir);
   if(!behind) arm();
-  cx.restore(); FLASH=false; cx.globalAlpha=1;
-  if(melee&&P.swing>0){
-    const cl=S.fx.has('cleave'), span=cl?1.25:.9, prog=1-P.swing/.16, a0=P.swingA-span, a1=a0+2*span*Math.min(1,prog*1.2);
-    cx.lineCap='round';
-    for(const [rr,lw,al] of [[cl?62:46,14,.18],[cl?70:52,6,.4],[cl?76:57,2,.8]]){cx.strokeStyle=`rgba(255,248,230,${al*Math.min(1,P.swing*8)})`; cx.lineWidth=lw; cx.beginPath(); cx.arc(x,y,rr,Math.max(a0,a1-1.4),a1); cx.stroke();}
-  }
+  cx.restore();
 }
 
 function slimeBody(r,c){
@@ -5158,7 +5223,7 @@ function extraGlows(glow){
   for(const r of G.rings||[]) if(r.r>40) glow(r.x,r.y,r.r*1.3,`rgba(255,190,110,${(.25*Math.max(0,r.t/r.max)).toFixed(3)})`);
 }
 
-Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
+Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); Object.assign(EN_EXACT,{"Pixelgrafik på. Du kan byta i inställningarna.":"Pixel graphics on. You can switch in the settings."}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
 let splashDone=false;
 function endSplash(){
   if(splashDone) return; splashDone=true; const s=$('splash'); s.classList.add('done'); setTimeout(()=>{s.hidden=true;},700);
@@ -5393,7 +5458,6 @@ addEventListener('keydown',e=>{
   if(k==='escape'){if(invOpen||shopOpen||smithOpen||trainOpen||potsOpen||stashOpen||bakeOpen||homeOpen||wpOpen||XOPEN){if(invOpen) openInv(false); closePanels();} else openPause(true); return;}
   if(k==='p'&&!paused){startPortal(); return;}
   if(k==='m'){toggleMute();return;}
-  if(k==='g'){setPixel(!PIXEL);return;}
   if(paused) return;
   keys.add(k);
   if(k==='shift') cast('dash'); else if(k==='e') cast(mySkills().e); else if(k==='q') cast(mySkills().q); else if(k==='r') cast(mySkills().r); else if(k==='f'||k==='1') drinkPotion(); else if(k==='2') cast(TSK[P.cls||'krigare'].u1); else if(k==='3') cast(TSK[P.cls||'krigare'].u2);
