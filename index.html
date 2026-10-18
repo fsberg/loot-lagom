@@ -225,6 +225,7 @@ html.pixel .beta{border-radius:0;font-family:var(--body)}
 .tcol h3{margin:0 0 8px;font-size:17px}.trow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed rgba(168,153,138,.25)}
 .tnode{flex:1 1 90px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:6px 8px;background:rgba(0,0,0,.25);border:2px solid rgba(168,153,138,.3);border-radius:6px;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-align:left}
 .sk[hidden]{display:none!important}
+.evrow{display:flex;gap:10px;align-items:center;padding:7px 8px;border-bottom:1px dashed rgba(168,153,138,.25)}.evrow b{min-width:78px;color:var(--torch)}.evrow span{flex:1}.evrow.done{opacity:.55}.evrow em{font-style:normal;color:#7ad06a}
 .tlink{position:relative;height:20px;margin:-6px 0 2px;text-align:center;font-size:11px;color:var(--muted)}
 .tlink::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed rgba(168,153,138,.35)}
 .tlink.open::before{border-left:2px solid var(--torch)}
@@ -387,6 +388,14 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
   <div class="potgrid" id="ptGrid"></div>
 </div>
 
+<div class="panel" id="evP" hidden>
+  <div class="panel-head"><h2>Göstas Godispass</h2><div class="row"><span class="chip"><small>Godis</small><span class="gold" id="evCandy">0</span></span><button class="btn sm" data-act="close">Stäng (T)</button></div></div>
+  <p class="quote" id="evQuote"></p>
+  <p style="margin:-6px 0 10px">Samla godis i Spökgrottan och ute i ruinen. Hämta belöningarna här när du har samlat tillräckligt. Passet gäller bara under Halloween.</p>
+  <div class="row" style="justify-content:flex-start;margin-bottom:10px"><button class="btn primary sm" data-act="evgo">Gå in i Spökgrottan</button><span class="muted" id="evRuns"></span></div>
+  <div class="bar" aria-hidden="true" style="margin-bottom:10px"><i id="evBar" style="width:0%"></i></div>
+  <div id="evList"></div>
+</div>
 <div class="panel" id="stairP" hidden style="width:min(380px,calc(100% - 32px))">
   <div class="panel-head"><h2>Trappan</h2></div>
   <p id="stTxt" style="margin:-4px 0 14px"></p>
@@ -782,6 +791,9 @@ const ET={
   vildsvin:{name:'Stressat Vildsvin',r:16,hp:55,dmg:12,spd:60,xp:20,kind:'charger',acd:3.2,col:'#6a4a3a',q:['Jag är sen till mötet!','Oink. Men argt.','Har någon sett min kalender?']},
   mattant:{name:'Skolmattant',r:14,hp:40,dmg:6,spd:60,xp:18,kind:'ranged',proj:'kbulle',fan:3,psp:210,wind:.3,acd:2.8,col:'#d88a9a',q:['Ät upp, annars blir det ingen efterrätt!','Köttbullar till alla!','Ta två, du är så tunn.','Inga armbågar på bordet!']},
   snogubbe:{name:'Snögubbe med Attityd',r:17,hp:55,dmg:9,spd:45,xp:22,kind:'ranged',proj:'snoboll',psp:190,pr:10,pslow:1.2,wind:.5,acd:2.5,col:'#eef4fa',q:['Det är kallt här. För dig.','Min näsa är en morot. Problem?','Vintern kommer. Den är jag.']},
+  pumpa:{name:'Pumpahuvud',r:15,hp:40,dmg:9,spd:95,xp:16,kind:'melee',acd:.9,col:'#e8742a',q:['Bus eller godis!','Jag är urholkad. Inuti OCH utanpå.','Paj? Över min döda kropp.','Lys upp mitt liv!']},
+  haxa:{name:'Häxan Hjördis',r:14,hp:34,dmg:8,spd:70,xp:18,kind:'ranged',proj:'brygd',psp:220,wind:.35,acd:2.3,col:'#5a3a7a',q:['Hihihi!','Min kvast är leasad.','En groda till, tack!','Brygden är nästan klar. Nästan.']},
+  pumpkung:{name:'Pumpakungen Pompe',r:40,hp:950,dmg:20,spd:70,xp:450,kind:'boss',b:3,acd:1,col:'#e8742a',minion:'pumpa',pk:'pfro',q:['BUS ELLER GODIS!','Jag är en GRÖNSAK av rang!','Ni ska bli pumpasoppa!'],intro:'Världens största pumpa. Och den har en krona.'},
   golem:{name:'Monteringsgolem',r:17,hp:72,dmg:8,spd:55,xp:26,kind:'ranged',proj:'skruv',burst:3,acd:2.4,col:'#c8a46a',q:['Det fattas en skruv!','Steg 47: panik.','Instruktionen var på fel språk.']},
   boss3:{name:'Kaninkungen Kalle Karot',r:38,hp:900,dmg:22,spd:90,xp:420,kind:'boss',b:3,acd:1,col:'#e8ddd0',q:['MOROTSKRIG!','Ni har ätit av min trädgård!','Hopp, hopp, KROSS!'],intro:'Han har en krona. Och väldigt starka bakben.'},
   boss4:{name:'Monteringsdraken Mats',r:40,hp:1100,dmg:24,spd:60,xp:520,kind:'boss',b:4,acd:1,col:'#c8a46a',q:['Det fattas en skruv... I DIG!','Monteringsanvisning: bränn allt.','Jag består av 4000 delar!'],intro:'Byggd av 4000 delar. Det blev några över.'},
@@ -1277,7 +1289,7 @@ const keys=new Set(), mouse={x:0,y:0,down:false};
 let touchMode=false, joy=null, touchAtk=false;
 
 function newHero(){
-  return {charmOn:['vanlig'],cleared:[],sk:{},runes:{},runeInv:{},furn:[],title:'',side:{},clock:60,screws:0,shards:0,bagUp:0,scrolls:2,wps:[1],sets:0,gems:{},pets:[],pet:null,ach:{},cnt:{},para:0,keys:0,riftTier:0,food:null,hc:false,story:{pages:0,told:-1,lore:0,prolog:false,ending:false},diff:'lagom',cls:'krigare',lvl:1,xp:0,gold:0,potions:3,kills:0,deaths:0,best:1,bag:[],perks:{},pp:0,bought:0,pots:['vanlig'],pot:'vanlig',prog:{quests:0,fountain:0,ghosts:0,props:0},
+  return {evs:{},charmOn:['vanlig'],cleared:[],sk:{},runes:{},runeInv:{},furn:[],title:'',side:{},clock:60,screws:0,shards:0,bagUp:0,scrolls:2,wps:[1],sets:0,gems:{},pets:[],pet:null,ach:{},cnt:{},para:0,keys:0,riftTier:0,food:null,hc:false,story:{pages:0,told:-1,lore:0,prolog:false,ending:false},diff:'lagom',cls:'krigare',lvl:1,xp:0,gold:0,potions:3,kills:0,deaths:0,best:1,bag:[],perks:{},pp:0,bought:0,pots:['vanlig'],pot:'vanlig',prog:{quests:0,fountain:0,ghosts:0,props:0},
     equip:{
       weapon:{id:IID++,il:1,r:0,slot:'weapon',base:'Smörkniv',name:'Rostig Smörkniv',stats:{dmg:3},flavor:'Farfars. Han använde den till smör.',value:2},
       helm:{id:IID++,il:1,r:0,slot:'helm',base:'Kastrull',name:'Kastrull',stats:{armor:2,hp:5},flavor:'Inte en hjälm. Men nästan.',value:2},
@@ -1377,6 +1389,106 @@ function spawn(type,x,y,elite=false){
   if(elite){const na=G.depth>=16?3:G.depth>=8?2:1; e.affs=shuffle(Object.keys(EAFF)).slice(0,na); e.aff=e.affs[0]; e.name+=` [${e.affs.map(a=>EAFF[a].n).join(' · ')}]`; if(e.affs.includes('snabb')) e.spd*=1.45;}
   e.hp=e.maxhp; if(!NOSPAWN) G.enemies.push(e); return e;
 }
+// ---- seasonal events ----
+const EVENTS={halloween:{n:'Halloween',from:[9,10],to:[10,8],pool:['pumpa','pumpa','haxa','skelett','spoke','fladdermus'],boss:'pumpkung'}};
+function evNow(){
+  try{const o=localStorage.getItem('loot-lagom-event'); if(o) return o==='off'?null:(EVENTS[o]?o:null);}catch(e){}
+  const d=new Date(), v=d.getMonth()*100+d.getDate();
+  for(const id in EVENTS){const E2=EVENTS[id]; if(v>=E2.from[0]*100+E2.from[1]&&v<=E2.to[0]*100+E2.to[1]) return id;}
+  return null;
+}
+function evState(){const id=evNow(); if(!id||!P) return null; const key=id+new Date().getFullYear(); P.evs=P.evs||{}; return P.evs[key]||(P.evs[key]={candy:0,claimed:[],runs:0});}
+const EVUNIQ={
+  helm:{n:'Pumpahjälmen',look:'Pumpahjälm',fx:'lux',st:{hp:[18,28],armor:[4,7]},f:'Urholkad med kärlek. Luktar paj.'},
+  armor:{n:'Spöklakanet',look:'Spöklakan',fx:'dodge',st:{armor:[9,13],hp:[22,32]},f:'Två hål för ögonen. Ett för kaffet.'},
+  ring:{n:'Godisringen',fx:'goldheal',st:{crit:[5,8],dmg:[3,5]},f:'Smakar jordgubb. Ät den inte.'},
+};
+function evItem(slot){
+  const u=EVUNIQ[slot], il=Math.max(1,P.best||1), it={id:IID++,il,r:3,stats:{},slot,name:u.n,fx:u.fx,flavor:u.f,base:SLOTS[slot].l,ev:1};
+  if(u.look) it.look=u.look;
+  const add=(k,v)=>{it.stats[k]=(it.stats[k]||0)+v;};
+  for(const k in u.st) add(k,sv(k,rand(...u.st[k]),il));
+  for(const k of shuffle(Object.keys(AFF)).slice(0,ri(2,3))) add(k,sv(k,rand(AFF[k].min,AFF[k].max),il));
+  it.value=Math.round((4+il*3)*30); return it;
+}
+function giveItem(it){if(P.bag.length<BAG){P.bag.push(it); log(`Du fick: ${it.name}`,RAR[it.r].c);} else{drop(P.x,P.y,{kind:'item',item:it}); log('Väskan är full, så Gösta lade den på marken.','#ff7a6a');}}
+const EVTRACK=[
+  {need:10,n:'2 hälsodrycker',give:()=>{P.potions=Math.min(9,P.potions+2);}},
+  {need:25,n:'500 guld',give:()=>{P.gold+=500;}},
+  {need:45,n:'En stor juvel',give:()=>{const k=pick(Object.keys(GEMS))+'1'; P.gems[k]=(P.gems[k]||0)+1;}},
+  {need:70,n:'Pumpahjälmen (legendarisk hjälm)',give:()=>giveItem(evItem('helm'))},
+  {need:100,n:'En runa',give:()=>{const k=pick(Object.keys(RUNES)); P.runeInv=P.runeInv||{}; P.runeInv[k]=(P.runeInv[k]||0)+1;}},
+  {need:135,n:'Husdjuret Fladder-Fia',give:()=>unlockPet('fia')},
+  {need:175,n:'Spöklakanet (legendarisk rustning)',give:()=>giveItem(evItem('armor'))},
+  {need:220,n:'Godisringen (legendarisk ring)',give:()=>giveItem(evItem('ring'))},
+  {need:270,n:'Loppisfyndet Pumpalyktan',give:()=>unlockPot('pumpa')},
+  {need:330,n:'Titeln Pumpakungen och 2000 guld',give:()=>{P.gold+=2000; achieve('pumpkin');}},
+];
+Object.assign(POTS,{pumpa:{n:'Pumpalyktan',c:'#e8742a',c2:'#3a2a1a',d:'Dina träffar har 8% chans att tända en pumpa som exploderar efter en sekund och gör 150% skada.',how:'Belöning i Gravgrävar-Göstas godispass under Halloween.'}});
+PETS.fia={n:'Fladdermusen Fladder-Fia',how:'Belöning i Gravgrävar-Göstas godispass under Halloween.',d:'Fladdrar runt och biter fiender.',c:'#4a3a5a'};
+ACH.pumpkin=['Pumpakung','Klara hela Göstas godispass.']; TITLES.pumpkin='Pumpakungen';
+const GOSHI=['Godkväll. Eller godnatt. Det är svårt att säga här.','Bus eller godis? Jag föredrar godis. Och spadar.'];
+const GOSQ=['Jag har grävt gravar i fyrtio år. Det här är första gången de gräver tillbaka.','Pumpakungen bor i Spökgrottan. Han har ingen hjärna, bara frön.','Godis är valutan i natt. Guld är så förra veckan.','Häxan Hjördis är min kusin. Vi pratar inte.','Lyktan? Den har jag fått av en pumpa.'];
+function halloweenTown(g,cxT,cyT,X0,Y0,W,H){
+  const go={npc:true,type:'gosta',x:(cxT+8+.5)*TILE,y:(cyT-1+.5)*TILE,r:14,title:'Gravgrävar-Gösta (Halloween)',hi:GOSHI,lines:GOSQ,say:null,qt:rand(3,8),greeted:false};
+  g.npcs.push(go); g.portals.push({x:(cxT+8.5)*TILE,y:(cyT+1.4)*TILE,kind:'event'});
+  const f=g.fountain, pk=[];
+  for(let i=0;i<7;i++){const a=i/7*Math.PI*2+.3; pk.push({x:f.x+Math.cos(a)*62,y:f.y+Math.sin(a)*42+8,s:.8+(i%3)*.1});}
+  for(const l of g.lamps) pk.push({x:l.x+14,y:l.y+4,s:.7});
+  for(const hs of g.houses) pk.push({x:(hs.x+hs.w*.43)*TILE-8,y:Y0*TILE+4,s:.75},{x:(hs.x+hs.w*.43)*TILE+30,y:Y0*TILE+4,s:.65});
+  for(const s of g.stalls) pk.push({x:s.x+38,y:s.y+8,s:.6});
+  g.pumpkins=pk;
+}
+function drawPumpkinBody(r,lx,col){
+  for(const [ox,rx] of [[-r*.4,r*.55],[r*.4,r*.55],[0,r*.62]]) blob(E(ox,0,rx,r*.8),sh(ox,-r*.2,r*.7,col),1.6);
+  line(0,-r*.75,r*.2,-r*1.08,'#3a6a2a',Math.max(2,r*.16)); blob(E(r*.35,-r*.95,r*.25,r*.12,.5),'#4a8a3a',1);
+  const fl=.75+.25*Math.sin(G.time*10+r), gc=FLASH?'#fff':`rgb(255,${Math.round(190*fl)},60)`;
+  blob(()=>{cx.moveTo(-r*.45+lx,-r*.05);cx.lineTo(-r*.25+lx,-r*.38);cx.lineTo(-r*.05+lx,-r*.05);cx.closePath();},gc,1);
+  blob(()=>{cx.moveTo(r*.05+lx,-r*.05);cx.lineTo(r*.25+lx,-r*.38);cx.lineTo(r*.45+lx,-r*.05);cx.closePath();},gc,1);
+  blob(()=>{cx.moveTo(-r*.45+lx,r*.2); for(let i=0;i<=6;i++) cx.lineTo(-r*.45+lx+i*r*.15,r*.2+(i%2?r*.12:0)); cx.lineTo(r*.45+lx,r*.32); cx.quadraticCurveTo(lx,r*.62,-r*.45+lx,r*.32); cx.closePath();},gc,1);
+}
+function drawPumpkin(x,y,s){cx.save(); cx.translate(x,y); ell(0,8*s,12*s,3.5*s,'rgba(0,0,0,.35)'); cx.scale(s,s); drawPumpkinBody(11,0,'#e8742a'); cx.restore();}
+function drawGosta(n){
+  const dir=P.x<n.x?-1:1, t=G.time;
+  cx.save(); cx.translate(n.x,n.y); ell(0,15,15,5,'rgba(0,0,0,.35)');
+  blob(E(-5,13,4.5,3),'#2a2420',1.4); blob(E(5,13,4.5,3),'#2a2420',1.4);
+  cx.save(); cx.translate(-dir*13,0); line(0,12,0,-22,OL,3.6); line(0,12,0,-22,'#7a5a3a',2); blob(()=>{cx.moveTo(-5,12);cx.lineTo(5,12);cx.lineTo(4,22);cx.quadraticCurveTo(0,25,-4,22);cx.closePath();},sh(0,16,6,'#8a8f96'),1.2); cx.restore();
+  blob(()=>{cx.moveTo(-9,-4);cx.lineTo(-11,14);cx.lineTo(11,14);cx.lineTo(9,-4);cx.closePath();},sh(0,4,12,'#3a3a44'),1.8); line(0,-3,0,13,'#24242c',1.2); circ(-2,3,1,'#8a8f96'); circ(-2,8,1,'#8a8f96');
+  blob(E(-dir*12,2,3.4,3.4),'#d8c8b0',1.3);
+  cx.save(); cx.translate(dir*12,4+Math.sin(t*2)*1.5); line(0,-9,0,-2,OL,1.2); blob(RR(-4,-2,8,9,2),'#2a2428',1.2); ell(0,2.5,2.5,3.2,`rgb(255,${180+Math.round(40*Math.sin(t*9))},90)`); cx.restore();
+  blob(E(dir*12,-4,3.2,3.2),'#d8c8b0',1.3);
+  blob(E(0,-11,8,8.5),sh(0,-11,8,'#d8c8b0')); eye(-3+dir,-12,2,dir,0); eye(3+dir,-12,2,dir,0); line(-3,-6.5,3,-6,OL,1.2);
+  cx.fillStyle='rgba(60,50,40,.5)'; for(const [a,b] of [[-4,-5],[-1,-4.5],[2,-4.5],[4,-5]]) cx.fillRect(a,b,1.2,1.2);
+  blob(RR(-11,-19,22,3,1),'#1a1820',1.3); blob(RR(-7,-31,14,13,1),sh(0,-25,8,'#24222a'),1.4); line(-7,-21,7,-21,'#e8742a',2);
+  cx.restore();
+}
+
+function makeEventDungeon(){const id=evNow(); if(!id){log('Spökgrottan har stängt för säsongen.','#a8998a'); return;} newFloor(Math.max(2,P.best||1),{rift:true,mods:[],ev:id});}
+function evKill(e){
+  const id=evNow(); if(!id||e.nodrop) return; const inEv=G.rift&&G.rift.ev; let n=0;
+  if(inEv){if(e.T.kind==='boss') n=25; else if(e.elite||e.mini) n=3; else if(Math.random()<.45) n=1;}
+  else if(!G.town&&Math.random()<(e.elite?.3:.04)) n=1;
+  if(n) drop(e.x,e.y,{kind:'candy',amt:n,c:pick(['#e8742a','#b07aff','#7ad06a','#f4a8c8'])});
+}
+function eventWin(e){
+  banner('Pumpakungen är besegrad!','Godiset regnar. En portal hem öppnade sig.'); SFX.play('levelup');
+  for(let i=0;i<2;i++) drop(e.x,e.y,{kind:'item',item:makeItem(G.depth,2,1)});
+  if(Math.random()<.35) drop(e.x,e.y,{kind:'item',item:evItem(pick(['helm','armor','ring']))});
+  G.portals.push({x:e.x,y:e.y+40,kind:'riftback',ev:true}); const s=evState(); if(s) s.runs=(s.runs||0)+1;
+}
+function renderEvent(){
+  const s=evState(); if(!s){$('evList').innerHTML='<p class="muted">Inget event pågår just nu.</p>'; return;}
+  $('evCandy').textContent=s.candy; $('evQuote').textContent='”'+pick(GOSQ)+'”'; $('evRuns').textContent=s.runs?`  Pumpakungen besegrad ${s.runs} gånger`:'';
+  setS($('evBar'),'width',Math.min(100,s.candy/EVTRACK[EVTRACK.length-1].need*100).toFixed(1)+'%');
+  $('evList').innerHTML=EVTRACK.map((t,i)=>{const got=s.claimed.includes(i), can=!got&&s.candy>=t.need;
+    return `<div class="evrow ${got?'done':''}"><b>${t.need} godis</b><span>${t.n}</span>${got?'<em>Hämtad</em>':can?`<button class="btn primary sm" data-claim="${i}">Hämta</button>`:`<span class="muted" style="flex:0 0 auto">${t.need-s.candy} kvar</span>`}</div>`;}).join('');
+}
+$('evP').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b||b.disabled) return;
+  if(b.dataset.act==='close'){openX('evP',false); return;}
+  if(b.dataset.act==='evgo'){openX('evP',false); makeEventDungeon(); return;}
+  if(b.dataset.claim!==undefined){const s=evState(), i=+b.dataset.claim, t=EVTRACK[i]; if(s&&t&&!s.claimed.includes(i)&&s.candy>=t.need){s.claimed.push(i); t.give(); SFX.play('cash'); banner('Belöning!',t.n); recalc(); save();} renderEvent();}
+});
 // ---- remembered floors: same layout when you come back, cleared floors stay empty ----
 let NOSPAWN=false; const FLOORC=new Map();
 const isCleared=d=>!!(P&&P.cleared&&P.cleared.includes(d));
@@ -1407,7 +1519,8 @@ function newFloorGen(depth,opt){
   fresh.forEach((f,i)=>{if(!pool.includes(f)) pool[i]=f;});
   if(fresh.length&&!NOSPAWN) setTimeout(()=>log(`Nytt på den här våningen: ${fresh.map(f=>ET[f].name).join(', ')}.`,'#ff8b2e'),3000);
   if(opt&&opt.rift&&opt.mods.includes('kaniner')){pool.length=0; pool.push('kanin','kanin','fladdermus');}
-  const isBoss=depth%5===0;
+  const isBoss=depth%5===0&&!(opt&&opt.rift);
+  if(opt&&opt.ev&&EVENTS[opt.ev]){pool.length=0; pool.push(...EVENTS[opt.ev].pool);}
   for(const r of G.m.rooms){
     if(r===st) continue;
     if(r===G.m.stairs&&isBoss){
@@ -1421,7 +1534,7 @@ function newFloorGen(depth,opt){
   const others=G.m.rooms.filter(r=>r!==st&&r!==G.m.stairs);
   if(others.length&&Math.random()<.65){const [x,y]=roomPos(pick(others),1.5); spawn('mimic',x,y);}
   if(!NOSPAWN&&!isBoss&&depth>=2&&others.length&&Math.random()<.35){const [x,y]=roomPos(pick(others)); spawn('sune',x,y); setTimeout(()=>log('Du hör klirret av svarta pengar någonstans...','#b07aff'),2400);}
-  G.theme=themeFor(depth); G.tex=TEX.theme(G.theme); G.decor=[]; G.chunks=[]; G.dying=[]; G.hitstop=0; G.slowmo=0; G.zoom=OPT.zoom||1;
+  G.theme=opt&&opt.ev?'krypta':themeFor(depth); G.tex=TEX.theme(G.theme); G.decor=[]; G.chunks=[]; G.dying=[]; G.hitstop=0; G.slowmo=0; G.zoom=OPT.zoom||1;
   if(!(opt&&opt.rift)&&(depth===1||themeFor(depth-1)!==G.theme)) setTimeout(()=>log(`Du kliver in i ${TH().n}.`,'#9fd0ff'),1200);
   G.props=[]; G.altars=[]; G.decals=[]; G.torches=[]; G.rings=[]; G.bolts=[]; G.fires=[]; G.timers=[]; G.clouds=[]; G.holes=[]; G.marks=[]; G.stinks=[]; G.emarks=[]; G.traps=[];
   for(const r of G.m.rooms){
@@ -1456,7 +1569,7 @@ function newFloorGen(depth,opt){
     G.rift=opt; G.m.t[G.m.stairs.cy*MW+G.m.stairs.cx]=0; G.m.t[st.cy*MW+st.cx]=0; G.portals=[]; G.npcs=[];
     for(const e of G.enemies){if(opt.mods.includes('snabba')) e.spd*=1.5; if(opt.mods.includes('jattar')){e.r*=1.35; e.maxhp=Math.round(e.maxhp*1.5); e.hp=e.maxhp;}}
     G.riftKills=0; G.riftNeed=Math.round(G.enemies.length*.75); G.quest=null;
-    banner('Kaosportalen',opt.mods.map(m=>RIFTMODS[m]).join(' · ')); return;
+    banner(opt.ev?'Spökgrottan':'Kaosportalen',opt.ev?'Besegra spökena så kommer Pumpakungen. Samla godis!':opt.mods.map(m=>RIFTMODS[m]).join(' · ')); return;
   }
   G.pool=pool; G.spikes=[]; G.challenge=null; G.event=null; G.npcs=[];
   for(const s of G.m.secrets||[]) G.props.push({x:(s.cx)*TILE,y:(s.cy)*TILE,r:14,kind:'chest',secret:true});
@@ -1594,7 +1707,7 @@ function wake(e){e.sleeping=false;e.aggro=true;SFX.play('chomp');say(e,pick(e.T.
 function killEnemy(e){
   e.dead=true; P.kills++; if(!e.chal&&!e.nodrop||e.T.kind==='boss') countKill(e);
   if(G.rift&&!e.nodrop){G.riftKills=(G.riftKills||0)+1;}
-  if(e.riftBoss) riftWin(e);
+  if(e.riftBoss){if(G.rift&&G.rift.ev) eventWin(e); else riftWin(e);}
   if(S.set4==='kock'&&Math.random()<.6){const x=e.x,y=e.y; G.timers.push({t:.12,f:()=>explode(x,y,70,S.dmg*1.5,'#ffb03a')});}
   let xp=e.T.xp*(1+0.3*(G.depth-1))*(e.elite?2:1)*DF().xp; if(S.fx.has('xp')) xp*=1.5; xp*=S.xpMul||1;
   gainXp(xp);
@@ -1615,7 +1728,7 @@ function killEnemy(e){
   if(e.T.kind==='bomber'){const x=e.x,y=e.y; G.timers.push({t:.1,f:()=>explode(x,y,75,S.dmg*1.5,'#ff9a3a')});}
   if(hasAff(e,'explo')) G.emarks.push({x:e.x,y:e.y,r:85,t:.8,max:.8,dmg:e.dmg*1.6,src:e.name,col:'#ff8b2e'});
   if(e.nodrop) return;
-  charmKill(e);
+  charmKill(e); evKill(e);
   extraLoot(e);
   const gm=(1+S.gf/100)*(1+DF().loot), k=e.T.kind;
   if(Math.random()<.5||e.elite||k!=='melee') drop(e.x,e.y,{kind:'gold',amt:Math.max(1,Math.round(rand(2,6)*G.depth*gm*(e.elite?4:k==='boss'?15:k==='mimic'?6:k==='thief'?10:1)))});
@@ -1799,6 +1912,7 @@ function charmHit(e,d,opts,crit){
   if(hasCh('is')&&Math.random()<.12){e.iceT=Math.max(e.iceT||0,1.5); e.slowT=Math.max(e.slowT||0,1.5); if(e.T.kind!=='boss') e.stun=Math.max(e.stun||0,.5);}
   if(hasCh('fondue')&&crit&&!e.dead) e.burn={t:3,dps:Math.max(2,d*.35),k:.5};
   if(hasCh('spok')&&Math.random()<.1&&G.time-(P.chSpT||-9)>.35){P.chSpT=G.time; const a=Math.random()*Math.PI*2; G.proj.push({x:P.x,y:P.y-12,vx:Math.cos(a)*240,vy:Math.sin(a)*240,r:7,dmg:S.dmg,life:1.8,pierce:0,hit:new Set([e]),kind:'magic',rot:0,norot:true,ghost:true,charm:true});}
+  if(hasCh('pumpa')&&Math.random()<.08&&G.time-(P.chPuT||-9)>.3){P.chPuT=G.time; G.marks.push({x:e.x,y:e.y,t:1,max:1,dmg:S.dmg*1.5,r:70}); text(e.x,e.y-e.r-26,'Pumpa!','#ff8b2e');}
   if(hasCh('mormor')&&!e.dead&&(P.chHit=(P.chHit||0)+1)%8===0){e.vuln=4; e.vulnK=1; text(e.x,e.y-e.r-26,'STÄMPLAD!','#c8302a');}
 }
 function charmKill(e){
@@ -1996,7 +2110,7 @@ function update(dt){
   updateDungeonFeatures(dt); updatePet(dt); if(G.town&&G.folk) updateTown(dt);
   if(S.set4==='pension'&&!G.town&&(G.setT=(G.setT||5)-dt)<=0){G.setT=5; const t=nearestEnemy(420); if(t) G.marks.push({x:t.x,y:t.y,t:.7,max:.7,dmg:S.dmg*2.5,r:90});}
   if(S.set4==='alg'&&!G.town&&(G.setT2=(G.setT2||6)-dt)<=0){G.setT2=6; const t=nearestEnemy(500), a=t?Math.atan2(t.y-P.y,t.x-P.x):P.face; G.proj.push({x:P.x+Math.cos(a)*20,y:P.y+Math.sin(a)*20,vx:Math.cos(a)*480,vy:Math.sin(a)*480,r:22,dmg:S.dmg*2.5,life:1.1,pierce:999,hit:new Set(),kind:'moose',rot:0,norot:true,kb:520}); SFX.play('moose');}
-  if(G.rift&&!G.riftBossOut&&G.riftKills>=G.riftNeed){G.riftBossOut=true; const r=pick(G.m.rooms.filter(r=>Math.hypot((r.cx+.5)*TILE-P.x,(r.cy+.5)*TILE-P.y)>300))||G.m.rooms[0]; const b=spawn(pick(BOSSES),(r.cx+.5)*TILE,(r.cy+.5)*TILE); b.riftBoss=true; b.name='Kaos-'+b.name; b.aggro=true; G.boss=b; banner('Kaosväktaren har vaknat!',b.name); SFX.play('boss');}
+  if(G.rift&&!G.riftBossOut&&G.riftKills>=G.riftNeed){G.riftBossOut=true; const r=pick(G.m.rooms.filter(r=>Math.hypot((r.cx+.5)*TILE-P.x,(r.cy+.5)*TILE-P.y)>300))||G.m.rooms[0]; const b=spawn(G.rift.ev?EVENTS[G.rift.ev].boss:pick(BOSSES),(r.cx+.5)*TILE,(r.cy+.5)*TILE); b.riftBoss=true; if(!G.rift.ev) b.name='Kaos-'+b.name; b.aggro=true; G.boss=b; banner(G.rift.ev?'Pumpakungen har vaknat!':'Kaosväktaren har vaknat!',b.name); SFX.play('boss');}
   if(G.rift&&G.rift.mods.includes('lava')&&(G.lavaT=(G.lavaT||3)-dt)<=0){G.lavaT=2.5; for(let i=0;i<3;i++) G.emarks.push({x:P.x+rand(-160,160),y:P.y+rand(-160,160),r:44,t:1.1,max:1.1,dmg:(10+G.depth*5)*DF().dmg,src:'kaoslava',col:'#ff5a1a'});}
   updateEnemies(dt);
   updateProj(dt);
@@ -2098,7 +2212,7 @@ function updateEnemies(dt){
           e.jump=null; e.hopH=0; G.rings.push({x:e.x,y:e.y,r:115,t:.35,max:.35,col:'#e8ddd0'}); burst(e.x,e.y,'#8a7a5a',30,240,5); SFX.play('stamp');
           if(!reduceMotion) G.shake=Math.min(14,G.shake+8);
           if(Math.hypot(P.x-e.x,P.y-e.y)<115+P.r) hurtPlayer(e.dmg*1.3,e.name);
-          if(rage<1) for(let i=0;i<2;i++){const s=spawn('kanin',e.x+rand(-40,40),e.y+rand(-40,40)); s.aggro=true; s.nodrop=true;}
+          if(rage<1) for(let i=0;i<2;i++){const s=spawn(e.T.minion||'kanin',e.x+rand(-40,40),e.y+rand(-40,40)); s.aggro=true; s.nodrop=true;}
         }
       }else if(e.dash>0){e.dash-=dt; moveEnt(e,e.dvx*dt,e.dvy*dt);}
       else if(!touch&&!(e.breath>0)&&!(e.blow>0)) moveEnt(e,ux*e.spd*dt,uy*e.spd*dt);
@@ -2113,7 +2227,7 @@ function updateEnemies(dt){
       }else if(b===3){
         if(e.bt<=0&&!e.jump){e.bt=3.2*rage; const dd=Math.min(260,d), tx=e.x+ux*dd, ty=e.y+uy*dd, bad=blocked(tx,ty,e.r);
           e.jump={t:.9,sx:e.x,sy:e.y,tx:bad?e.x:tx,ty:bad?e.y:ty}; G.emarks.push({x:e.jump.tx,y:e.jump.ty,r:115,t:.9,max:.9,dmg:0}); if(Math.random()<.4) say(e,'HOPP!',1);}
-        if(e.bt2<=0&&!e.jump){e.bt2=2.2*rage; SFX.play('shoot'); const n=rage<1?7:5; for(let i=0;i<n;i++) shoot('morot',a0+(i-(n-1)/2)*.18,300,8,.6,2.2);}
+        if(e.bt2<=0&&!e.jump){e.bt2=2.2*rage; SFX.play('shoot'); const n=rage<1?7:5; for(let i=0;i<n;i++) shoot(e.T.pk||'morot',a0+(i-(n-1)/2)*.18,300,8,.6,2.2);}
       }else if(b===4){
         if(e.breath>0){e.breath-=dt; if((e.bf=(e.bf||0)-dt)<=0){e.bf=.05; e.ba+=(a0-e.ba)*.08; shoot('eld',e.ba+rand(-.12,.12),300,9,.3,.9);}}
         else if(e.bt<=0){e.bt=4*rage; e.breath=1.3; e.ba=a0; say(e,'Monteringssteg 12: ELD!',1.4); SFX.play('boom');}
@@ -2228,10 +2342,11 @@ function updateProj(dt){
   for(const p of G.proj) if(p.dead&&p.pt==='kosmisk'&&!p.holed){p.holed=true; G.holes.push({x:p.x,y:p.y,t:2.2,tick:0,dmg:p.dmg});}
   G.proj=G.proj.filter(p=>!p.dead);
 }
-const AUTOPICK={gold:1,scroll:1,potion:1,gem:1,rune:1,kpot:1};
+const AUTOPICK={candy:1,gold:1,scroll:1,potion:1,gem:1,rune:1,kpot:1};
 function sellBlue(slots){let c=0,g=0; P.bag=P.bag.filter(it=>{if(it.r===1&&slots.includes(it.slot)&&!(it.gemsIn&&it.gemsIn.length)&&!it.up){c++; g+=it.value; return false;} return true;}); P.gold+=g; if(c) SFX.play('cash'); return [c,g];}
 function pickup(d){
   if(d.kind==='rune'){pickRune(d); return;}
+  if(d.kind==='candy'){const s=evState(); if(s){s.candy+=d.amt; text(d.x,d.y-10,`+${d.amt} godis`,'#ff8b2e'); SFX.play('gold');} d.gone=true; return;}
   if(d.kind==='gold'){P.gold+=d.amt; if(S.fx.has('goldheal')) heal(S.hp*.01); SFX.play('gold'); text(d.x,d.y-10,`+${d.amt} guld`,'#f3d351'); d.gone=true;}
   else if(d.kind==='scroll'){P.scrolls=(P.scrolls||0)+1; d.gone=true; SFX.play('gold'); text(d.x,d.y-10,'+1 portalrulle','#9fd0ff');}
   else if(d.kind==='potion'){if(P.potions>=9){log('Du kan inte bära fler drycker.','#a8998a'); return;} P.potions++; SFX.play('gold'); text(d.x,d.y-10,'+1 dryck','#ff7a6a'); d.gone=true;}
@@ -2378,7 +2493,7 @@ function render(){
     if(Math.hypot(P.x-G.memorial.x,P.y-G.memorial.y)<5*TILE) cx.fillText('Minnesstenar',G.memorial.x,G.memorial.y-24);
     if(Math.hypot(P.x-G.home.x,P.y-G.home.y)<5*TILE) cx.fillText('Ditt hem',G.home.x,G.home.y-70);
     for(const f of G.folk||[]) if(f.say) bubble(f.x,f.y-26,f.say.t);}
-  for(const pt of G.portals||[]) if(Math.hypot(P.x-pt.x,P.y-pt.y)<6*TILE){cx.font=`700 12px ${FONT}`; cx.textAlign='center'; cx.fillStyle='#9fd0ff'; cx.fillText(pt.kind==='rift'?`Kaosportal (${P.keys||0} nycklar)`:pt.kind==='riftback'?'Portal hem till Lagomby':pt.kind==='town'?'Portal till Lagomby':`Portal till våning ${DUNGEON?DUNGEON.depth:G.depth}`,pt.x,pt.y-44);}
+  for(const pt of G.portals||[]) if(Math.hypot(P.x-pt.x,P.y-pt.y)<6*TILE){cx.font=`700 12px ${FONT}`; cx.textAlign='center'; cx.fillStyle='#9fd0ff'; cx.fillText(pt.kind==='event'?'Spökgrottan (Halloween)':pt.kind==='rift'?`Kaosportal (${P.keys||0} nycklar)`:pt.kind==='riftback'?'Portal hem till Lagomby':pt.kind==='town'?'Portal till Lagomby':`Portal till våning ${DUNGEON?DUNGEON.depth:G.depth}`,pt.x,pt.y-44);}
   if(P.chan>0){cx.strokeStyle='#9fd0ff'; cx.lineWidth=4; cx.beginPath(); cx.arc(P.x,P.y,26,-Math.PI/2,-Math.PI/2+Math.PI*2*(1-P.chan/1.2)); cx.stroke();}
   drawTitle();
   if(P.say) bubble(P.x,P.y-38,P.say.t);
@@ -2725,6 +2840,7 @@ function lighting(ox,oy){
 function drawDrop(d){
   const k=Math.min(1,d.t/.35), x=d.sx+(d.x-d.sx)*k, y=d.sy+(d.y-d.sy)*k-Math.sin(k*Math.PI)*22;
   if(d.kind==='rune'){drawRuneDrop(d,x,y); return;}
+  if(d.kind==='candy'){ell(x,y+6,7,2.2,'rgba(0,0,0,.4)'); cx.save(); cx.translate(x,y); cx.rotate(Math.sin(G.time*3+d.x)*.3); const c=d.c||'#e8742a'; blob(()=>{cx.moveTo(-5,0);cx.lineTo(-10,-4);cx.lineTo(-10,4);cx.closePath();},lt(c,.2),1); blob(()=>{cx.moveTo(5,0);cx.lineTo(10,-4);cx.lineTo(10,4);cx.closePath();},lt(c,.2),1); blob(E(0,0,6,4.5),sh(0,-1,6,c),1.2); line(-2,-3,2,3,'rgba(255,255,255,.6)',1.2); cx.restore(); return;}
   if(d.kind==='scroll'){ell(x,y+6,8,2.5,'rgba(0,0,0,.4)'); cx.save(); cx.translate(x,y); cx.rotate(-.3); blob(RR(-9,-4,18,8,3),sh(0,0,9,'#f4ecd8'),1.3); blob(E(-9,0,2.5,4),'#d8c8a8',1); blob(E(9,0,2.5,4),'#d8c8a8',1); line(-2,-4,-2,4,'#4a6ad9',2); cx.restore(); return;}
   if(d.kind==='gem'){const G2=GEMS[d.gem], s=4+d.tier*1.5; ell(x,y+6,7,2.5,'rgba(0,0,0,.4)'); cx.shadowColor=G2.c; cx.shadowBlur=8;
     if(d.gem==='bulle'){blob(E(x,y,s+2,s+1),sh(x,y,s+2,'#c8742a'),1.2); cx.strokeStyle='#f0d0a0'; cx.lineWidth=1.2; cx.beginPath(); cx.arc(x,y,s*.5,0,5); cx.stroke();}
@@ -2853,7 +2969,7 @@ function drawWeapon(it){
   cx.shadowBlur=0;
 }
 
-const GEARCOL={Morgonrock:'#8a6a9a',Ringbrynja:'#9aa0a8',Kartongrustning:'#b8925a',Fleecetröja:'#3a6ad9',Regnställ:'#f3d351',Tältduk:'#5a7a3a',Kofta:'#7a4a8a','Förkläde':'#5a6ab8','Blommig Klänning':'#e87aa8','Stickad Poncho':'#c8742a',Reflexväst:'#4a6a3a',Jaktjacka:'#6a7a3a',Flanellskjorta:'#b8302a','Kamouflagedräkt':'#5a6a3a',Fiskeväst:'#4a6a3a','Mjukisbyxornas Pansar':'#8a8a92'};
+const GEARCOL={'Spöklakan':'#ecebf2',Morgonrock:'#8a6a9a',Ringbrynja:'#9aa0a8',Kartongrustning:'#b8925a',Fleecetröja:'#3a6ad9',Regnställ:'#f3d351',Tältduk:'#5a7a3a',Kofta:'#7a4a8a','Förkläde':'#5a6ab8','Blommig Klänning':'#e87aa8','Stickad Poncho':'#c8742a',Reflexväst:'#4a6a3a',Jaktjacka:'#6a7a3a',Flanellskjorta:'#b8302a','Kamouflagedräkt':'#5a6a3a',Fiskeväst:'#4a6a3a','Mjukisbyxornas Pansar':'#8a8a92'};
 const gk=it=>it?(it.r===3?(it.look||it.name):it.base):null;
 function drawHair(cls,B,hasHelm){
   if(cls==='hexa'){blob(()=>{cx.ellipse(0,-12+B,10.5,8,0,Math.PI,0);cx.closePath();},'#cfcad4',1.2); blob(E(0,-21+B,5.5,5),'#cfcad4',1.4); line(-5,-25+B,5,-18+B,'#d6dbe0',1.4);}
@@ -2881,6 +2997,7 @@ function drawHeadgear(it,B,dir){
     case 'Fiskehatt':{const hc=acc('#b8a87a'); blob(E(0,-14+B,15,4.5),dk(hc,.1),1.4); blob(()=>{cx.moveTo(-9,-14+B);cx.lineTo(-8,-23+B);cx.quadraticCurveTo(0,-25+B,8,-23+B);cx.lineTo(9,-14+B);cx.closePath();},sh(0,-19+B,10,hc)); line(5,-21+B,7,-15+B,'#c8ccd2',1.2); circ(7,-15+B,1.3,'#d9473a'); break;}
     case 'Mössa med Öronlappar':{const hc=acc('#7a5a3a'); blob(E(-11,-8+B,4,7),'#d8c8a8',1.3); blob(E(11,-8+B,4,7),'#d8c8a8',1.3); blob(()=>{cx.ellipse(0,-12+B,12,11,0,Math.PI,0);cx.closePath();},sh(0,-17+B,12,hc)); blob(RR(-12.5,-14+B,25,4,2),'#d8c8a8',1.3); break;}
     case 'Kartongkronan':{blob(()=>{cx.moveTo(-11,-14+B);cx.lineTo(-12,-27+B);cx.lineTo(-6,-20+B);cx.lineTo(0,-30+B);cx.lineTo(6,-20+B);cx.lineTo(12,-27+B);cx.lineTo(11,-14+B);cx.closePath();},sh(0,-20+B,12,'#b8925a')); line(-9,-17+B,9,-17+B,'#c8a46a',2.5); circ(0,-21+B,1.8,'#d9473a'); break;}
+    case 'Pumpahjälm':{const fl=.75+.25*Math.sin(G.time*9); blob(()=>{cx.ellipse(0,-13+B,13,11,0,Math.PI,0);cx.closePath();},sh(0,-18+B,13,'#e8742a')); for(const xx of [-6,0,6]) line(xx,-23+B+Math.abs(xx)*.3,xx*1.15,-13+B,'rgba(120,50,10,.5)',1.1); line(0,-24+B,2,-29+B,'#3a6a2a',2.4); blob(()=>{cx.moveTo(-7,-15+B);cx.lineTo(-5,-19+B);cx.lineTo(-3,-15+B);cx.closePath();},`rgb(255,${Math.round(200*fl)},70)`,.8); blob(()=>{cx.moveTo(3,-15+B);cx.lineTo(5,-19+B);cx.lineTo(7,-15+B);cx.closePath();},`rgb(255,${Math.round(200*fl)},70)`,.8); break;}
     default: blob(()=>{cx.ellipse(0,-13+B,11,9,0,Math.PI,0);cx.closePath();},sh(0,-17+B,11,rc));
   }
   cx.shadowBlur=0;
@@ -2907,6 +3024,7 @@ function drawTorso(it,cls,B,dir){
     case 'Flanellskjorta': for(let i=-8;i<10;i+=5) line(i,-3+B,i,14,'rgba(40,10,10,.45)',1.4); for(let j=0;j<16;j+=5) line(-10,j+B,10,j+B,'rgba(40,10,10,.45)',1.4); break;
     case 'Kamouflagedräkt': for(const [px,py,c2] of [[-5,2,'#3a4a22'],[4,6,'#7a6a3a'],[-3,10,'#2a3a1a'],[6,0,'#3a4a22']]) blob(E(px,py+B,4,2.5,.5),c2,0); break;
     case 'Fiskeväst': blob(RR(-9,-2+B,18,14,3),'#b8a87a',1.3); for(const [px,py] of [[-7,2],[2,2],[-7,7],[2,7]]) blob(RR(px,py+B,5,4,1),'#a8986a',.8); break;
+    case 'Spöklakan': for(let i=-8;i<=6;i+=4) line(i,11+B,i+2,14,'rgba(0,0,0,.2)',1); circ(-3,2+B,1.4,'rgba(0,0,0,.25)'); circ(3,2+B,1.4,'rgba(0,0,0,.25)'); break;
     case 'Mjukisbyxornas Pansar': line(-2,-3+B,-3,4+B,'#f4f4f0',1.2); line(2,-3+B,3,4+B,'#f4f4f0',1.2); break;
   }
   if(cls==='krigare'&&k!=='Morgonrock'){cx.fillStyle=FLASH?'#fff':'#2a1c18'; cx.fillRect(-11,6+B,22,3); cx.fillStyle='#d2a64a'; cx.fillRect(-2,5.5+B,4,4);}
@@ -3250,6 +3368,31 @@ function drawEnemy(e){
       blob(()=>{cx.moveTo(lx,hy+1);cx.lineTo(lx+dir*9,hy+2.5);cx.lineTo(lx,hy+4);cx.closePath();},'#ff8b2e',1);
       blob(RR(-6,hy-r*.42-8,12,9,1),'#2a2428',1.2); blob(RR(-9,hy-r*.42,18,2.5,1),'#2a2428',1);
       break;}
+    case 'pumpa':{
+      const hop=e.aggro&&mv?Math.abs(Math.sin(t*1.6))*5:0;
+      blob(E(-5,r*.8,3.5,2.5),'#2f5a28',1.2); blob(E(5,r*.8,3.5,2.5),'#2f5a28',1.2); cx.translate(0,-hop);
+      drawPumpkinBody(r,lx,T.col);
+      break;}
+    case 'pumpkung':{
+      cx.translate(0,-(e.hopH||0));
+      for(const s of [-1,1]){line(s*r*.8,0,s*r*1.25,-r*.2+Math.sin(t+s)*4,'#2f5a28',5); blob(E(s*r*1.3,-r*.25+Math.sin(t+s)*4,6,4,s*.5),'#4a8a3a',1.2);}
+      drawPumpkinBody(r,lx,T.col);
+      blob(()=>{cx.moveTo(-r*.45,-r*.72);cx.lineTo(-r*.5,-r*1.12);cx.lineTo(-r*.25,-r*.9);cx.lineTo(0,-r*1.22);cx.lineTo(r*.25,-r*.9);cx.lineTo(r*.5,-r*1.12);cx.lineTo(r*.45,-r*.72);cx.closePath();},sh(0,-r*.95,r*.5,'#f3c64a'),1.6);
+      circ(0,-r*.86,2.6,'#b07aff');
+      break;}
+    case 'haxa':{
+      const c=T.col, w=e.wind>0;
+      cx.save(); cx.rotate(-dir*.5); line(-dir*14,r*.6,dir*14,-r*.2,OL,3.4); line(-dir*14,r*.6,dir*14,-r*.2,'#7a5a3a',2); blob(()=>{cx.moveTo(-dir*12,r*.5);cx.lineTo(-dir*22,r*.15);cx.lineTo(-dir*22,r*1.1);cx.closePath();},'#c8a85a',1.1); cx.restore();
+      blob(()=>{cx.moveTo(-r*.6,-r*.3);cx.lineTo(-r*.95,r*.85);cx.quadraticCurveTo(0,r*1.05+wk,r*.95,r*.85);cx.lineTo(r*.6,-r*.3);cx.closePath();},sh(0,r*.2,r,c));
+      blob(E(0,-r*.55,r*.5,r*.48),sh(0,-r*.55,r*.5,'#8ac85a'));
+      eye(-3+lx,-r*.6+ly,1.8,lx,ly,'#c8302a'); eye(3+lx,-r*.6+ly,1.8,lx,ly,'#c8302a');
+      blob(()=>{cx.moveTo(lx,-r*.52);cx.lineTo(lx+dir*6,-r*.34);cx.lineTo(lx+1,-r*.36);cx.closePath();},'#7ab84a',1);
+      cx.strokeStyle=OL; cx.lineWidth=1.2; cx.beginPath(); cx.arc(lx,-r*.3,2.6,.2,Math.PI-.2); cx.stroke();
+      blob(E(0,-r*.95,r*.95,r*.22),'#1e1624',1.3);
+      blob(()=>{cx.moveTo(-r*.5,-r*.98);cx.quadraticCurveTo(-r*.2,-r*1.6,-dir*r*.55,-r*2.1);cx.quadraticCurveTo(r*.25,-r*1.5,r*.5,-r*.98);cx.closePath();},sh(0,-r*1.4,r*.6,'#2a2032'),1.3);
+      line(-r*.45,-r*1.05,r*.45,-r*1.05,'#e8742a',2);
+      if(w) blob(E(dir*r*.9,-r*.1,4,4),'#7ad06a',1.1);
+      break;}
     case 'troll':{
       const c=T.col, sl=e.slam>0;
       if(sl){const k=1-e.slam/.85; cx.globalAlpha=.18+.12*k; circ(0,0,95,'#d9473a'); cx.globalAlpha=.8; cx.strokeStyle='#ff6b5b'; cx.lineWidth=2; cx.beginPath(); cx.arc(0,0,95*k,0,Math.PI*2); cx.stroke(); cx.globalAlpha=1;}
@@ -3467,6 +3610,8 @@ function drawProj(p){
   else if(p.kind==='can'){cx.translate(0,-Math.sin((1-p.life/p.max)*Math.PI)*70); cx.rotate(p.rot); blob(RR(-6,-7,12,14,2),sh(0,0,8,'#c8ccd2'),1.4); blob(RR(-6,-3,12,6,1),'#3a6ad9',1); circ(0,0,1.5,'#f3d351');}
   else if(p.kind==='moose') drawMoose(p);
   else if(p.kind==='skruv'){cx.rotate(p.rot*1.5); blob(RR(-6,-1.8,12,3.6,1),'#b8bec6',1.2); blob(E(-6,0,2.6,3.4),'#8a8f96',1.2);}
+  else if(p.kind==='brygd'){cx.rotate(p.rot*.4); blob(()=>{cx.moveTo(-4,-1);cx.lineTo(-2,-6);cx.lineTo(2,-6);cx.lineTo(4,-1);cx.quadraticCurveTo(6,6,0,7);cx.quadraticCurveTo(-6,6,-4,-1);cx.closePath();},sh(0,2,6,'#7ad06a'),1.2); blob(RR(-2,-9,4,3,1),'#8a5a32',.8); circ(1.5,2,1.2,'rgba(255,255,255,.6)');}
+  else if(p.kind==='pfro'){cx.rotate(Math.atan2(p.vy,p.vx)); blob(E(0,0,6,3.6),sh(0,-1,6,'#f4e8c8'),1.2);}
   else if(p.kind==='pil'){cx.rotate(Math.atan2(p.vy,p.vx)); line(-9,0,7,0,OL,3); line(-9,0,7,0,'#a87a4a',1.6); blob(()=>{cx.moveTo(11,0);cx.lineTo(6,-3);cx.lineTo(6,3);cx.closePath();},'#c8ccd2',1); line(-9,0,-12,-3,'#e8e0d0',1.6); line(-9,0,-12,3,'#e8e0d0',1.6);}
   else if(p.kind==='kbulle'){cx.rotate(p.rot*.3); blob(E(0,0,6,6),sh(0,0,6,'#8a4a2a'),1.3); circ(-2,-2,1.6,'rgba(255,220,180,.5)'); circ(2.5,2,1.5,'#c8302a');}
   else if(p.kind==='snoboll'){blob(E(0,0,p.r,p.r),sh(0,0,p.r,'#f4f8ff'),1.3); circ(-p.r*.3,-p.r*.3,p.r*.3,'rgba(255,255,255,.9)');}
@@ -3699,7 +3844,7 @@ function hud(){
   if(np) setT('talkBtn',`Plocka upp ${dropName(np)} (T)`);
   if(ts) setT('talkBtn',{stash:'Öppna förrådskistan (T)',home:'Gå in i ditt hem (T)',memorial:'Läs minnesstenarna (T)'}[ts]);
   if(tb.hidden===near) tb.hidden=!near;
-  if(nn) setT('talkBtn',{kjell:'Handla med Kjell-Åke (T)',smed:'Smida hos Svetsa-Svea (T)',tore:'Lär dig av Tore (T)',kerstin:'Titta på Kerstins loppisbord (T)',sibylla:'Fråga Sibylla om framtiden (T)',bosse:'Köp bakverk av Bosse (T)',berit:'Byt med Berit (T)',tobias:'Prata med Tobias (T)',...XTALK}[nn.type]);
+  if(nn) setT('talkBtn',{kjell:'Handla med Kjell-Åke (T)',smed:'Smida hos Svetsa-Svea (T)',tore:'Lär dig av Tore (T)',kerstin:'Titta på Kerstins loppisbord (T)',gosta:'Prata med Gravgrävar-Gösta (T)',sibylla:'Fråga Sibylla om framtiden (T)',bosse:'Köp bakverk av Bosse (T)',berit:'Byt med Berit (T)',tobias:'Prata med Tobias (T)',...XTALK}[nn.type]);
   else if(nf) setT('talkBtn','Kasta 100 guld i fontänen (T)');
   const bb=$('bossbar'), show=!!(G.boss&&G.boss.aggro);
   if(bb.hidden===show) bb.hidden=!show;
@@ -3896,6 +4041,7 @@ function makeTown(depth,withBack){
   for(let i=0;i<4;i++) g.folk.push(folk('hen',{x:well.x+rand(-50,50),y:well.y+rand(20,50),t:0,tx:well.x,ty:well.y+30}));
   for(let i=0;i<3;i++) g.folk.push(folk('duck',{a:i*2.1,rr:rand(.35,.75),sp:Math.random()<.5?1:-1,col:i?'#8a6a4a':'#f4f4f0',head:i?'#3a7a3a':'#f4f4f0'}));
   g.folk.push(folk('cat',{x:g.benches[0].x,y:g.benches[0].y-6}));
+  if(evNow()==='halloween') halloweenTown(g,cxT,cyT,X0,Y0,W,H);
   return g;
 }
 function updateTown(dt){
@@ -4004,7 +4150,7 @@ function drawBunting(){
     cx.strokeStyle='rgba(60,40,30,.8)'; cx.lineWidth=1.2; cx.beginPath(); cx.moveTo(ax,ay); cx.quadraticCurveTo(mx,my,bx,by); cx.stroke();
     const n=Math.max(4,Math.round(Math.hypot(bx-ax,by-ay)/24));
     for(let i=1;i<n;i++){const q=i/n, x=(1-q)*(1-q)*ax+2*(1-q)*q*mx+q*q*bx, y=(1-q)*(1-q)*ay+2*(1-q)*q*my+q*q*by, fl=Math.sin(G.time*4+i+a)*2.2;
-      cx.fillStyle=i%2?'#2a6ad9':'#f3d351'; cx.beginPath(); cx.moveTo(x-6,y); cx.lineTo(x+6,y); cx.lineTo(x+fl,y+12); cx.closePath(); cx.fill(); cx.strokeStyle='rgba(0,0,0,.35)'; cx.lineWidth=.8; cx.stroke();}
+      cx.fillStyle=G.pumpkins?(i%2?'#e8742a':'#3a2a4a'):i%2?'#2a6ad9':'#f3d351'; cx.beginPath(); cx.moveTo(x-6,y); cx.lineTo(x+6,y); cx.lineTo(x+fl,y+12); cx.closePath(); cx.fill(); cx.strokeStyle='rgba(0,0,0,.35)'; cx.lineWidth=.8; cx.stroke();}
   }
 }
 function enterTown(at){
@@ -4012,6 +4158,7 @@ function enterTown(at){
   G=makeTown(d,!!DUNGEON);
   const b=G.portals.find(p=>p.kind==='back'), p=at==='portal'&&b?b:at==='ruin'?{x:G.ruin.x,y:G.ruin.y-60}:{x:G.fountain.x,y:G.fountain.y+70};
   P.x=p.x; P.y=p.y; P.portalLock=true; G.ruinLock=true; G.cam.x=P.x; G.cam.y=P.y; P.goto=null;
+  if(evNow()==='halloween'&&!enterTown.told){enterTown.told=true; setTimeout(()=>log('Det är Halloween i Lagomby! Gravgrävar-Gösta har öppnat Spökgrottan. Samla godis och hämta belöningar hos honom.','#ff8b2e'),2600);}
   FADE=1; banner('Lagomby',at==='ruin'?'Du kliver upp ur ruinen. Himlen är grå. Som vanligt.':'Staden där inget gott händer. Med flit.'); save(); storyOnTown();
 }
 function descend(n){
@@ -4033,6 +4180,8 @@ function usePortal(pt){
   }else if(pt.kind==='rift'){
     if(!(P.keys>0)){log('Du behöver en Kaosnyckel. Bossar tappar dem.','#ff5a8a'); return;}
     P.keys--; makeRift(); P.portalLock=true; save();
+  }else if(pt.kind==='event'){
+    makeEventDungeon(); P.portalLock=true; save();
   }else if(pt.kind==='riftback'){
     enterTown(DUNGEON?'portal':'fountain'); log('Hemma igen. Kaoset luktar fortfarande i kläderna.','#ff5a8a');
   }else{
@@ -4056,7 +4205,7 @@ function drawPortal(pt){
   const t=G.time;
   cx.save(); cx.translate(pt.x,pt.y);
   ell(0,18,22,6,'rgba(0,0,0,.4)');
-  const rf=pt.kind==='rift'||pt.kind==='riftback', g=cx.createRadialGradient(0,-6,2,0,-6,34); g.addColorStop(0,rf?'rgba(255,220,240,.95)':'rgba(220,240,255,.95)'); g.addColorStop(.5,rf?'rgba(255,60,140,.6)':'rgba(110,150,255,.6)'); g.addColorStop(1,'rgba(120,60,220,0)');
+  const ev=pt.kind==='event'||pt.ev, rf=pt.kind==='rift'||pt.kind==='riftback', g=cx.createRadialGradient(0,-6,2,0,-6,34); g.addColorStop(0,ev?'rgba(255,230,190,.95)':rf?'rgba(255,220,240,.95)':'rgba(220,240,255,.95)'); g.addColorStop(.5,ev?'rgba(255,120,30,.65)':rf?'rgba(255,60,140,.6)':'rgba(110,150,255,.6)'); g.addColorStop(1,'rgba(120,60,220,0)');
   cx.fillStyle=g; cx.beginPath(); cx.ellipse(0,-6,22,30,0,0,Math.PI*2); cx.fill();
   cx.lineWidth=2.5; cx.lineCap='round';
   for(let i=0;i<4;i++){cx.strokeStyle=i%2?'rgba(180,140,255,.8)':'rgba(160,220,255,.9)'; cx.beginPath(); cx.ellipse(0,-6,20-i*4,28-i*5,0,t*(2+i)+i,t*(2+i)+i+Math.PI*1.2); cx.stroke();}
@@ -4090,6 +4239,7 @@ function drawRuin(){
 }
 function drawTownExtras(){
   if(G.ruin) drawRuin();
+  for(const pk of G.pumpkins||[]) drawPumpkin(pk.x,pk.y,pk.s,true);
   const s=G.stash, m=G.memorial;
   ell(s.x,s.y+12,18,5,'rgba(0,0,0,.3)'); blob(RR(s.x-17,s.y-8,34,20,3),sh(s.x,s.y,20,'#6a4a2a')); blob(()=>{cx.moveTo(s.x-17,s.y-8);cx.lineTo(s.x-17,s.y-14);cx.quadraticCurveTo(s.x,s.y-22,s.x+17,s.y-14);cx.lineTo(s.x+17,s.y-8);cx.closePath();},sh(s.x,s.y-12,18,'#7a5a32')); blob(RR(s.x-3,s.y-11,6,6,1),'#c8ccd2',1.1);
   const graves=readGraves().slice(-5);
@@ -4206,10 +4356,10 @@ function drawTown(){
 function townAmbience(ox,oy){
   const f=G.fountain, t=G.time;
   for(let i=0;i<4;i++){const wx=G.tb.X0*TILE-500+((t*16+i*620)%(G.tb.W*TILE+1000)), wy=G.tb.Y0*TILE+((i*263)%(G.tb.H*TILE))+Math.sin(t*.1+i)*40, sx=wx+ox, sy=wy+oy, r=200+i*40;
-    if(sx<-r||sy<-r||sx>VW+r||sy>VH+r) continue; const g2=cx.createRadialGradient(sx,sy,0,sx,sy,r); g2.addColorStop(0,'rgba(34,38,46,.26)'); g2.addColorStop(1,'rgba(34,38,46,0)'); cx.fillStyle=g2; cx.fillRect(sx-r,sy-r,r*2,r*2);}
-  cx.save(); cx.globalCompositeOperation='saturation'; cx.fillStyle='rgba(128,128,128,.5)'; cx.fillRect(0,0,VW,VH);
-  cx.globalCompositeOperation='multiply'; cx.fillStyle='#a4a6b2'; cx.fillRect(0,0,VW,VH); cx.restore();
-  const g=cx.createLinearGradient(0,0,0,VH); g.addColorStop(0,'rgba(16,20,30,.3)'); g.addColorStop(.5,'rgba(16,20,30,0)'); g.addColorStop(1,'rgba(16,20,30,.18)');
+    if(sx<-r||sy<-r||sx>VW+r||sy>VH+r) continue; const g2=cx.createRadialGradient(sx,sy,0,sx,sy,r); g2.addColorStop(0,'rgba(34,38,46,.18)'); g2.addColorStop(1,'rgba(34,38,46,0)'); cx.fillStyle=g2; cx.fillRect(sx-r,sy-r,r*2,r*2);}
+  cx.save(); cx.globalCompositeOperation='saturation'; cx.fillStyle='rgba(128,128,128,.32)'; cx.fillRect(0,0,VW,VH);
+  cx.globalCompositeOperation='multiply'; cx.fillStyle='#cacbd2'; cx.fillRect(0,0,VW,VH); cx.restore();
+  const g=cx.createLinearGradient(0,0,0,VH); g.addColorStop(0,'rgba(16,20,30,.16)'); g.addColorStop(.5,'rgba(16,20,30,0)'); g.addColorStop(1,'rgba(16,20,30,.08)');
   cx.fillStyle=g; cx.fillRect(0,0,VW,VH);
   cx.strokeStyle='#120e14'; cx.fillStyle='#120e14'; cx.lineWidth=2.2; cx.lineCap='round';
   for(let i=0;i<5;i++){
@@ -4217,6 +4367,7 @@ function townAmbience(ox,oy){
     if(x<-20||y<-20||x>VW+20||y>VH+20) continue;
     cx.beginPath(); cx.moveTo(x-9,y-fl*4); cx.quadraticCurveTo(x-3,y-2,x,y); cx.quadraticCurveTo(x+3,y-2,x+9,y-fl*4); cx.stroke(); cx.beginPath(); cx.ellipse(x,y,2.6,1.8,0,0,Math.PI*2); cx.fill();
   }
+  if(G.pumpkins) for(let i=0;i<6;i++){const a=t*.9+i*1.05, x=f.x+Math.cos(a)*(90+i*22)+ox, y=f.y-90+Math.sin(a*1.3)*50+oy, fl=Math.sin(t*16+i*3); if(x<-20||y<-20||x>VW+20||y>VH+20) continue; cx.fillStyle='#1e1426'; cx.beginPath(); cx.moveTo(x,y); cx.quadraticCurveTo(x-6,y-6-fl*5,x-13,y-2-fl*4); cx.quadraticCurveTo(x-9,y+1,x-7,y+3); cx.quadraticCurveTo(x-4,y+1,x,y+3); cx.quadraticCurveTo(x+4,y+1,x+7,y+3); cx.quadraticCurveTo(x+9,y+1,x+13,y-2-fl*4); cx.quadraticCurveTo(x+6,y-6-fl*5,x,y); cx.fill();}
   for(let i=0;i<40;i++){const x=((i*97.3+t*(6+i%4*3))%(VW+40))-20+Math.sin(t*.8+i)*6, y=((i*53.1+t*(12+i%5*4))%(VH+40))-20; cx.fillStyle=`rgba(200,200,206,${(.16+(i%3)*.07).toFixed(2)})`; cx.fillRect(x,y,1.8,1.8);}
 }
 function drawKerstin(n){
@@ -4317,7 +4468,7 @@ function renderHome(){
 }
 $('homeP').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b||b.disabled) return; if(b.dataset.act==='close'){openHome(false);return;}
   if(b.dataset.pet){P.pet=b.dataset.pet; P.petE=null; SFX.play('equip'); renderHome();}});
-function closePanels(){if(stairOpen) closeStair(false); if(XOPEN) openX(XOPEN,false); if(wpOpen) openWp(false); if(shopOpen) openShop(false); if(smithOpen) openSmith(false); if(trainOpen) openTrainer(false); if(potsOpen) openPots(false); if(stashOpen) openStash(false); if(bakeOpen) openBake(false); if(homeOpen) openHome(false);}
+function closePanels(){if(XOPEN==='evP') openX('evP',false); if(stairOpen) closeStair(false); if(XOPEN) openX(XOPEN,false); if(wpOpen) openWp(false); if(shopOpen) openShop(false); if(smithOpen) openSmith(false); if(trainOpen) openTrainer(false); if(potsOpen) openPots(false); if(stashOpen) openStash(false); if(bakeOpen) openBake(false); if(homeOpen) openHome(false);}
 const nearFountain=()=>G.town&&Math.hypot(P.x-G.fountain.x,P.y-G.fountain.y)<80;
 function wishFountain(){
   if(P.gold<100){SFX.play('deny'); log('En önskan kostar 100 guld. Det står på skylten. Typ.','#a8998a'); return;}
@@ -4330,6 +4481,7 @@ function wishFountain(){
 function drawCharm(id){
   const P2=POTS[id]||POTS.vanlig, c=P2.c, c2=P2.c2;
   switch(id){
+    case 'pumpa': cx.save(); cx.scale(.62,.62); drawPumpkinBody(14,0,c); cx.restore(); break;
     case 'vanlig': blob(()=>{cx.moveTo(-9,4);cx.lineTo(-7,-3);cx.lineTo(-2,-4);cx.lineTo(2,-10);cx.lineTo(7,-9);cx.lineTo(9,-5);cx.lineTo(5,-5);cx.lineTo(5,0);cx.lineTo(8,4);cx.lineTo(8,9);cx.lineTo(5,9);cx.lineTo(3,4);cx.lineTo(-4,4);cx.lineTo(-5,9);cx.lineTo(-8,9);cx.closePath();},sh(0,0,10,c),1.4); line(-5,-1,1,-1,c2,1.4); circ(-2,1.5,1.2,'#3a6ad9'); circ(5,-7,.9,OL); break;
     case 'wok': blob(()=>{cx.moveTo(-10,6);cx.lineTo(-11,-6);cx.lineTo(-5,-1);cx.lineTo(0,-9);cx.lineTo(5,-1);cx.lineTo(11,-6);cx.lineTo(10,6);cx.closePath();},sh(0,0,11,c2),1.4); blob(E(-4,7,2.4,3.6),c,1); blob(E(5,8,2,4.5),c,1); circ(0,-1,1.8,'#d9473a'); break;
     case 'is': blob(RR(-8,5,16,5,1.5),'#8a5a32',1.2); blob(E(0,-2,9,9),'rgba(200,235,255,.75)',1.4); blob(()=>{cx.moveTo(-4,4);cx.lineTo(0,-5);cx.lineTo(4,4);cx.closePath();},'#2f6a38',.8); for(const [a,b] of [[-5,-6],[3,-8],[6,-2],[-6,0]]) circ(a,b,.9,'#ffffff'); ell(-3,-6,2.4,1.2,'rgba(255,255,255,.7)'); break;
@@ -4393,6 +4545,7 @@ function interact(){
   if(n.type==='berit'||n.type==='tobias'){interactEvent(n); return;}
   if(n.type==='bosse'){openBake(true); return;}
   if(n.type==='sibylla'){const s=P.story; storyDialog([['sibylla',STORY.sibylla[s.ending?6:Math.min(5,s.pages)]]]); return;}
+  if(n.type==='gosta'){openX('evP',true); return;}
   if(n.type==='kjell') openShop(true); else if(n.type==='smed') openSmith(true); else if(n.type==='kerstin') openPots(true); else openTrainer(true);
 }
 const upCost=it=>Math.round((25+it.il*12)*[1,1.4,2,3,2.5][it.r]*Math.pow(1.6,it.up||0));
@@ -4589,6 +4742,7 @@ function updatePet(dt){
   if(id==='doris'&&!G.town){let best=null,bd=280; for(const d of G.drops){if(d.gone||d.t<.35||!['gold','potion','gem'].includes(d.kind)) continue; const dd=Math.hypot(d.x-pe.x,d.y-pe.y); if(dd<bd&&Math.hypot(d.x-P.x,d.y-P.y)<320){bd=dd;best=d;}} if(best){tx=best.x;ty=best.y;sp=320; if(bd<16) pickup(best);}}
   if(id==='pip'&&!G.town){pe.cd-=dt; const t=nearestEnemy(220); if(t){tx=t.x-14;ty=t.y; sp=280; if(pe.cd<=0&&Math.hypot(t.x-pe.x,t.y-pe.y)<40){pe.cd=1.1; hitEnemy(t,S.dmg*.3,{kb:40,nols:1,noproc:1,nocrit:1}); if(Math.random()<.15) say(pe,pick(['För Lagomby!','Ta det här!','Pip-pip, hurra!']),1.2);}}}
   if(id==='fluff'&&!G.town){const t=petFluff(pe,dt); if(t){tx=t.x-12; ty=t.y; sp=280;}}
+  if(id==='fia'&&!G.town){pe.cd-=dt; const t=nearestEnemy(200); if(t){tx=t.x; ty=t.y-18; sp=300; if(pe.cd<=0&&Math.hypot(t.x-pe.x,t.y+18-pe.y)<40){pe.cd=1.2; hitEnemy(t,S.dmg*.25,{kb:20,nols:1,noproc:1,nocrit:1}); if(Math.random()<.12) say(pe,pick(['Ijiik!','*bits*','Blod? Nej, saft.']),1);}}}
   if(id==='agda'&&!G.town){pe.cd-=dt; if(pe.cd<=0){const near=G.enemies.filter(e=>!e.dead&&Math.hypot(e.x-pe.x,e.y-pe.y)<130); if(near.length){pe.cd=5; for(const e of near) e.stun=Math.max(e.stun,e.T.kind==='boss'?.3:1.2); text(pe.x,pe.y-20,'KVACK!','#f3d351',true); SFX.play('squeak'); G.rings.push({x:pe.x,y:pe.y,r:130,t:.3,max:.3,col:'#f3d351'});} else pe.cd=.5;}}
   const d=Math.hypot(tx-pe.x,ty-pe.y); if(d>4){const k=Math.min(1,sp*dt/d); pe.dir=tx<pe.x?-1:1; pe.x+=(tx-pe.x)*k; pe.y+=(ty-pe.y)*k;}
   if(Math.hypot(P.x-pe.x,P.y-pe.y)>500){pe.x=P.x; pe.y=P.y;}
@@ -4605,6 +4759,7 @@ function drawPet(){
   }else if(id==='pip'){
     blob(E(0,0,9,7),sh(0,0,9,'#e8c8a0')); blob(E(-3,-1,4,3),'#8a5a32',0); circ(dir*6,-3,1.2,OL); circ(dir*9,-1,1,'#e86a7a');
     blob(()=>{cx.ellipse(0,-5,6,4,0,Math.PI,0);cx.closePath();},'#a4abb3',1.2); line(dir*4,1,dir*16,-6,'#d6dbe0',1.6); line(dir*6,-1,dir*8,2,'#7a4e2c',2);
+  }else if(id==='fia'){cx.translate(0,-14+Math.sin(G.time*5)*3); const fl=Math.sin(G.time*20); for(const s of [-1,1]) blob(()=>{cx.moveTo(s*3,-1);cx.quadraticCurveTo(s*9,-7-fl*5,s*15,-2-fl*4);cx.quadraticCurveTo(s*11,1,s*8,2);cx.quadraticCurveTo(s*6,0,s*3,2);cx.closePath();},'#3a2e4a',1.2); blob(E(0,0,5,5.5),sh(0,0,5,'#4a3a5a'),1.2); blob(()=>{cx.moveTo(-3,-3);cx.lineTo(-2,-8);cx.lineTo(0,-4);cx.closePath();},'#4a3a5a',1); blob(()=>{cx.moveTo(3,-3);cx.lineTo(2,-8);cx.lineTo(0,-4);cx.closePath();},'#4a3a5a',1); circ(-1.8,-1,1,'#ff8b2e'); circ(1.8,-1,1,'#ff8b2e'); blob(RR(-4,-6.5,8,2,1),'#e8742a',.8);
   }else if(id==='fluff'){drawFluffBody(dir);
   }else{
     blob(E(0,0,9,7),sh(0,0,9,'#f3d351')); blob(E(dir*6,-6,5,5),sh(dir*6,-6,5,'#ffe27a')); blob(()=>{cx.moveTo(dir*10,-6);cx.lineTo(dir*15,-5);cx.lineTo(dir*10,-3);cx.closePath();},'#ff8b2e',1); circ(dir*7,-7,1.2,OL); blob(E(-dir*3,-1,4,2.5,.4),'#e8c84a',.8);
@@ -4764,7 +4919,7 @@ function bossPhase2(e,dt,d,ux,uy,a0,shoot,rage){
   if(e.bt4>0) return;
   if(b===1){e.bt4=6; for(let i=0;i<5;i++) G.emarks.push({x:P.x+rand(-130,130),y:P.y+rand(-130,130),r:52,t:1,max:1,dmg:e.dmg*.6,src:e.name,col:'#5fbf58',pool:{r:52,t:6,kind:'slime',dmg:0}}); say(e,'Kladdregn!',1.2);}
   else if(b===2){e.bt4=7; e.spiral=2; say(e,'Blankettvirvel! Fyll i alla!',1.6);}
-  else if(b===3){e.bt4=6.5; for(let i=0;i<8;i++){const a=i/8*Math.PI*2; G.emarks.push({x:P.x+Math.cos(a)*110,y:P.y+Math.sin(a)*80,r:46,t:1.1,max:1.1,dmg:e.dmg*.8,src:e.name,col:'#ff8b2e'});} const s=spawn('kanin',e.x+rand(-40,40),e.y+rand(-40,40),true); s.aggro=true; s.nodrop=true; say(e,'Morotsregn!',1.2);}
+  else if(b===3){e.bt4=6.5; for(let i=0;i<8;i++){const a=i/8*Math.PI*2; G.emarks.push({x:P.x+Math.cos(a)*110,y:P.y+Math.sin(a)*80,r:46,t:1.1,max:1.1,dmg:e.dmg*.8,src:e.name,col:'#ff8b2e'});} const s=spawn(e.T.minion||'kanin',e.x+rand(-40,40),e.y+rand(-40,40),true); s.aggro=true; s.nodrop=true; say(e,e.T.minion?'Pumparegn!':'Morotsregn!',1.2);}
   else if(b===4){e.bt4=6; for(let w=0;w<2;w++) G.timers.push({t:w*.6,f:()=>{if(e.dead) return; const gap=Math.floor(Math.random()*24); for(let i=0;i<24;i++){if(Math.abs(i-gap)<2) continue; shoot('eld',i/24*Math.PI*2,240,9,.45,2.4);} SFX.play('boom');}}); say(e,'Eldring! Steg 13!',1.2);}
   else if(b===5){e.bt4=9; for(let i=0;i<2;i++){const s=spawn('skelett',e.x+rand(-60,60),e.y+rand(-60,60),true); s.aggro=true; s.nodrop=true; s.name='Ordningsvakt Olle';} for(let i=0;i<4;i++) addPool(e.x+rand(-160,160),e.y+rand(-120,120),40,7,'water',0); say(e,'Jag har ringt polisen! Och slagit på vattenspridaren!',2);}
   else if(b===6){e.bt4=8; const sa=Math.random()*Math.PI*2; for(let i=0;i<14;i++){const a=i/14*Math.PI*2; if(Math.abs(Math.atan2(Math.sin(a-sa),Math.cos(a-sa)))<.5) continue; G.emarks.push({x:P.x+Math.cos(a)*rand(60,170),y:P.y+Math.sin(a)*rand(50,140),r:50,t:1.3,max:1.3,dmg:e.dmg*.8,src:e.name,col:'#6a9a3a',pool:{r:46,t:5,kind:'soup',dmg:e.dmg*.15}});} say(e,'Jag KOKAR ÖVER!',1.6);}
@@ -4887,7 +5042,7 @@ function drawTitle(){
   cx.fillStyle='rgba(11,8,12,.72)'; const w=cx.measureText(t).width+10; rrect(P.x-w/2,P.y-66,w,16,3); cx.fill();
   cx.fillStyle='#f0d488'; cx.fillText(t,P.x,P.y-54);
 }
-const XDRAW={
+const XDRAW={gosta:n=>drawGosta(n),
   cchest(n){const t=G.time; cx.save(); cx.translate(n.x,n.y); ell(0,12,20,6,'rgba(0,0,0,.4)'); cx.shadowColor='#b07aff'; cx.shadowBlur=14+Math.sin(t*4)*6;
     blob(RR(-18,-12,36,24,3),sh(0,0,18,'#4a2a5a'),2); cx.shadowBlur=0; blob(()=>{cx.ellipse(0,-12,18,9,0,Math.PI,0);cx.closePath();},sh(0,-16,18,'#5a3a6a'),2);
     line(-18,-4,18,8,'#8a8a92',2.5); line(18,-4,-18,8,'#8a8a92',2.5); blob(RR(-5,-6,10,10,2),'#f3d351',1.4); circ(0,-1,2,OL);
@@ -4914,7 +5069,7 @@ function petFluff(pe,dt){
 }
 // ---- day and night in town ----
 function townNight(ox,oy){
-  const nf=Math.max(.4,nightness()), du=duskness();
+  const nf=Math.max(.18,nightness()), du=duskness();
   if(du>.01){cx.fillStyle=`rgba(255,120,60,${(.14*du).toFixed(3)})`; cx.fillRect(0,0,VW,VH);}
   if(nf<.02) return;
   const w=Math.ceil(VW/2), h=Math.ceil(VH/2); if(LC.width!==w||LC.height!==h){LC.width=w;LC.height=h;}
@@ -4923,11 +5078,13 @@ function townNight(ox,oy){
   const hole=(x,y,r,a)=>{x=(x+ox)/2;y=(y+oy)/2;r/=2; if(x<-r||y<-r||x>w+r||y>h+r) return; const g=lcx.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,`rgba(0,0,0,${a})`); g.addColorStop(.6,`rgba(0,0,0,${a*.8})`); g.addColorStop(1,'rgba(0,0,0,0)'); lcx.fillStyle=g; lcx.fillRect(x-r,y-r,r*2,r*2);};
   const wins=[]; for(const hs of G.houses||[]){const hx=hs.x*TILE, ww=hs.w*TILE, hy=G.tb.Y0*TILE-6; for(const wx of [hx+ww*.14,hx+ww*.66]) wins.push([wx+11,hy-78+29]);}
   hole(P.x,P.y,250,.85); for(const l of G.lamps||[]) hole(l.x,l.y-40,220,.95); for(const [x,y] of wins) hole(x,y+20,90,.75);
+  for(const pk of G.pumpkins||[]) hole(pk.x,pk.y,70,.7);
   for(const n of G.npcs||[]) hole(n.x,n.y-20,110,.5); if(G.fountain) hole(G.fountain.x,G.fountain.y,140,.45); for(const pt of G.portals||[]) hole(pt.x,pt.y,150,.8);
   lcx.globalCompositeOperation='source-over'; cx.drawImage(LC,0,0,VW,VH);
   cx.globalCompositeOperation='lighter';
   const glow=(x,y,r,c)=>{x+=ox;y+=oy; if(x<-r||y<-r||x>VW+r||y>VH+r) return; const g=cx.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,c); g.addColorStop(1,'rgba(0,0,0,0)'); cx.fillStyle=g; cx.fillRect(x-r,y-r,r*2,r*2);};
   for(const l of G.lamps||[]) glow(l.x,l.y-50,130,`rgba(255,190,110,${(.22*nf).toFixed(3)})`);
+  for(const pk of G.pumpkins||[]) glow(pk.x,pk.y-2,46,`rgba(255,140,40,${(.3*nf).toFixed(3)})`);
   for(const [x,y] of wins) glow(x,y,40,`rgba(255,210,130,${(.3*nf).toFixed(3)})`);
   const t=G.time, f=G.fountain||{x:P.x,y:P.y};
   for(let i=0;i<18;i++){const x=f.x+Math.sin(t*.3+i*2.3)*(160+i*22)+ox, y=f.y+Math.cos(t*.23+i*1.9)*(120+i*10)+oy, a=nf*(.4+.4*Math.sin(t*3+i*1.7));
@@ -5200,7 +5357,7 @@ Object.assign(NEWSK,{
 });
 // generic extra panels
 let XOPEN=null;
-const XRENDER={treeP:renderTree,charP:renderChar,questP:renderQuests};
+const XRENDER={treeP:renderTree,charP:renderChar,questP:renderQuests,evP:()=>renderEvent()};
 function openX(id,v){
   if(!G||!started||(v&&G.over)) return;
   if(v){if(invOpen) openInv(false); closePanels();} else if(XOPEN!==id) return;
@@ -5288,7 +5445,7 @@ function extraGlows(glow){
   for(const r of G.rings||[]) if(r.r>40) glow(r.x,r.y,r.r*1.3,`rgba(255,190,110,${(.25*Math.max(0,r.t/r.max)).toFixed(3)})`);
 }
 
-Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); Object.assign(EN_EXACT,{"Pixelgrafik på. Du kan byta i inställningarna.":"Pixel graphics on. You can switch in the settings."}); Object.assign(EN_EXACT,{"Våningen är rensad!":"Floor cleared!","Här kommer inga fler fiender.":"No more enemies will come here.","Rensad. Tyst och lugnt.":"Cleared. Nice and quiet."}); Object.assign(EN_EXACT,{"Sälj alla blå vapen och rustningar":"Sell all blue weapons and armor","Sälj alla blå ringar":"Sell all blue rings","Jag smälter ner dem till något vettigt.":"I'll melt them into something useful.","blå prylar för":"blue items for","”Du har inga blå vapen eller rustningar. Inget att smälta.”":"“You have no blue weapons or armor. Nothing to melt.”","blå ringar för":"blue rings for","De glittrar nästan.":"They almost sparkle.","Du har inga blå ringar. Svea tar vapen och rustningar.":"You have no blue rings. Svea takes weapons and armor.","Sålde":"Sold","blå saker till Svetsa-Svea för":"blue items to Svetsa-Svea for","blå ringar till Kjell-Åke för":"blue rings to Kjell-Åke for"}); Object.assign(EN_EXACT,{"Dalahästen":"The Dala Horse","+6% springfart och +6% attackfart.":"+6% move speed and +6% attack speed.","Du har alltid haft den. Den luktar farmors vind.":"You've always had it. It smells like grandma's attic.","Kung Kladds Klibbiga Krona":"King Kladd's Sticky Crown","Dina träffar har 20% chans att klistra fast fienden. Den blir långsam i 2 sekunder.":"Your hits have a 20% chance to glue the enemy in place. It's slowed for 2 seconds.","Kung Kladd den Klibbige bär den. Besegra honom på våning 5.":"King Kladd the Sticky wears it. Defeat him on floor 5.","Snöglob från Sune":"Snow Globe from Sune","Dina träffar har 12% chans att frysa fienden en kort stund.":"Your hits have a 12% chance to freeze the enemy for a moment.","Svartjobbaren Sune har en i säcken. Fånga honom innan han smiter genom sin portal.":"Sune the Moonlighter has one in his sack. Catch him before he slips through his portal.","Kjell-Åkes Fondueset":"Kjell-Åke's Fondue Set","Dina kritiska träffar sätter eld på fienden.":"Your critical hits set the enemy on fire.","Kjell-Åke ger bort sitt fondueset när du klarat 4 av hans uppdrag.":"Kjell-Åke gives away his fondue set once you've finished 4 of his quests.","Spargrisen":"The Piggy Bank","+30% guldfynd. Fiender du besegrar tappar ibland en extra guldhög.":"+30% gold find. Enemies you defeat sometimes drop an extra pile of gold.","Spökbrädet":"The Ouija Board","Dina träffar har 10% chans att skicka iväg en spökskalle som letar upp en fiende.":"Your hits have a 10% chance to send out a ghost skull that seeks an enemy.","Besegra 25 Spöken med Skatteskuld. De betalar sin skuld i kuriosa.":"Defeat 25 Ghosts with Tax Debt. They pay their debt in curios.","Bertils Gummistämpel":"Bertil's Rubber Stamp","Var åttonde träff stämplar fienden. Den tar 40% mer skada i 4 sekunder.":"Every eighth hit stamps the enemy. It takes 40% more damage for 4 seconds.","Byråkraten Bertil stämplar allt han ser. Besegra honom på våning 10.":"Bertil the Bureaucrat stamps everything he sees. Defeat him on floor 10.","Det Kosmiska Kaffefatet":"The Cosmic Saucer","Fiender du besegrar har 12% chans att lämna ett litet svart hål som suger in andra och smäller.":"Enemies you defeat have a 12% chance to leave a tiny black hole that pulls others in and pops.","Välkommen till Kerstins loppis! Allt är unikt. Inget är till salu.":"Welcome to Kerstin's flea market! Everything is unique. Nothing is for sale.","Hej hjärtat! Har du hittat något fint i ruinerna?":"Hi sweetie! Found anything nice in the ruins?","En dalahäst är aldrig fel. Utom när den biter.":"A Dala horse is never wrong. Except when it bites.","Kung Kladd har en krona. Den är klibbig. Jag VILL ha den.":"King Kladd has a crown. It's sticky. I WANT it.","Spöken betalar sina skulder i kuriosa. Helt sant.":"Ghosts pay their debts in curios. Totally true.","Sune säljer allt. Även snöglober han inte äger.":"Sune sells everything. Even snow globes he doesn't own.","Bertil stämplar allt. Till och med sin lunch.":"Bertil stamps everything. Even his lunch.","Bär dina fynd nära hjärtat. Eller i fickan.":"Keep your finds close to your heart. Or in your pocket.","NYTT LOPPISFYND!":"NEW FLEA MARKET FIND!","Du bär den redan.":"You're already wearing it.","Byt berlocker hos Loppis-Kerstin i stan.":"Swap charms at Flea Market Kerstin in town.","STÄMPLAD!":"STAMPED!","Kerstins Loppisbord":"Kerstin's Flea Market Table","Fynd":"Finds","Kerstin samlar kuriosa från ruinerna. Varje fynd blir en berlock som du kan bära, oavsett klass. Du får fler platser för berlocker ju fler fynd du hittar.":"Kerstin collects curios from the ruins. Every find becomes a charm you can wear, whatever your class. You get more charm slots the more finds you collect.","Berlocker på:":"Charms worn:","En plats till när du har":"One more slot when you have","fynd.":"finds.","Ta av":"Remove","Alla platser är fulla":"All slots are full","Bär den":"Wear it","Den klär dig! Nästan.":"It suits you! Almost.","Ta väl hand om den. Den är ett original.":"Take good care of it. It's an original.","Loppis-Kerstin (samlare)":"Flea Market Kerstin (collector)","Titta på Kerstins loppisbord (T)":"Browse Kerstin's flea market (T)","Loppis-Kerstin":"Flea Market Kerstin","Loppiskung":"Flea Market King","Hitta alla Kerstins loppisfynd.":"Find all of Kerstin's flea market finds.","Hjälp Loppis-Kerstin att hitta henne på ett sidouppdrag.":"Help Flea Market Kerstin find her on a side quest.","Kerstins loppisfynd":"Kerstin's flea market finds","Du önskade dig en till spargris. Fontänen låtsas inte höra.":"You wished for another piggy bank. The fountain pretends not to hear.","Kastar en kastrull som studsar mellan fiender.":"Throws a saucepan that bounces between enemies.","uppdrag":"quests","spöken":"ghosts","krossade":"smashed","Hittad!":"Found!","Så hittar du den:":"How to find it:"}); Object.assign(EN_EXACT,{"Dina vanliga attacker skjuter två stickor i en solfjäder.":"Your basic attacks fire two needles in a fan."}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
+Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); Object.assign(EN_EXACT,{"Trappan":"The Stairs","Vill du gå ner till våning":"Go down to floor","Vill du gå upp till våning":"Go up to floor","Vill du kliva ner i ruinen?":"Climb down into the ruin?","Vill du gå upp till Lagomby?":"Go up to Lagomby?","Nej (Esc)":"No (Esc)","Ja (Enter)":"Yes (Enter)"}); Object.assign(EN_EXACT,{"Invånare: färre än igår":"Population: fewer than yesterday","Du kliver upp ur ruinen. Himlen är grå. Som vanligt.":"You climb out of the ruin. The sky is grey. As usual.","Staden där inget gott händer. Med flit.":"The town where nothing good happens. On purpose."}); Object.assign(EN_EXACT,{"Pixelgrafik på. Du kan byta i inställningarna.":"Pixel graphics on. You can switch in the settings."}); Object.assign(EN_EXACT,{"Våningen är rensad!":"Floor cleared!","Här kommer inga fler fiender.":"No more enemies will come here.","Rensad. Tyst och lugnt.":"Cleared. Nice and quiet."}); Object.assign(EN_EXACT,{"Sälj alla blå vapen och rustningar":"Sell all blue weapons and armor","Sälj alla blå ringar":"Sell all blue rings","Jag smälter ner dem till något vettigt.":"I'll melt them into something useful.","blå prylar för":"blue items for","”Du har inga blå vapen eller rustningar. Inget att smälta.”":"“You have no blue weapons or armor. Nothing to melt.”","blå ringar för":"blue rings for","De glittrar nästan.":"They almost sparkle.","Du har inga blå ringar. Svea tar vapen och rustningar.":"You have no blue rings. Svea takes weapons and armor.","Sålde":"Sold","blå saker till Svetsa-Svea för":"blue items to Svetsa-Svea for","blå ringar till Kjell-Åke för":"blue rings to Kjell-Åke for"}); Object.assign(EN_EXACT,{"Dalahästen":"The Dala Horse","+6% springfart och +6% attackfart.":"+6% move speed and +6% attack speed.","Du har alltid haft den. Den luktar farmors vind.":"You've always had it. It smells like grandma's attic.","Kung Kladds Klibbiga Krona":"King Kladd's Sticky Crown","Dina träffar har 20% chans att klistra fast fienden. Den blir långsam i 2 sekunder.":"Your hits have a 20% chance to glue the enemy in place. It's slowed for 2 seconds.","Kung Kladd den Klibbige bär den. Besegra honom på våning 5.":"King Kladd the Sticky wears it. Defeat him on floor 5.","Snöglob från Sune":"Snow Globe from Sune","Dina träffar har 12% chans att frysa fienden en kort stund.":"Your hits have a 12% chance to freeze the enemy for a moment.","Svartjobbaren Sune har en i säcken. Fånga honom innan han smiter genom sin portal.":"Sune the Moonlighter has one in his sack. Catch him before he slips through his portal.","Kjell-Åkes Fondueset":"Kjell-Åke's Fondue Set","Dina kritiska träffar sätter eld på fienden.":"Your critical hits set the enemy on fire.","Kjell-Åke ger bort sitt fondueset när du klarat 4 av hans uppdrag.":"Kjell-Åke gives away his fondue set once you've finished 4 of his quests.","Spargrisen":"The Piggy Bank","+30% guldfynd. Fiender du besegrar tappar ibland en extra guldhög.":"+30% gold find. Enemies you defeat sometimes drop an extra pile of gold.","Spökbrädet":"The Ouija Board","Dina träffar har 10% chans att skicka iväg en spökskalle som letar upp en fiende.":"Your hits have a 10% chance to send out a ghost skull that seeks an enemy.","Besegra 25 Spöken med Skatteskuld. De betalar sin skuld i kuriosa.":"Defeat 25 Ghosts with Tax Debt. They pay their debt in curios.","Bertils Gummistämpel":"Bertil's Rubber Stamp","Var åttonde träff stämplar fienden. Den tar 40% mer skada i 4 sekunder.":"Every eighth hit stamps the enemy. It takes 40% more damage for 4 seconds.","Byråkraten Bertil stämplar allt han ser. Besegra honom på våning 10.":"Bertil the Bureaucrat stamps everything he sees. Defeat him on floor 10.","Det Kosmiska Kaffefatet":"The Cosmic Saucer","Fiender du besegrar har 12% chans att lämna ett litet svart hål som suger in andra och smäller.":"Enemies you defeat have a 12% chance to leave a tiny black hole that pulls others in and pops.","Välkommen till Kerstins loppis! Allt är unikt. Inget är till salu.":"Welcome to Kerstin's flea market! Everything is unique. Nothing is for sale.","Hej hjärtat! Har du hittat något fint i ruinerna?":"Hi sweetie! Found anything nice in the ruins?","En dalahäst är aldrig fel. Utom när den biter.":"A Dala horse is never wrong. Except when it bites.","Kung Kladd har en krona. Den är klibbig. Jag VILL ha den.":"King Kladd has a crown. It's sticky. I WANT it.","Spöken betalar sina skulder i kuriosa. Helt sant.":"Ghosts pay their debts in curios. Totally true.","Sune säljer allt. Även snöglober han inte äger.":"Sune sells everything. Even snow globes he doesn't own.","Bertil stämplar allt. Till och med sin lunch.":"Bertil stamps everything. Even his lunch.","Bär dina fynd nära hjärtat. Eller i fickan.":"Keep your finds close to your heart. Or in your pocket.","NYTT LOPPISFYND!":"NEW FLEA MARKET FIND!","Du bär den redan.":"You're already wearing it.","Byt berlocker hos Loppis-Kerstin i stan.":"Swap charms at Flea Market Kerstin in town.","STÄMPLAD!":"STAMPED!","Kerstins Loppisbord":"Kerstin's Flea Market Table","Fynd":"Finds","Kerstin samlar kuriosa från ruinerna. Varje fynd blir en berlock som du kan bära, oavsett klass. Du får fler platser för berlocker ju fler fynd du hittar.":"Kerstin collects curios from the ruins. Every find becomes a charm you can wear, whatever your class. You get more charm slots the more finds you collect.","Berlocker på:":"Charms worn:","En plats till när du har":"One more slot when you have","fynd.":"finds.","Ta av":"Remove","Alla platser är fulla":"All slots are full","Bär den":"Wear it","Den klär dig! Nästan.":"It suits you! Almost.","Ta väl hand om den. Den är ett original.":"Take good care of it. It's an original.","Loppis-Kerstin (samlare)":"Flea Market Kerstin (collector)","Titta på Kerstins loppisbord (T)":"Browse Kerstin's flea market (T)","Loppis-Kerstin":"Flea Market Kerstin","Loppiskung":"Flea Market King","Hitta alla Kerstins loppisfynd.":"Find all of Kerstin's flea market finds.","Hjälp Loppis-Kerstin att hitta henne på ett sidouppdrag.":"Help Flea Market Kerstin find her on a side quest.","Kerstins loppisfynd":"Kerstin's flea market finds","Du önskade dig en till spargris. Fontänen låtsas inte höra.":"You wished for another piggy bank. The fountain pretends not to hear.","Kastar en kastrull som studsar mellan fiender.":"Throws a saucepan that bounces between enemies.","uppdrag":"quests","spöken":"ghosts","krossade":"smashed","Hittad!":"Found!","Så hittar du den:":"How to find it:"}); Object.assign(EN_EXACT,{"Dina vanliga attacker skjuter två stickor i en solfjäder.":"Your basic attacks fire two needles in a fan."}); Object.assign(EN_EXACT,{"Pumpahuvud":"Pumpkin Head","Häxan Hjördis":"Hjördis the Witch","Pumpakungen Pompe":"Pompe the Pumpkin King","Bus eller godis!":"Trick or treat!","Jag är urholkad. Inuti OCH utanpå.":"I'm hollow. Inside AND out.","Paj? Över min döda kropp.":"Pie? Over my dead body.","Lys upp mitt liv!":"Light up my life!","Hihihi!":"Hehehe!","Min kvast är leasad.":"My broom is leased.","En groda till, tack!":"One more frog, please!","Brygden är nästan klar. Nästan.":"The brew is almost ready. Almost.","BUS ELLER GODIS!":"TRICK OR TREAT!","Jag är en GRÖNSAK av rang!":"I am a VEGETABLE of rank!","Ni ska bli pumpasoppa!":"You'll be pumpkin soup!","Världens största pumpa. Och den har en krona.":"The world's largest pumpkin. And it has a crown.","Pumparegn!":"Pumpkin rain!","Spökgrottan":"The Spooky Cave","Besegra spökena så kommer Pumpakungen. Samla godis!":"Defeat the spooks and the Pumpkin King will come. Collect candy!","Pumpakungen har vaknat!":"The Pumpkin King has awoken!","Spökgrottan (Halloween)":"The Spooky Cave (Halloween)","godis":"candy","Prata med Gravgrävar-Gösta (T)":"Talk to Gösta the Gravedigger (T)","Gravgrävar-Gösta (Halloween)":"Gösta the Gravedigger (Halloween)","Det är Halloween i Lagomby! Gravgrävar-Gösta har öppnat Spökgrottan. Samla godis och hämta belöningar hos honom.":"It's Halloween in Lagomby! Gösta the Gravedigger has opened the Spooky Cave. Collect candy and claim rewards from him.","Pumpahjälmen":"The Pumpkin Helm","Urholkad med kärlek. Luktar paj.":"Hollowed out with love. Smells of pie.","Spöklakanet":"The Ghost Sheet","Två hål för ögonen. Ett för kaffet.":"Two holes for the eyes. One for coffee.","Godisringen":"The Candy Ring","Smakar jordgubb. Ät den inte.":"Tastes like strawberry. Don't eat it.","Du fick:":"You got:","Väskan är full, så Gösta lade den på marken.":"Your bag is full, so Gösta put it on the ground.","2 hälsodrycker":"2 health potions","500 guld":"500 gold","En stor juvel":"A large gem","Pumpahjälmen (legendarisk hjälm)":"The Pumpkin Helm (legendary helm)","En runa":"A rune","Husdjuret Fladder-Fia":"The pet Flutter-Fia","Spöklakanet (legendarisk rustning)":"The Ghost Sheet (legendary armor)","Godisringen (legendarisk ring)":"The Candy Ring (legendary ring)","Loppisfyndet Pumpalyktan":"The flea market find Jack-o'-Lantern","Titeln Pumpakungen och 2000 guld":"The title Pumpkin King and 2000 gold","Pumpalyktan":"The Jack-o'-Lantern","Dina träffar har 8% chans att tända en pumpa som exploderar efter en sekund och gör 150% skada.":"Your hits have an 8% chance to light a pumpkin that explodes after a second for 150% damage.","Belöning i Gravgrävar-Göstas godispass under Halloween.":"A reward in Gösta the Gravedigger's candy pass during Halloween.","Fladdermusen Fladder-Fia":"Flutter-Fia the Bat","Fladdrar runt och biter fiender.":"Flutters around and bites enemies.","Ijiik!":"Eeek!","*bits*":"*bites*","Blod? Nej, saft.":"Blood? No, juice.","Pumpakung":"Pumpkin Monarch","Klara hela Göstas godispass.":"Complete Gösta's whole candy pass.","Pumpakungen":"The Pumpkin King","Godkväll. Eller godnatt. Det är svårt att säga här.":"Good evening. Or good night. Hard to tell around here.","Bus eller godis? Jag föredrar godis. Och spadar.":"Trick or treat? I prefer treats. And shovels.","Jag har grävt gravar i fyrtio år. Det här är första gången de gräver tillbaka.":"I've dug graves for forty years. This is the first time they dig back.","Pumpakungen bor i Spökgrottan. Han har ingen hjärna, bara frön.":"The Pumpkin King lives in the Spooky Cave. He has no brain, just seeds.","Godis är valutan i natt. Guld är så förra veckan.":"Candy is the currency tonight. Gold is so last week.","Häxan Hjördis är min kusin. Vi pratar inte.":"Hjördis the Witch is my cousin. We don't talk.","Lyktan? Den har jag fått av en pumpa.":"The lantern? A pumpkin gave it to me.","Spökgrottan har stängt för säsongen.":"The Spooky Cave has closed for the season.","Pumpakungen är besegrad!":"The Pumpkin King is defeated!","Godiset regnar. En portal hem öppnade sig.":"Candy is raining. A portal home has opened.","Inget event pågår just nu.":"No event is running right now.","Pumpakungen besegrad":"Pumpkin King defeated","gånger":"times","Hämtad":"Claimed","Hämta":"Claim","kvar":"left","Belöning!":"Reward!","Göstas Godispass":"Gösta's Candy Pass","Godis":"Candy","Samla godis i Spökgrottan och ute i ruinen. Hämta belöningarna här när du har samlat tillräckligt. Passet gäller bara under Halloween.":"Collect candy in the Spooky Cave and out in the ruin. Claim the rewards here once you've collected enough. The pass only runs during Halloween.","Gå in i Spökgrottan":"Enter the Spooky Cave","Pumpa!":"Pumpkin!"}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
 let splashDone=false;
 function endSplash(){
   if(splashDone) return; splashDone=true; const s=$('splash'); s.classList.add('done'); setTimeout(()=>{s.hidden=true;},700);
@@ -5399,7 +5556,7 @@ $('talkBtn').addEventListener('click',()=>interact());
 
 // ---------------- save ----------------
 const SKEY='loot-lagom-v1';
-function serialize(){const {charmOn,cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}=P; return {v:1,depth:G?G.depth:1,town:!G||!!G.town||!!G.rift,iid:IID,P:{charmOn,cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}};}
+function serialize(){const {evs,charmOn,cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}=P; return {v:1,depth:G?G.depth:1,town:!G||!!G.town||!!G.rift,iid:IID,P:{evs,charmOn,cleared,sk,runes,runeInv,furn,title,side,clock,screws,shards,bagUp,scrolls,wps,gems,pets,pet,ach,cnt,para,keys,riftTier,food,hc,story,diff,cls,lvl,xp,gold,potions,kills,deaths,best,bag,equip,perks,pp,bought,pots,pot,prog}};}
 function save(){
   if(!started) return false;
   if(P.hc&&G&&G.over) return false;
