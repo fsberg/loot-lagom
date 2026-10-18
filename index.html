@@ -224,6 +224,13 @@ html.pixel .beta{border-radius:0;font-family:var(--body)}
 @media (max-width:760px){.tcols{grid-template-columns:repeat(2,1fr)}}
 .tcol h3{margin:0 0 8px;font-size:17px}.trow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed rgba(168,153,138,.25)}
 .tnode{flex:1 1 90px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:6px 8px;background:rgba(0,0,0,.25);border:2px solid rgba(168,153,138,.3);border-radius:6px;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.sk[hidden]{display:none!important}
+.tlink{position:relative;height:20px;margin:-6px 0 2px;text-align:center;font-size:11px;color:var(--muted)}
+.tlink::before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed rgba(168,153,138,.35)}
+.tlink.open::before{border-left:2px solid var(--torch)}
+.tlink span{position:relative;background:var(--panel,#1c1612);padding:0 6px}
+.tnode.act{border-width:3px;border-style:double}
+.tnode i{font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--torch)}
 .tnode b{color:var(--parch);font-size:13px}.tnode span{font-size:12px}
 .tnode.on{border-color:var(--bc);color:var(--parch)}.tnode.can{box-shadow:0 0 0 1px var(--bc),0 0 10px -2px var(--bc)}.tnode.sel{background:rgba(242,160,61,.15)}
 html.pixel .tnode{border-radius:0}
@@ -296,6 +303,8 @@ html.pixel .sp-steam i{filter:none;border-radius:0}
     <button class="sk" data-skill="pot" data-slot="e" title="Kastrullkast (E eller högerklick)"><span class="k">E</span><svg viewBox="0 0 24 24"><path d="M4 11h13v4a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM17 12h5M3 11h15"/></svg><span class="n"></span></button>
     <button class="sk" data-skill="spin" data-slot="q" title="Ilsket Snurr (Q)"><span class="k">Q</span><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2M20 4v5h-5"/></svg><span class="n"></span></button>
     <button class="sk" data-skill="talk" data-slot="r" title="Pinsamt Tal (R)"><span class="k">R</span><svg viewBox="0 0 24 24"><path d="M4 5h16v10H10l-5 4v-4H4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg><span class="n"></span></button>
+    <button class="sk" data-skill="ugn" data-slot="u1" hidden><span class="k">2</span><svg viewBox="0 0 24 24"></svg><span class="n"></span></button>
+    <button class="sk" data-skill="julbord" data-slot="u2" hidden><span class="k">3</span><svg viewBox="0 0 24 24"></svg><span class="n"></span></button>
     <button class="sk" data-act="potion" title="Hälsodryck (F)"><span class="k">F</span><svg viewBox="0 0 24 24"><path d="M10 3h4M10 3v5l-5 8a3 3 0 0 0 3 5h8a3 3 0 0 0 3-5l-5-8V3M7.5 14h9"/></svg><span class="n" id="hPot">3</span></button>
     <button class="sk" data-act="bag" title="Väska (I)"><span class="k">I</span><svg viewBox="0 0 24 24"><path d="M9 7V5a3 3 0 0 1 6 0v2M5 8h14l-1 12H6z"/></svg><span class="n" id="hBag">0</span></button>
     <button class="sk" data-act="char" title="Hjälten (C)"><span class="k">C</span><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 4-7 8-7s7 2 8 7"/></svg><span class="n"></span></button>
@@ -764,6 +773,11 @@ const ET={
   troll:{name:'Brotrollet Bengt',r:24,hp:150,dmg:20,spd:62,xp:45,kind:'brute',acd:1.8,col:'#6a8a5a',q:['Fem kronor för att gå förbi!','Bengt KROSSA!','Var är min bro?!']},
   spoke:{name:'Spöke med Skatteskuld',r:14,hp:38,dmg:9,spd:92,xp:22,kind:'ghost',acd:1,col:'#b8c8e8',q:['Du har inte betalat tv-licensen!','Buuu... och moms.','Jag går igenom väggar. Och kvitton.']},
   gnom:{name:'Trädgårdstomte med Tändsticka',r:11,hp:18,dmg:26,spd:150,xp:14,kind:'bomber',acd:1,col:'#d9473a',q:['FÖR TRÄDGÅRDEN!','Tjoho!','Jag har en plan. Den är kort.']},
+  bageskelett:{name:'Skelett med Pilbåge (Närsynt)',r:15,hp:30,dmg:8,spd:62,xp:15,kind:'ranged',proj:'pil',psp:340,wind:.45,acd:2.2,col:'#e6e0d0',q:['Var är du? Allt är suddigt.','Knäck. Sikta. Knäck.','Mina glasögon ligger kvar i graven.','Jag träffade en gång. 1987.']},
+  mygga:{name:'Norrlandsmygga',r:8,hp:8,dmg:3,spd:185,xp:3,kind:'melee',erratic:1,swarm:3,acd:.55,col:'#5a4a3a',q:['Bzzz!','Blod! Gratis blod!','Jag är från Kiruna.','Bara ett litet stick!']},
+  vildsvin:{name:'Stressat Vildsvin',r:16,hp:55,dmg:12,spd:60,xp:20,kind:'charger',acd:3.2,col:'#6a4a3a',q:['Jag är sen till mötet!','Oink. Men argt.','Har någon sett min kalender?']},
+  mattant:{name:'Skolmattant',r:14,hp:40,dmg:6,spd:60,xp:18,kind:'ranged',proj:'kbulle',fan:3,psp:210,wind:.3,acd:2.8,col:'#d88a9a',q:['Ät upp, annars blir det ingen efterrätt!','Köttbullar till alla!','Ta två, du är så tunn.','Inga armbågar på bordet!']},
+  snogubbe:{name:'Snögubbe med Attityd',r:17,hp:55,dmg:9,spd:45,xp:22,kind:'ranged',proj:'snoboll',psp:190,pr:10,pslow:1.2,wind:.5,acd:2.5,col:'#eef4fa',q:['Det är kallt här. För dig.','Min näsa är en morot. Problem?','Vintern kommer. Den är jag.']},
   golem:{name:'Monteringsgolem',r:17,hp:72,dmg:8,spd:55,xp:26,kind:'ranged',proj:'skruv',burst:3,acd:2.4,col:'#c8a46a',q:['Det fattas en skruv!','Steg 47: panik.','Instruktionen var på fel språk.']},
   boss3:{name:'Kaninkungen Kalle Karot',r:38,hp:900,dmg:22,spd:90,xp:420,kind:'boss',b:3,acd:1,col:'#e8ddd0',q:['MOROTSKRIG!','Ni har ätit av min trädgård!','Hopp, hopp, KROSS!'],intro:'Han har en krona. Och väldigt starka bakben.'},
   boss4:{name:'Monteringsdraken Mats',r:40,hp:1100,dmg:24,spd:60,xp:520,kind:'boss',b:4,acd:1,col:'#c8a46a',q:['Det fattas en skruv... I DIG!','Monteringsanvisning: bränn allt.','Jag består av 4000 delar!'],intro:'Byggd av 4000 delar. Det blev några över.'},
@@ -827,8 +841,8 @@ const ALTARS={
   snal:{n:'Snålhetens Altare',s:'Snålhet',q:'Pengar regnar! +150% guldfynd.',c:'#f3d351'},
   jatte:{n:'Jättealtaret',s:'Jätte',q:'Kastrullen sitter lite tight nu. +30% liv och skada.',c:'#7aa2ff'},
 };
-const QNAME={kanin:'arga kaniner',skelett:'skelett',slem:'slemmiga snorklingar',kultist:'kultister',fladdermus:'fladdermöss',svamp:'surmulna svampar',troll:'brotroll',spoke:'spöken',gnom:'trädgårdstomtar',golem:'monteringsgolemer'};
-const QUESTQ={kanin:'Kaninerna har ätit upp hans morötter.',skelett:'Skeletten gnäller om ryggont dygnet runt.',slem:'Slemmet har kladdat ner hans hyllor.',kultist:'Kultisterna läser dikter utanför butiken.',fladdermus:'Fladdermössen skriker hela nätterna.',svamp:'Svamparna surar ner hela grottan.',troll:'Trollen tar betalt för att gå förbi.',spoke:'Spökena kräver honom på pengar.',gnom:'Tomtarna sprängde hans trädgård.',golem:'Golemerna har snott hans skruvar.'};
+const QNAME={kanin:'arga kaniner',skelett:'skelett',slem:'slemmiga snorklingar',kultist:'kultister',fladdermus:'fladdermöss',svamp:'surmulna svampar',troll:'brotroll',spoke:'spöken',gnom:'trädgårdstomtar',golem:'monteringsgolemer',bageskelett:'bågskelett',mygga:'myggor',vildsvin:'stressade vildsvin',mattant:'skolmattanter',snogubbe:'snögubbar'};
+const QUESTQ={kanin:'Kaninerna har ätit upp hans morötter.',skelett:'Skeletten gnäller om ryggont dygnet runt.',slem:'Slemmet har kladdat ner hans hyllor.',kultist:'Kultisterna läser dikter utanför butiken.',fladdermus:'Fladdermössen skriker hela nätterna.',svamp:'Svamparna surar ner hela grottan.',troll:'Trollen tar betalt för att gå förbi.',spoke:'Spökena kräver honom på pengar.',gnom:'Tomtarna sprängde hans trädgård.',golem:'Golemerna har snott hans skruvar.',bageskelett:'Bågskeletten skjuter pilar på hans brevlåda.',mygga:'Myggorna bet honom tjugo gånger i natt.',vildsvin:'Vildsvinen sprang rakt genom hans staket.',mattant:'Mattanterna tvingar honom att äta stuvade makaroner.',snogubbe:'Snögubbarna kastar snöboll på hans fönster.'};
 const DIFF={
   lagom:{n:'Lagom',hp:1,dmg:1,loot:0,xp:1,d:'Lagom svårt. Fienderna biter ordentligt, men det går att överleva.'},
   jobbigt:{n:'Jobbigt',hp:1.6,dmg:1.4,loot:.25,xp:1.25,d:'Fiender har 60% mer liv och gör 40% mer skada. Mer loot och erfarenhet.'},
@@ -856,7 +870,7 @@ const TH=()=>THEMES[(G&&G.theme)||'krypta'];
 const OPT={shake:true,nums:true,vol:100,zoom:1.3,music:60}; try{Object.assign(OPT,JSON.parse(localStorage.getItem('loot-lagom-opt')||'{}'));}catch(e){}
 function saveOpt(){try{localStorage.setItem('loot-lagom-opt',JSON.stringify(OPT));}catch(e){}}
 let PIXEL=true; try{PIXEL=localStorage.getItem('loot-lagom-pixel')!=='0';}catch(e){}
-const MININAMES={kanin:'Kenneth, Kaninernas Fackombud',skelett:'Sture som Vägrar Gå i Pension',slem:'Slem-Lennart',kultist:'Kultledaren Kent',fladdermus:'Fladder-Fredrik med Hörlurar',svamp:'Svamp-Siv den Sura',troll:'Troll-Torbjörn',spoke:'Spöket Skattmasen',gnom:'Tomte-Tommy med Dynamit',golem:'Golem-Göran, Ej Monterad'};
+const MININAMES={kanin:'Kenneth, Kaninernas Fackombud',skelett:'Sture som Vägrar Gå i Pension',slem:'Slem-Lennart',kultist:'Kultledaren Kent',fladdermus:'Fladder-Fredrik med Hörlurar',svamp:'Svamp-Siv den Sura',troll:'Troll-Torbjörn',spoke:'Spöket Skattmasen',gnom:'Tomte-Tommy med Dynamit',golem:'Golem-Göran, Ej Monterad',bageskelett:'Robin Hud-och-Ben',mygga:'Drottning Surr av Norrbotten',vildsvin:'Galten Gunnar, Försenad',mattant:'Majvor, Köttbullarnas Drottning',snogubbe:'Snö-Sören som Aldrig Smälter'};
 const EXTRABUFF={fest:{n:'Festglädje',s:'Fest'}};
 const BERITQ=['Byteshandel! Jag tar din sämsta pryl och ger dig något bättre. Kanske.','Ingen returrätt. Inga kvitton. Bara magi.'];
 const TOBIASQ=['Ursäkta, var ligger turistbyrån? Och varför är allt så arga här?','Jag tog fel tunnelbana. Tror jag.'];
@@ -981,7 +995,7 @@ const POTS={
 };
 const KERHI=['Kastruller! Jag älskar kastruller! Vill du se min samling?','Hej hjärtat! Har du hittat några nya kastruller?'];
 const KERQ=['En kastrull är en hjälm man kan koka soppa i.','Jag har hört att Kung Kladd gömmer en wok i kronan.','Fontänen? Kasta i lite guld, så får du se!','Spöken med skatteskuld betalar i kastruller. Helt sant.','Sune säljer allt. Även saker han inte äger.','Den hundrade krukan... den är speciell.','Bertil har konfiskerat min mormors kastrull. Den byråkraten!'];
-const TIERS=[['kanin','skelett','slem','fladdermus'],['kultist'],['svamp'],['troll'],['spoke'],['gnom'],['golem']];
+const TIERS=[['kanin','skelett','slem','fladdermus'],['bageskelett','kultist'],['mygga','svamp'],['vildsvin','troll'],['mattant','spoke'],['snogubbe','gnom'],['golem']];
 const SMEDHI=['Svetsa-Svea, till er tjänst! Nio fingrar kvar.','Har du något som behöver bankas på?'];
 const SMEDQ=['Jag kan smida allt. Utom relationer.','Slå på den tills den blir bättre. Det är hela hemligheten.','Tjugo år i branschen. Tjugo år av tinnitus.','Inga reklamationer. Inga frågor.'];
 const TOREHI=['Välkommen, unge hjälte! Eller medelålders. Svårt att säga under kastrullen.','Kom in, kom in. Lärdomen väntar. Mot betalning.'];
@@ -1299,7 +1313,7 @@ function recalc(){
   recalcExtra();
   S.spd=Math.min(S.spd,80); S.crit=Math.min(S.crit,75); S.as=Math.min(S.as,150);
 }
-const need=l=>Math.round(130*Math.pow(l,2.1));
+const need=l=>Math.round(175*Math.pow(l,2.2));
 function initRuntime(){
   Object.assign(P,{x:0,y:0,r:14,face:0,acd:0,swing:0,swingA:0,spin:0,hurt:0,inv:0,say:null,cds:{pot:0,spin:0,talk:0,dash:0,yarn:0,coffee:0,glare:0,stink:0,moose:0,mosquito:0,pan:0,cart:0,fika:0,knit:0,frost:0,storm:0,traps:0,volley:0,hunt:0},tb:null,swarm:0,swarmT:0,moving:false,buff:null,whirl:0,whirlT:0,swingN:0,cat:null,fireT:0,dashT:0,dvx:0,dvy:0,mdx:1,mdy:0});
 }
@@ -1352,7 +1366,7 @@ function roomPos(r,pad=1){return [(rand(r.x+pad,r.x+r.w-pad))*TILE,(rand(r.y+pad
 
 // ---------------- floors ----------------
 function spawn(type,x,y,elite=false){
-  const D=DF(), T=ET[type], sc=1.45*(1+.45*(G.depth-1))*(1+.015*Math.pow(G.depth-1,1.5))*D.hp, dsc=1.35*(1+.32*(G.depth-1))*D.dmg;
+  const D=DF(), T=ET[type], ef=G.rift?1:G.depth<=1?.65:G.depth===2?.82:1, sc=1.45*(1+.45*(G.depth-1))*(1+.015*Math.pow(G.depth-1,1.5))*D.hp*ef, dsc=1.35*(1+.32*(G.depth-1))*D.dmg*ef;
   const e={type,T,x,y,r:T.r*(elite?1.25:1),maxhp:Math.round(T.hp*sc*(elite?2.6:1)),dmg:T.dmg*dsc*(elite?1.5:1),spd:T.spd*(elite?1.1:1),
     cd:rand(.3,1),aggro:false,elite,stun:0,flash:0,kx:0,ky:0,ph:Math.random()*6,say:null,qt:rand(4,10),bt:2,bt2:5,dash:0,
     name:elite?T.name+' '+pick(ELITE):T.name,sleeping:T.kind==='mimic'};
@@ -1365,10 +1379,10 @@ function newFloor(depth,opt){
   G.m.t[st.cy*MW+st.cx]=7;
   {const sp=opt&&opt.arrive==='down'?G.m.stairs:st; P.x=(sp.cx+.5)*TILE; P.y=(sp.cy+.5)*TILE;} G.cam.x=P.x; G.cam.y=P.y; P.inv=1.2; G.stairLock=true; P.goto=null;
   const unlocked=[]; TIERS.slice(0,Math.min(TIERS.length,depth)).forEach(a=>unlocked.push(...a));
-  const pool=shuffle(unlocked.slice()).slice(0,depth<3?3:4);
-  const fresh=depth>1&&depth<=TIERS.length?TIERS[depth-1][0]:null;
-  if(fresh&&!pool.includes(fresh)) pool[0]=fresh;
-  if(fresh) setTimeout(()=>log(`Nytt på den här våningen: ${ET[fresh].name}.`,'#ff8b2e'),3000);
+  const pool=shuffle(unlocked.slice()).slice(0,depth<3?3:depth<6?4:5);
+  const fresh=depth>1&&depth<=TIERS.length?TIERS[depth-1]:[];
+  fresh.forEach((f,i)=>{if(!pool.includes(f)) pool[i]=f;});
+  if(fresh.length) setTimeout(()=>log(`Nytt på den här våningen: ${fresh.map(f=>ET[f].name).join(', ')}.`,'#ff8b2e'),3000);
   if(opt&&opt.rift&&opt.mods.includes('kaniner')){pool.length=0; pool.push('kanin','kanin','fladdermus');}
   const isBoss=depth%5===0;
   for(const r of G.m.rooms){
@@ -1377,8 +1391,9 @@ function newFloor(depth,opt){
       G.boss=spawn(bossFor(depth),(r.cx-2)*TILE,(r.cy+.5)*TILE);
       continue;
     }
-    const n=ri(4,6)+Math.floor(depth/2);
-    for(let i=0;i<n;i++){const [x,y]=roomPos(r); spawn(pick(pool),x,y,Math.random()<.12+depth*.012);}
+    const n=depth<=1?ri(3,5):depth===2?ri(4,6):ri(5,8)+Math.floor(depth/2);
+    for(let i=0;i<n;i++){const [x,y]=roomPos(r), tp=pick(pool), el=Math.random()<(depth<=2?.04:.12+depth*.012); spawn(tp,x,y,el);
+      for(let s=1;s<(ET[tp].swarm||1);s++) spawn(tp,x+rand(-18,18),y+rand(-18,18),false);}
   }
   const others=G.m.rooms.filter(r=>r!==st&&r!==G.m.stairs);
   if(others.length&&Math.random()<.65){const [x,y]=roomPos(pick(others),1.5); spawn('mimic',x,y);}
@@ -1546,7 +1561,7 @@ function hitEnemy(e,base,opts={}){
   text(e.x+rand(-6,6),e.y-e.r-4,d,crit?'#ffd34a':'#f4ece0',crit);
   if(S.ls&&!opts.nols) leech(d*Math.min(S.ls,5)/100);
   if(crit){G.shake=Math.min(8,G.shake+3); if(S.fx.has('squeak')){e.stun=Math.max(e.stun,1); SFX.play('squeak'); text(e.x,e.y-e.r-22,'PIIP!','#ff8b2e');}}
-  const a=Math.atan2(e.y-P.y,e.x-P.x), kb=e.T.kind==='boss'?40:opts.kb??220;
+  const a=Math.atan2(e.y-P.y,e.x-P.x), kb=e.T.kind==='boss'?40:opts.kb??90;
   e.kx+=Math.cos(a)*kb; e.ky+=Math.sin(a)*kb;
   burst(e.x,e.y,e.T.kind==='melee'&&e.type==='slem'?'#7ccf6a':'#c94a3a',4,90);
   afterHit(e,d,opts);
@@ -1571,9 +1586,9 @@ function killEnemy(e){
   if(G.dying){const a=Math.atan2(e.y-P.y,e.x-P.x), sp=e.T.kind==='boss'?60:240; G.dying.push({e,t:.45,max:.45,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,rot:0,vr:rand(-9,9)});
     chunks(e.x,e.y,e.type==='skelett'?'#e6e0d0':e.T.col,e.T.kind==='boss'?24:7,e.type==='skelett'?'bone':(e.type==='slem'||e.type==='smallslem'||e.type==='boss1')?'drop':'blob');
     if(e.elite||e.T.kind==='boss') G.hitstop=Math.max(G.hitstop||0,e.T.kind==='boss'?.12:.07);}
-  addDecal(e.x,e.y+e.r*.5,{slem:'#5aa848',smallslem:'#5aa848',boss1:'#5aa848',skelett:'#8a8478',mimic:'#4a2e18',boss2:'#e8e4d8',svamp:'#8a5aa8',spoke:'#8a98b8',golem:'#8a6a3a',troll:'#3a5a2a'}[e.type]||'#5a1414',e.r*1.1,e.type==='skelett'?.3:.55);
+  addDecal(e.x,e.y+e.r*.5,{slem:'#5aa848',smallslem:'#5aa848',boss1:'#5aa848',skelett:'#8a8478',mimic:'#4a2e18',boss2:'#e8e4d8',svamp:'#8a5aa8',spoke:'#8a98b8',golem:'#8a6a3a',troll:'#3a5a2a',bageskelett:'#8a8478',snogubbe:'#dfe8f0'}[e.type]||'#5a1414',e.r*1.1,e.type==='skelett'?.3:.55);
   if(S.corpse&&Math.random()<.3){const x=e.x,y=e.y; G.timers.push({t:.15,f:()=>{explode(x,y,75,S.dmg*1.2,'#9ad04a'); if(Math.random()<.2) log(pick(['Usch, vad det luktar.','Det där var inte jag.','Någon åt för mycket ärtsoppa.']),'#9ad04a');}});}
-  SFX.play(e.T.kind==='boss'?'die_boss':'die_'+(e.type==='smallslem'?'slem':e.type));
+  SFX.play(e.T.kind==='boss'?'die_boss':'die_'+({smallslem:'slem',bageskelett:'skelett',mygga:'fladdermus',vildsvin:'troll',mattant:'kultist',snogubbe:'golem'}[e.type]||e.type));
   if(e.T.kind==='bomber'){const x=e.x,y=e.y; G.timers.push({t:.1,f:()=>explode(x,y,75,S.dmg*1.5,'#ff9a3a')});}
   if(hasAff(e,'explo')) G.emarks.push({x:e.x,y:e.y,r:85,t:.8,max:.8,dmg:e.dmg*1.6,src:e.name,col:'#ff8b2e'});
   if(e.nodrop) return;
@@ -1697,7 +1712,8 @@ function attack(){
 }
 function castRaw(id){
   if(paused||G.over) return;
-  const sk=SKILLS[id];
+  const sk=SKILLS[id]; if(!sk) return;
+  if(sk.tree&&!npk(id)){SFX.play('deny');log(`Lär dig ${sk.n} i talangträdet (K).`,'#a8998a');return;}
   if(P.lvl<sk.lvl){SFX.play('deny');log(`${sk.n} låses upp på nivå ${sk.lvl}.`,'#a8998a');return;}
   if(P.cds[id]>0) return;
   P.cds[id]=sk.cd*(S.cdr[id]||1)*(S.cdrAll||1); SFX.play(id);
@@ -1805,11 +1821,14 @@ function chainLightning(src,base){
   for(const o of ts){G.bolts.push({pts:makeBolt(from.x,from.y,o.x,o.y),t:.2}); hitEnemy(o,base*.6,{nocrit:1,chain:1,kb:0}); from=o;}
   if(ts.length) SFX.play('zap');
 }
+const POTCD=2;
+function inCombat(){return (P.ooc||0)<6||!!(G&&G.enemies&&G.enemies.some(e=>!e.dead&&e.aggro&&Math.hypot(e.x-P.x,e.y-P.y)<450));}
 function drinkPotion(){
   if(paused||G.over) return;
   if(P.potions<=0){SFX.play('deny');log('Inga drycker kvar. Köp fler i väskan (I).','#a8998a');return;}
   if(P.hp>=S.hp){log('Du är redan pigg som en mört.','#a8998a');return;}
-  P.potions--; G.potUsed=true; const h=heal(S.hp*S.potHeal); SFX.play('potion'); text(P.x,P.y-30,'+'+Math.round(h),'#7fd88a',true);
+  if(P.potCd>0){SFX.play('deny'); text(P.x,P.y-30,'Vänta lite!','#a8998a'); return;}
+  P.potCd=POTCD; P.potions--; G.potUsed=true; const h=heal(S.hp*S.potHeal); SFX.play('potion'); text(P.x,P.y-30,'+'+Math.round(h),'#7fd88a',true);
   burst(P.x,P.y,'#d9473a',14,120);
   if(Math.random()<.35) say(P,pick(POTQ));
 }
@@ -1830,6 +1849,7 @@ function update(dt){
   if(joy){const dx=joy.x-joy.ox,dy=joy.y-joy.oy,l=Math.hypot(dx,dy); if(l>6){const k=1/Math.max(l,50); mx=dx*k; my=dy*k;}}
   const ml=Math.hypot(mx,my); if(ml>1){mx/=ml;my/=ml;}
   if(P.slowT>0) P.slowT-=dt;
+  if(P.potCd>0) P.potCd-=dt;
   const sp=175*(1+S.spd/100)*(P.slowT>0?.55:1);
   if(P.dashT>0&&S.dashFire&&(P.fireT-=dt)<=0){P.fireT=.035; G.fires.push({x:P.x+rand(-4,4),y:P.y+8,t:2.5,tick:0});}
   if(P.dashT>0){P.dashT-=dt; moveEnt(P,P.dvx*dt,P.dvy*dt); G.parts.push({x:P.x+rand(-6,6),y:P.y+12,vx:0,vy:-20,life:.3,max:.3,col:'#6a5a58',size:4});}
@@ -1844,7 +1864,8 @@ function update(dt){
   if(P.goto){const d=P.goto; if(ml>.1||mouse.down||d.gone||G.over) P.goto=null; else{const dd=Math.hypot(d.x-P.x,d.y-P.y); if(dd<38){pickup(d); P.goto=null;} else{moveEnt(P,(d.x-P.x)/dd*sp*dt,(d.y-P.y)/dd*sp*dt); P.moving=true; P.face=Math.atan2(d.y-P.y,d.x-P.x);}}}
   if(!G.over&&(mouse.down||touchAtk||keys.has(' '))&&P.acd<=0) attack();
   if(S.shieldMax&&!G.over){P.shT=(P.shT||0)+dt; if(P.shT>4) P.shield=Math.min(S.shieldMax,(P.shield||0)+S.shieldMax*.3*dt);}
-  if(!G.over) P.hp=Math.min(S.hp,P.hp+S.hp*(P.buff&&P.buff.id==='fika'?.05:((P.ooc=(P.ooc||0)+dt)>8?.0008:0))*dt);
+  P.ooc=(P.ooc||0)+dt;
+  if(!G.over){const reg=P.buff&&P.buff.id==='fika'?.05:inCombat()?0:.01; if(reg) P.hp=Math.min(S.hp,P.hp+S.hp*reg*dt);}
 
   if(S.fx.has('aura')&&(G.auraT-=dt)<=0){G.auraT=.5; for(const e of G.enemies) if(!e.dead&&Math.hypot(e.x-P.x,e.y-P.y)<110+e.r) hitEnemy(e,2+G.depth*2.5,{nocrit:1,nols:1,kb:0});}
   if(S.fx.has('bun')&&P.moving&&(G.bunT-=dt)<=0){G.bunT=1; if(Math.random()<.06){drop(P.x,P.y,{kind:'bun'}); log('Du tappade en kanelbulle. Farmor skulle vara stolt.','#ff8b2e');}}
@@ -1989,9 +2010,24 @@ function updateEnemies(dt){
     if(e.fear>0){e.fear-=dt; moveEnt(e,-ux*e.spd*dt,-uy*e.spd*dt); continue;}
     const k=e.kind||e.T.kind;
     if(k==='ranged'){
-      if(d>250) moveEnt(e,ux*e.spd*dt,uy*e.spd*dt); else if(d<150) moveEnt(e,-ux*e.spd*dt,-uy*e.spd*dt);
-      if(e.cd<=0&&d<420&&los(e.x,e.y,P.x,P.y)){e.cd=e.T.acd; SFX.play('shoot'); G.proj.push({x:e.x,y:e.y,vx:ux*230,vy:uy*230,r:7,dmg:e.dmg,life:2.4,enemy:true,kind:e.T.proj||'dikt',rot:0,src:e.name});
-        for(let b=1;b<(e.T.burst||1);b++){const vx=ux*260,vy=uy*260; G.timers.push({t:b*.18,f:()=>{if(!e.dead) G.proj.push({x:e.x,y:e.y,vx,vy,r:7,dmg:e.dmg,life:2.4,enemy:true,kind:e.T.proj,rot:0,src:e.name});}});}}
+      if(e.wind>0){e.wind-=dt; if(e.wind<=0) enemyShoot(e,ux,uy);}
+      else{
+        if(d>250) moveEnt(e,ux*e.spd*dt,uy*e.spd*dt); else if(d<150) moveEnt(e,-ux*e.spd*dt,-uy*e.spd*dt);
+        if(e.cd<=0&&d<420&&los(e.x,e.y,P.x,P.y)){e.cd=e.T.acd*rand(.85,1.15); if(e.T.wind) e.wind=e.T.wind; else enemyShoot(e,ux,uy);}
+      }
+    }else if(k==='charger'){
+      e.mcd=(e.mcd||0)-dt;
+      if(e.wind>0){e.wind-=dt; if(e.wind<=0){e.dash=.55; e.dvx=e.cx2*520; e.dvy=e.cy2*520; e.dhit=false; SFX.play('stamp');}}
+      else if(e.dash>0){
+        e.dash-=dt; const ox=e.x,oy=e.y; moveEnt(e,e.dvx*dt,e.dvy*dt);
+        if(Math.hypot(e.x-ox,e.y-oy)<520*dt*.3){e.dash=0; e.stun=1.2; e.cd=e.T.acd; say(e,'Aj! Väggen!',1.2); burst(e.x,e.y,'#bdb6a9',10,120,3); if(!reduceMotion) G.shake=Math.min(8,G.shake+3);}
+        else if(!e.dhit&&Math.hypot(P.x-e.x,P.y-e.y)<e.r+P.r+4){e.dhit=true; hurtPlayer(e.dmg*1.3,e.name); moveEnt(P,e.cx2*24,e.cy2*24);}
+        if(e.dash<=0&&!e.stun) e.cd=e.T.acd;
+      }else{
+        if(!touch) moveEnt(e,ux*e.spd*dt,uy*e.spd*dt);
+        else if(e.mcd<=0){e.mcd=1.1; e.lunge=.15; hurtPlayer(e.dmg*.7,e.name);}
+        if(e.cd<=0&&d>80&&d<300&&los(e.x,e.y,P.x,P.y)){e.wind=.6; e.cx2=ux; e.cy2=uy; if(Math.random()<.5) say(e,pick(['UR VÄGEN!','Jag är SEN!','Flytta på dig!']),1);}
+      }
     }else if(k==='boss'){
       const rage=e.hp<e.maxhp/2?.65:1, b=e.T.b;
       if(rage<1&&!e.raged){e.raged=true; say(e,pick(['NU BLIR JAG ARG!','Det här är personligt nu!','ANDRA RUNDAN!']),2); if(!reduceMotion) G.shake=10; SFX.play('boss');}
@@ -2086,11 +2122,18 @@ function updateEnemies(dt){
   }
   G.enemies=G.enemies.filter(e=>!e.dead);
 }
+function enemyShoot(e,ux,uy){
+  if(e.dead) return;
+  const T=e.T, sp=T.psp||230, n=T.fan||1, kind=T.proj||'dikt', a=Math.atan2(uy,ux);
+  SFX.play(kind==='pil'?'sling':'shoot');
+  for(let i=0;i<n;i++){const aa=a+(i-(n-1)/2)*.28; G.proj.push({x:e.x,y:e.y,vx:Math.cos(aa)*sp,vy:Math.sin(aa)*sp,r:T.pr||7,dmg:e.dmg,life:2.4,enemy:true,kind,rot:kind==='kbulle'?0:aa,src:e.name,slow:T.pslow||0});}
+  for(let b=1;b<(T.burst||1);b++){const vx=ux*260,vy=uy*260; G.timers.push({t:b*.18,f:()=>{if(!e.dead) G.proj.push({x:e.x,y:e.y,vx,vy,r:7,dmg:e.dmg,life:2.4,enemy:true,kind,rot:0,src:e.name});}});}
+}
 function updateProj(dt){
   for(const p of G.proj){
     if(!p.enemy||p.kind==='eld'){(p.tr||(p.tr=[])).push(p.x,p.y); if(p.tr.length>14) p.tr.splice(0,2);}
     p.x+=p.vx*dt; p.y+=p.vy*dt; p.life-=dt; if(!p.norot) p.rot+=dt*12;
-    if(p.orbit){p.oa+=dt*7.5; const R=Math.min(80,(2.4-p.life)*260+20); p.x=P.x+Math.cos(p.oa)*R; p.y=P.y+Math.sin(p.oa)*R; if((p.hc=(p.hc||0)+dt)>.35){p.hc=0; p.hit.clear();}}
+    if(p.orbit){p.oa+=dt*(p.ospd||7.5); const R=p.orbR||Math.min(80,(2.4-p.life)*260+20); p.x=P.x+Math.cos(p.oa)*R; p.y=P.y+Math.sin(p.oa)*R; if((p.hc=(p.hc||0)+dt)>.35){p.hc=0; p.hit.clear();}}
     if(p.ghost||p.home){let best=null,bd=260; for(const e of G.enemies){if(e.dead||p.hit.has(e)) continue; const d=Math.hypot(e.x-p.x,e.y-p.y); if(d<bd){bd=d;best=e;}}
       if(best){const sp=Math.hypot(p.vx,p.vy)||520, k=Math.min(1,dt*6); p.vx+=((best.x-p.x)/bd*sp-p.vx)*k; p.vy+=((best.y-p.y)/bd*sp-p.vy)*k;}}
     if(p.pt==='fondue'&&(p.ft=(p.ft||0)-dt)<=0){p.ft=.06; G.fires.push({x:p.x,y:p.y,t:2.2,tick:0,cheese:true});}
@@ -2113,7 +2156,7 @@ function updateProj(dt){
       continue;
     }
     if(p.enemy){
-      if(Math.hypot(p.x-P.x,p.y-P.y)<P.r+p.r){p.dead=true; if(p.cloud) G.clouds.push({x:p.x,y:p.y,r:50,t:3.5,tick:0,dmg:p.dmg,src:p.src}); else hurtPlayer(p.dmg,p.src);}
+      if(Math.hypot(p.x-P.x,p.y-P.y)<P.r+p.r){p.dead=true; if(p.cloud) G.clouds.push({x:p.x,y:p.y,r:50,t:3.5,tick:0,dmg:p.dmg,src:p.src}); else{hurtPlayer(p.dmg,p.src); if(p.slow){P.slowT=Math.max(P.slowT||0,p.slow); text(P.x,P.y-40,'Brr!','#9fd8ff');}}}
     }else{
       for(const e of G.enemies){
         if(p.nohit||e.dead||p.hit.has(e)) continue;
@@ -2931,10 +2974,10 @@ function drawEnemy(e){
       blob(RR(-2.3+lx,3+ly,4.6,4,1),'#ffffff',1.2); line(lx,3.4+ly,lx,6.6+ly,OL,.8);
       if(e.elite){blob(RR(-r*.8,-r*.62,r*1.6,3.5,1.5),'#d9473a',1.2);}
       break;}
-    case 'skelett':{
-      const bc=T.col, chat=e.aggro?Math.abs(Math.sin(t*1.5))*2:0;
+    case 'skelett': case 'bageskelett':{
+      const arch=e.type==='bageskelett', bc=T.col, chat=e.aggro?Math.abs(Math.sin(t*1.5))*2:0;
       bone(-4,6,-5+wk*2.5,r,bc); bone(4,6,5-wk*2.5,r,bc);
-      line(dir*11,-1,dir*13,r+1,OL,4.6); line(dir*11,-1,dir*13,r+1,'#8a5a32',2.6);
+      if(!arch){line(dir*11,-1,dir*13,r+1,OL,4.6); line(dir*11,-1,dir*13,r+1,'#8a5a32',2.6);}
       blob(E(0,3,7.5,7),sh(0,3,8,bc),2);
       for(let i=0;i<3;i++) line(-5,i*3.2,5,i*3.2,'#8f887a',1.3);
       line(0,-3,0,9,'#8f887a',1.5);
@@ -2948,7 +2991,16 @@ function drawEnemy(e){
       circ(-3.8+lx*1.6,-1.5+ly,1.1,'#ff6b5b'); circ(3.8+lx*1.6,-1.5+ly,1.1,'#ff6b5b');
       cx.fillStyle='#1a121a'; cx.beginPath(); cx.moveTo(lx,1.6); cx.lineTo(lx-1.5,4); cx.lineTo(lx+1.5,4); cx.fill();
       cx.save(); cx.rotate(-.5); blob(RR(2,-9,8,3,1),'#e8c49a',1); cx.restore();
+      if(arch){cx.strokeStyle=OL; cx.lineWidth=1.3; cx.beginPath(); cx.arc(-3.8+lx,-1.5,3.6,0,Math.PI*2); cx.stroke(); cx.beginPath(); cx.arc(3.8+lx,-1.5,3.6,0,Math.PI*2); cx.stroke(); line(-.4+lx,-1.5,.4+lx,-1.5,OL,1.3);}
       cx.restore();
+      if(arch){const pull=e.wind>0?(1-e.wind/(T.wind||.5))*6:0, ba=Math.atan2(ly,lx);
+        cx.save(); cx.translate(lx*12,ly*6+2); cx.rotate(ba);
+        cx.strokeStyle=OL; cx.lineWidth=3.6; cx.beginPath(); cx.arc(-4,0,11,-1.1,1.1); cx.stroke();
+        cx.strokeStyle='#8a5a32'; cx.lineWidth=2; cx.beginPath(); cx.arc(-4,0,11,-1.1,1.1); cx.stroke();
+        const bx=-4+Math.cos(1.1)*11, by=Math.sin(1.1)*11;
+        line(bx,-by,-pull,0,'#e8e0d0',.9); line(bx,by,-pull,0,'#e8e0d0',.9);
+        if(pull>0){line(-pull,0,12,0,'#a87a4a',1.4); blob(()=>{cx.moveTo(15,0);cx.lineTo(11,-2.4);cx.lineTo(11,2.4);cx.closePath();},'#c8ccd2',.8);}
+        cx.restore();}
       break;}
     case 'slem': case 'smallslem':{
       const w=1+.09*Math.sin(t*1.4), c=T.col, jr=e.type==='smallslem';
@@ -3015,6 +3067,56 @@ function drawEnemy(e){
       blob(()=>{cx.ellipse(0,-3,r*1.1,r*.85,0,Math.PI,0);cx.quadraticCurveTo(0,1,-r*1.1,-3);},sh(0,-8,r,T.col));
       circ(-6,-10,2.6,'#f4ece0'); circ(5,-12,3,'#f4ece0'); circ(11,-5,2,'#f4ece0'); circ(-12,-4,1.8,'#f4ece0');
       cx.restore();
+      break;}
+    case 'mygga':{
+      const fl=Math.sin(G.time*45+e.ph), c=T.col;
+      cx.translate(0,-12+Math.sin(G.time*5+e.ph)*3);
+      cx.globalAlpha=.55; for(const s of [-1,1]) blob(E(s*5,-5-fl*1.5,6,2.4,s*(.5+fl*.3)),'#dceaff',1); cx.globalAlpha=1;
+      for(const s of [-1,1]) for(let i=0;i<3;i++) line(s*1.5,2,s*(4+i*2),7+i,OL,.9);
+      blob(E(-dir*3,1,4.5,3),sh(-dir*3,1,4,c),1.2);
+      blob(E(dir*2.5,-1,3.2,3),sh(dir*2.5,-1,3,lt(c,.15)),1.2);
+      line(dir*5,0,dir*5+lx*8,ly*8,OL,1.3);
+      circ(dir*2.6+lx*.6,-1.8+ly*.6,1.3,'#ff4a3a');
+      break;}
+    case 'vildsvin':{
+      const c=T.col, w=e.wind>0, ld=e.dash>0||w?(Math.sign(e.cx2)||dir):dir;
+      if(w){cx.save(); cx.globalAlpha=.18+.14*Math.sin(G.time*20); cx.strokeStyle='#ff5a3a'; cx.lineWidth=r*1.5; cx.lineCap='round'; cx.beginPath(); cx.moveTo(0,0); cx.lineTo(e.cx2*240,e.cy2*240); cx.stroke(); cx.restore(); cx.translate(Math.sin(G.time*60)*1.5,0);}
+      for(const [a,b] of [[-8,wk],[8,-wk],[-3,-wk],[3,wk]]) blob(RR(a-2,r*.4+b*1.5,4,7,1.5),dk(c,.3),1.2);
+      blob(E(0,0,r*1.05,r*.72),sh(0,-2,r,c));
+      for(let i=-3;i<=3;i++) line(i*3,-r*.6,i*3-ld*2,-r*.6-4,dk(c,.35),1.6);
+      blob(()=>{cx.moveTo(ld*6,-1);cx.lineTo(ld*4,9);cx.lineTo(ld*7,11);cx.lineTo(ld*9,9);cx.closePath();},'#3a6ad9',1);
+      const hx=ld*r*.8;
+      blob(E(hx,-1,r*.52,r*.46),sh(hx,-1,r*.5,lt(c,.08)));
+      blob(()=>{cx.moveTo(hx-ld*5,-r*.38);cx.lineTo(hx-ld*8,-r*.38-6);cx.lineTo(hx-ld*1,-r*.44);cx.closePath();},dk(c,.2),1.2);
+      blob(E(hx+ld*7,1,4.5,3.6),'#d89a8a',1.3); circ(hx+ld*6,1,.9,OL); circ(hx+ld*8.5,1,.9,OL);
+      line(hx+ld*3,4.5,hx+ld*6.5,-.5,'#fff4c8',2);
+      eye(hx-ld*1,-4.5,2.1,lx,ly,(w||e.dash>0)?'#ff3a2a':null);
+      break;}
+    case 'mattant':{
+      const c=T.col, w=e.wind>0;
+      blob(()=>{cx.moveTo(-r*.65,-r*.2);cx.lineTo(-r*.95,r*.85);cx.quadraticCurveTo(0,r*1.02+wk,r*.95,r*.85);cx.lineTo(r*.65,-r*.2);cx.closePath();},sh(0,r*.2,r,c));
+      blob(RR(-r*.45,-r*.05,r*.9,r*.85,2),'#f4f0e8',1.2);
+      cx.save(); cx.translate(dir*r*.8,0); cx.rotate(dir*(w?-1.3:-.3)+Math.sin(t*.6)*.05);
+      line(0,0,0,-14,'#8a8f96',2.2); blob(E(0,-16,4,3),'#b8bec6',1.2); if(!w) circ(0,-17,2,'#8a4a2a');
+      cx.restore();
+      blob(E(0,-r*.6,r*.55,r*.52),sh(0,-r*.6,r*.55,'#f0c8a8'));
+      blob(E(0,-r*1.06,r*.5,r*.28),'#c8c8d0',1.3); blob(E(0,-r*1.34,r*.22,r*.2),'#c8c8d0',1.2);
+      eye(-3+lx,-r*.62+ly,1.8,lx,ly); eye(3+lx,-r*.62+ly,1.8,lx,ly);
+      circ(-5.5,-r*.42,1.8,'rgba(232,110,120,.5)'); circ(5.5,-r*.42,1.8,'rgba(232,110,120,.5)');
+      cx.strokeStyle=OL; cx.lineWidth=1.2; cx.beginPath(); cx.arc(lx,-r*.38,2.4,.3,Math.PI-.3); cx.stroke();
+      break;}
+    case 'snogubbe':{
+      const c=T.col, w=e.wind>0, hy=-r*1.15;
+      blob(E(0,r*.35,r*.85,r*.7),sh(0,r*.2,r,c));
+      blob(E(0,-r*.45,r*.62,r*.55),sh(0,-r*.5,r*.7,c));
+      for(let i=0;i<3;i++) circ(0,-r*.7+i*5,1.4,OL);
+      line(-r*.55,-r*.45,-r*1.2,-r*.9-(w&&dir<0?6:0),'#6a4a2a',2); line(r*.55,-r*.45,r*1.2,-r*.9-(w&&dir>0?6:0),'#6a4a2a',2);
+      if(w) blob(E(dir*r*1.2,-r*.9-8,4.5,4.5),'#ffffff',1.2);
+      blob(E(0,hy,r*.45,r*.42),sh(0,hy-2,r*.5,c));
+      circ(-3+lx,hy+ly,1.5,OL); circ(3+lx,hy+ly,1.5,OL);
+      line(-5+lx,hy-3.5,-1.5+lx,hy-2.5,OL,1.4); line(5+lx,hy-3.5,1.5+lx,hy-2.5,OL,1.4);
+      blob(()=>{cx.moveTo(lx,hy+1);cx.lineTo(lx+dir*9,hy+2.5);cx.lineTo(lx,hy+4);cx.closePath();},'#ff8b2e',1);
+      blob(RR(-6,hy-r*.42-8,12,9,1),'#2a2428',1.2); blob(RR(-9,hy-r*.42,18,2.5,1),'#2a2428',1);
       break;}
     case 'troll':{
       const c=T.col, sl=e.slam>0;
@@ -3233,6 +3335,9 @@ function drawProj(p){
   else if(p.kind==='can'){cx.translate(0,-Math.sin((1-p.life/p.max)*Math.PI)*70); cx.rotate(p.rot); blob(RR(-6,-7,12,14,2),sh(0,0,8,'#c8ccd2'),1.4); blob(RR(-6,-3,12,6,1),'#3a6ad9',1); circ(0,0,1.5,'#f3d351');}
   else if(p.kind==='moose') drawMoose(p);
   else if(p.kind==='skruv'){cx.rotate(p.rot*1.5); blob(RR(-6,-1.8,12,3.6,1),'#b8bec6',1.2); blob(E(-6,0,2.6,3.4),'#8a8f96',1.2);}
+  else if(p.kind==='pil'){cx.rotate(Math.atan2(p.vy,p.vx)); line(-9,0,7,0,OL,3); line(-9,0,7,0,'#a87a4a',1.6); blob(()=>{cx.moveTo(11,0);cx.lineTo(6,-3);cx.lineTo(6,3);cx.closePath();},'#c8ccd2',1); line(-9,0,-12,-3,'#e8e0d0',1.6); line(-9,0,-12,3,'#e8e0d0',1.6);}
+  else if(p.kind==='kbulle'){cx.rotate(p.rot*.3); blob(E(0,0,6,6),sh(0,0,6,'#8a4a2a'),1.3); circ(-2,-2,1.6,'rgba(255,220,180,.5)'); circ(2.5,2,1.5,'#c8302a');}
+  else if(p.kind==='snoboll'){blob(E(0,0,p.r,p.r),sh(0,0,p.r,'#f4f8ff'),1.3); circ(-p.r*.3,-p.r*.3,p.r*.3,'rgba(255,255,255,.9)');}
   else if(p.kind==='spore'){cx.globalAlpha=.9; circ(0,0,7,'#9a6ab8'); circ(-2,-2,3,'#c89ae0'); circ(3,2,2,'#7a9a4a'); cx.globalAlpha=1;}
   else if(p.kind==='form'){cx.rotate(p.rot*.6); blob(RR(-7,-9,14,18,1),'#f4f4f0',1.4); for(let i=0;i<3;i++) line(-4,-5+i*3.5,4,-5+i*3.5,'#8a8a90',1); circ(3,5,3.2,'rgba(200,48,42,.85)');}
   cx.restore();
@@ -3435,7 +3540,7 @@ function setS(el,prop,v){const k=el.id+prop+(el.dataset.skill||'');if(hudCache[k
 const skBtns=[...document.querySelectorAll('.sk[data-skill]')];
 function hud(){
   setT('hDepth',String(G.depth)); setT('hFloor',G.town?'Lagomby':floorName(G.depth)); setT('hLvl',String(P.lvl)); setT('hGold',String(P.gold));
-  setT('hPot',String(P.potions)); setT('hBag',`${P.bag.length}`);
+  setT('hPot',String(P.potions)); {const pb=$('hPot').parentElement; if(pb) pb.style.setProperty('--cd',Math.max(0,(P.potCd||0)/POTCD).toFixed(3));} setT('hBag',`${P.bag.length}`);
   P.wob=(P.wob||0)*.94;
   drawOrb(oL,clamp(P.hp/S.hp,0,1),'#ff6a5a','#7a1010',`${Math.max(0,Math.ceil(P.hp))}`,P.wob,P.hp/S.hp<.3);
   if(PIXEL){setT('orbLT',`${Math.max(0,Math.ceil(P.hp))}`); setT('orbRT',`${P.lvl>=MAXLVL?'P'+(P.para||0):'Nv '+P.lvl}`);}
@@ -3443,9 +3548,10 @@ function hud(){
   setS($('xpFill'),'width',(P.xp/need(P.lvl)*100).toFixed(1)+'%');
   for(const b of skBtns){
     const id=b.dataset.skill, sk=SKILLS[id], locked=P.lvl<sk.lvl;
+    if(sk.tree){const hide=!npk(id); if(b.hidden!==hide) b.hidden=hide; if(hide) continue;}
     b.classList.toggle('locked',locked);
     b.querySelector('.n').textContent=locked?`Nv ${sk.lvl}`:(P.cds[id]>0?P.cds[id].toFixed(P.cds[id]<1?1:0):'');
-    b.style.setProperty('--cd',locked?0:(P.cds[id]/sk.cd).toFixed(3));
+    b.style.setProperty('--cd',locked?0:((P.cds[id]||0)/sk.cd).toFixed(3));
   }
   setT('hScroll',String(P.scrolls||0)); setT('hTree',P.pp>0?String(P.pp):'');
   {const op=$('orbPts'), on=P.pp>0; if(op.hidden===on) op.hidden=!on; if(on) setT('orbPts','+'+P.pp); const w=$('orbRW'), lv=G.time<(P.lvlFx||0)||(G.lvlFxT||0)>0; if(w.classList.contains('lvl')!==lv) w.classList.toggle('lvl',lv); if(G.lvlFxT>0) G.lvlFxT-=1/60;}
@@ -3549,7 +3655,7 @@ function renderInv(){
   ].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
   const gl=gemHTMLList();
   $('fxList').innerHTML=(gl?`<li style="color:var(--parch)">Juveler: ${gl}</li>`:'')+(P.keys?`<li style="color:#ff5a8a">Kaosnycklar: ${P.keys}</li>`:'')+[...S.fx].map(f=>`<li>${FX[f]}</li>`).join('')+Object.entries(P.perks||{}).map(([id,c])=>{const p=PERKS.find(x=>x.id===id); return p?`<li style="color:var(--torch)">${p.n}${c>1?' ×'+c:''}: ${p.d}</li>`:'';}).join('');
-  const bp=$('buyPot'); bp.textContent=`Beställ dryck med brevduva (${potCost()} guld)`; bp.disabled=P.gold<potCost()||P.potions>=9;
+  const bp=$('buyPot'), fight=!G.town&&inCombat(); bp.textContent=fight?'Brevduvan vågar inte flyga mitt i en strid':`Beställ dryck med brevduva (${potCost()} guld)`; bp.disabled=fight||P.gold<potCost()||P.potions>=9;
   const d=$('detail');
   const it=sel?(sel.w==='eq'?P.equip[sel.k]:P.bag[sel.k]):null;
   if(!it){d.innerHTML=`<p class="muted" style="margin:0">Klicka på en sak för att se den. Dubbelklicka för att ta på den direkt.</p><p class="fl" style="margin-top:8px">Grå saker är skräp. Blå är lite bättre skräp. Gula är fint skräp. Orange är legendariskt skräp.</p>`;return;}
@@ -3596,7 +3702,7 @@ $('inv').addEventListener('click',e=>{
       if(pr) pr.then(()=>log('Spar-koden är kopierad. Spara den någonstans säkert.','#9fe3d2'),()=>log('Koden är markerad. Kopiera den med Ctrl+C.','#a8998a'));
       else log('Koden är markerad. Kopiera den med Ctrl+C.','#a8998a');
     }
-    if(a==='buypot'&&P.gold>=potCost()&&P.potions<9){P.gold-=potCost(); P.potions++; SFX.play('cash'); log(pick(['En duva levererade en dryck. Den ville ha dricks.','Duvan landade. Drycken är bara lite fjädrig.','Leverans! Duvan tittar dömande på dig.']),'#ff7a6a');}
+    if(a==='buypot'&&P.gold>=potCost()&&P.potions<9&&(G.town||!inCombat())){P.gold-=potCost(); P.potions++; SFX.play('cash'); log(pick(['En duva levererade en dryck. Den ville ha dricks.','Duvan landade. Drycken är bara lite fjädrig.','Leverans! Duvan tittar dömande på dig.']),'#ff7a6a');}
   }
   renderInv();
 });
@@ -4457,6 +4563,8 @@ function recalcExtra(){
   const tb=P.tb;
   if(tb&&tb.id==='fika') S.armor=Math.round(S.armor*1.6);
   if(tb&&tb.id==='hunt'){S.as+=40; S.crit+=15;}
+  if(tb&&tb.id==='jul'){S.dmg=Math.round(S.dmg*1.4); S.armor=Math.round(S.armor*1.3);}
+  for(const id of ['ugn','julbord','kalas','bingo','kotte','algvand']) S.cdr[id]=1-.08*Math.max(0,npk(id)-1);
 }
 function addPool(x,y,r,t,kind,dmg,src){const L=G.epools||(G.epools=[]); L.push({x,y,r,t,max:t,kind,dmg:dmg||0,tick:0,src}); if(L.length>60) L.shift();}
 function eliteTick(e,dt,d){
@@ -4838,9 +4946,9 @@ function renderTree(){
   $('trPts').textContent=P.pp||0;
   $('treeCols').innerHTML=treeBranches().map(br=>{
     const tiers=[0,1,2,3].filter(t=>br.nodes.some(n=>n[0]===t));
-    return `<div class="tcol"><h3 style="color:${br.c}">${br.n} <span class="muted">${branchPts(br)}</span></h3>`+tiers.map(t=>`<div class="trow">`+br.nodes.filter(n=>n[0]===t).map(([tt,id,max])=>{
+    return `<div class="tcol"><h3 style="color:${br.c}">${br.n} <span class="muted">${branchPts(br)}</span></h3>`+tiers.map(t=>(t?(branchPts(br)>=t*TIER_NEED?'<div class="tlink open"></div>':`<div class="tlink"><span>Låses upp vid ${t*TIER_NEED} poäng</span></div>`):'')+`<div class="trow">`+br.nodes.filter(n=>n[0]===t).map(([tt,id,max])=>{
       const s=nodeState(br,tt,id,max), on=s.r>0;
-      return `<button class="tnode ${on?'on':''} ${s.ok?'can':''} ${treeSel===id?'sel':''}" data-node="${id}" style="--bc:${br.c}"><b>${s.p.n}</b><span>${s.r}/${max}</span></button>`;}).join('')+`</div>`).join('')+`</div>`;}).join('');
+      const act=s.p.req&&SKILLS[s.p.req]&&SKILLS[s.p.req].tree; return `<button class="tnode ${on?'on':''} ${s.ok?'can':''} ${act?'act':''} ${treeSel===id?'sel':''}" data-node="${id}" style="--bc:${br.c}">${act?`<i>${SKILLS[s.p.req].lvl>=18?'Ultimat':'Förmåga'}</i>`:''}<b>${s.p.n}</b><span>${s.r}/${max}</span></button>`;}).join('')+`</div>`).join('')+`</div>`;}).join('');
   const d=$('treeDetail');
   if(!treeSel){d.innerHTML='<p class="muted" style="margin:0">Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.</p>'; return;}
   const br=treeBranches().find(b=>b.nodes.some(n=>n[1]===treeSel)), nd=br.nodes.find(n=>n[1]===treeSel), s=nodeState(br,nd[0],nd[1],nd[2]);
@@ -4853,6 +4961,61 @@ function learnPerk(id){
   const ratio=P.hp/S.hp; recalc(); P.hp=Math.max(1,Math.round(S.hp*ratio)); SFX.play('equip'); log(`Ny talang: ${s.p.n}`,'#f2a03d'); save();
 }
 function offerPerk(){}
+// ---- tree abilities: new active skills unlocked and ranked in the talent tree ----
+var TSK={krigare:{u1:'ugn',u2:'julbord'},hexa:{u1:'kalas',u2:'bingo'},jagare:{u1:'kotte',u2:'algvand'}};
+const TREESK=['ugn','julbord','kalas','bingo','kotte','algvand'];
+Object.assign(SKILLS,{
+  ugn:{n:'Ugnsluckan',lvl:10,cd:12,sfx:'boom',tree:1},julbord:{n:'Julbordets Vrede',lvl:18,cd:45,sfx:'boss',tree:1},
+  kalas:{n:'Kaffekalaset',lvl:10,cd:12,sfx:'potion',tree:1},bingo:{n:'Bingokvällen',lvl:18,cd:45,sfx:'legend',tree:1},
+  kotte:{n:'Kottgranaten',lvl:10,cd:10,sfx:'sling',tree:1},algvand:{n:'Älgvandringen',lvl:18,cd:45,sfx:'moose',tree:1},
+});
+Object.assign(SKICON,{
+  ugn:'<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16M8 14h8"/>',
+  julbord:'<path d="M3 14h18M5 14v6M19 14v6M7 14a5 5 0 0 1 10 0M12 5v4"/>',
+  kalas:'<path d="M5 10h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 11h2a2 2 0 0 1 0 4h-2"/><circle cx="19" cy="5" r="2"/><circle cx="4" cy="5" r="2"/>',
+  bingo:'<circle cx="8" cy="8" r="4"/><circle cx="16" cy="16" r="4"/><path d="M8 7v2M16 15v2"/>',
+  kotte:'<path d="M12 3c4 3 5 8 0 18-5-10-4-15 0-18zM9 9h6M8.5 13h7M10 17h4"/>',
+  algvand:'<path d="M6 4v4h4M18 4v4h-4M8 8l4 4 4-4M12 12v8M8 20h8"/>',
+});
+const RANKTXT=' Varje rang: +30% skada och 8% kortare nedkylning.';
+PERKS.push(
+  {id:'ugn',cls:'krigare',req:'ugn',n:'Ugnsluckan',tag:'Ny förmåga · tangent 2 · nivå 10',d:'Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.'+RANKTXT,f:'Någon glömde stänga av ugnen. Det var du.',now:()=>applyClassUI()},
+  {id:'julbord',cls:'krigare',req:'julbord',n:'Julbordets Vrede',tag:'Ultimat förmåga · tangent 3 · nivå 18',d:'I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.'+RANKTXT,f:'Sill, skinka och total förstörelse.',now:()=>applyClassUI()},
+  {id:'kalas',cls:'hexa',req:'kalas',n:'Kaffekalaset',tag:'Ny förmåga · tangent 2 · nivå 10',d:'Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.'+RANKTXT,f:'Sju sorters kakor är minimum.',now:()=>applyClassUI()},
+  {id:'bingo',cls:'hexa',req:'bingo',n:'Bingokvällen',tag:'Ultimat förmåga · tangent 3 · nivå 18',d:'Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.'+RANKTXT,f:'B7! Någon? B7!',now:()=>applyClassUI()},
+  {id:'kotte',cls:'jagare',req:'kotte',n:'Kottgranaten',tag:'Ny förmåga · tangent 2 · nivå 10',d:'Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.'+RANKTXT,f:'Granen protesterade inte. Den är en gran.',now:()=>applyClassUI()},
+  {id:'algvand',cls:'jagare',req:'algvand',n:'Älgvandringen',tag:'Ultimat förmåga · tangent 3 · nivå 18',d:'Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.'+RANKTXT,f:'Skogens kung har bråttom.',now:()=>applyClassUI()},
+);
+TREE_CLS.krigare.nodes.push([2,'ugn',3],[3,'julbord',3]);
+TREE_CLS.hexa.nodes.push([2,'kalas',3],[3,'bingo',3]);
+TREE_CLS.jagare.nodes.push([2,'kotte',3],[3,'algvand',3]);
+const rkm=id=>1+.3*Math.max(0,npk(id)-1);
+const nearFoes=R=>G.enemies.filter(e=>!e.dead&&Math.hypot(e.x-P.x,e.y-P.y)<R);
+Object.assign(NEWSK,{
+  ugn(){const m=rkm('ugn');
+    for(let i=0;i<3;i++) G.timers.push({t:i*.18,f:()=>{const R=110+i*45; G.rings.push({x:P.x,y:P.y,r:R,t:.3,max:.3,col:'#ff8b2e'}); burst(P.x,P.y,'#ffb03a',18,R*2,3);
+      for(const e of G.enemies) if(!e.dead&&Math.hypot(e.x-P.x,e.y-P.y)<R+e.r){hitEnemy(e,S.dmg*1.5*m,{kb:200}); if(!e.dead) e.burn={t:3,dps:Math.max(2,S.dmg*.35*m),k:.5};}
+      if(!reduceMotion) G.shake=Math.min(10,G.shake+3);}});
+    say(P,pick(['Ugnen är på!','Varmt värre!','Tvåhundra grader!']),1.4);},
+  julbord(){const m=rkm('julbord'); P.tb={id:'jul',t:7}; recalc(); burst(P.x,P.y,'#f3d351',30,200,4); G.rings.push({x:P.x,y:P.y,r:200,t:.5,max:.5,col:'#f3d351'});
+    for(let i=0;i<14;i++) G.timers.push({t:.3+i*.45,f:()=>{const ts=nearFoes(420), tg=ts.length?pick(ts):null; G.marks.push({x:tg?tg.x:P.x+rand(-200,200),y:tg?tg.y:P.y+rand(-160,160),t:.55,max:.55,dmg:S.dmg*2.2*m,r:75});}});
+    say(P,'JULBORDET ÄR DUKAT!',2);},
+  kalas(){const m=rkm('kalas');
+    for(let i=0;i<4;i++) G.proj.push({x:P.x,y:P.y,vx:0,vy:0,r:10,dmg:S.dmg*.9*m,life:4,pierce:999,hit:new Set(),kind:'magic',rot:0,norot:true,orbit:true,oa:i*Math.PI/2,orbR:75,ospd:5});
+    say(P,pick(['Kaffe, någon?','Påtår!','Det är nybryggt!']),1.4);},
+  bingo(){const m=rkm('bingo'), ts=nearFoes(520);
+    for(let i=0;i<14;i++){const t=ts.length?ts[i%ts.length]:null; G.marks.push({x:t?t.x+rand(-15,15):P.x+rand(-240,240),y:t?t.y+rand(-15,15):P.y+rand(-180,180),t:.6+i*.15,max:.6+i*.15,dmg:S.dmg*2.6*m,r:85});}
+    G.rings.push({x:P.x,y:P.y,r:520,t:.5,max:.5,col:'#c88aff'}); say(P,'BINGO!',2);},
+  kotte(){const m=rkm('kotte'), [tx,ty]=aimPoint(380);
+    G.emarks.push({x:tx,y:ty,r:90,t:.45,max:.45,dmg:0,col:'#9ad04a'});
+    G.timers.push({t:.45,f:()=>{explode(tx,ty,90,S.dmg*2.4*m,'#9ad04a'); SFX.play('boom');
+      for(let i=0;i<6;i++){const a=i/6*Math.PI*2, x=tx+Math.cos(a)*85, y=ty+Math.sin(a)*85; G.timers.push({t:.25+i*.05,f:()=>explode(x,y,55,S.dmg*1.1*m,'#c8a46a')});}}});
+    if(Math.random()<.4) say(P,'Kotte!',1);},
+  algvand(){const m=rkm('algvand'), a=P.face, c=Math.cos(a), s=Math.sin(a);
+    for(let w=0;w<2;w++) for(let i=-2;i<=2;i++) G.timers.push({t:w*.7+Math.abs(i)*.08,f:()=>{const ox=P.x-s*i*40, oy=P.y+c*i*40;
+      G.proj.push({x:ox,y:oy,vx:c*520,vy:s*520,r:22,dmg:S.dmg*2.2*m,life:1.3,pierce:999,hit:new Set(),kind:'moose',rot:0,norot:true,kb:420}); if(i===0) SFX.play('moose');}});
+    say(P,'Älgvandring!',1.6);},
+});
 // generic extra panels
 let XOPEN=null;
 const XRENDER={treeP:renderTree,charP:renderChar,questP:renderQuests};
@@ -4943,7 +5106,7 @@ function extraGlows(glow){
   for(const r of G.rings||[]) if(r.r>40) glow(r.x,r.y,r.r*1.3,`rgba(255,190,110,${(.25*Math.max(0,r.t/r.max)).toFixed(3)})`);
 }
 
-Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
+Object.assign(EN_EXACT,{"Slagkraft":"Striking Power","Tålighet":"Toughness","Nytta":"Utility","Förmågor":"Abilities","Fullt":"Maxed","Kräver":"Requires","poäng i":"points in","Kräver nivå":"Requires level","Klicka på en talang för att läsa om den. Klicka igen för att lära dig den. Du får en talangpoäng varje gång du går upp i nivå, och fler kan köpas hos Tore i stan.":"Click a talent to read about it. Click it again to learn it. You get a talent point every time you level up, and you can buy more from Tore in town.","Lär dig (1 poäng)":"Learn (1 point)","Du har inga poäng kvar.":"You have no points left.","Talanger":"Talents","Talangpoäng:":"Talent points:","Talangträdet":"Talent Tree","Stäng (K)":"Close (K)","Stäng (C)":"Close (C)","Stäng (J)":"Close (J)","Hjälten":"The Hero","Anfall":"Offense","Försvar":"Defense","Övrigt":"Other","Effekter från utrustning":"Effects from equipment","Juveler och nycklar":"Gems and keys","Statistik":"Statistics","Kritisk skada":"Critical damage","Hälsodrycker":"Health potions","Portalrullar":"Portal scrolls","Ryggsäck":"Backpack","Inga ännu. Hitta legendariska föremål och set.":"None yet. Find legendary items and sets.","Inga talanger ännu.":"No talents yet.","talangpoäng att lägga (K)":"talent points to spend (K)","Juveler:":"Gems:","Runor i fickan:":"Runes in your pocket:","inga":"none","Kaosnycklar:":"Chaos keys:","Besegrade fiender":"Enemies defeated","Elitfiender":"Elite enemies","Bossar":"Bosses","Dödsfall":"Deaths","Prestationer":"Achievements","Erfarenhet:":"Experience:","Uppdragsloggen":"Quest Log","Huvuduppdrag":"Main quest","Receptsidor:":"Recipe pages:","av":"of","Åkes dagbok:":"Åke's diary:","sidor":"pages","På den här våningen":"On this floor","Klart!":"Done!","Besegra":"Defeat","Utmaning pågår vid obelisken!":"A challenge is underway at the obelisk!","Bakhåll: våg":"Ambush: wave","Visa Turisten Tobias till trappan.":"Show Tobias the Tourist to the stairs.","Sidouppdrag":"Side quests","Prata med":"Talk to","i stan, hon eller han har något på hjärtat.":"in town, they have something on their mind.","Låses upp när du har nått våning":"Unlocks when you have reached floor","Kerstins kastruller":"Kerstin's saucepans","Inget just nu.":"Nothing right now.","Hjälten (C)":"Hero (C)","Talanger (K)":"Talents (K)","Uppdrag (J)":"Quests (J)","Större ryggsäck":"Bigger backpack","Ryggsäcken är så stor den kan bli.":"Your backpack is as big as it gets.","Nu får du plats med fem saker till. Ingen returrätt på sömmarna.":"Now you can fit five more things. No returns on the seams.","NIVÅ UPP!":"LEVEL UP!","Du fick en talangpoäng. Tryck K för talangträdet.":"You got a talent point. Press K for the talent tree.","Ny förmåga:":"New ability:","husdjur hittade. Fler finns att upptäcka.":"pets found. More are out there to discover.","Inga husdjur än. Utforska grottan!":"No pets yet. Explore the cave!","Paragon":"Paragon","Väskan (I)":"Bag (I)","Visa hjälten (C)":"Show hero (C)"}); Object.assign(EN_EXACT,{"Skelett med Pilbåge (Närsynt)":"Nearsighted Skeleton Archer","Norrlandsmygga":"Northern Mosquito","Stressat Vildsvin":"Stressed Boar","Skolmattant":"Lunch Lady","Snögubbe med Attityd":"Snowman with Attitude","Robin Hud-och-Ben":"Robin Skin-and-Bones","Drottning Surr av Norrbotten":"Queen Buzz of Norrbotten","Galten Gunnar, Försenad":"Gunnar the Hog, Running Late","Majvor, Köttbullarnas Drottning":"Majvor, Queen of Meatballs","Snö-Sören som Aldrig Smälter":"Snow-Sören Who Never Melts","bågskelett":"skeleton archers","myggor":"mosquitoes","stressade vildsvin":"stressed boars","skolmattanter":"lunch ladies","snögubbar":"snowmen","Bågskeletten skjuter pilar på hans brevlåda.":"The skeleton archers keep shooting his mailbox.","Myggorna bet honom tjugo gånger i natt.":"The mosquitoes bit him twenty times last night.","Vildsvinen sprang rakt genom hans staket.":"The boars ran straight through his fence.","Mattanterna tvingar honom att äta stuvade makaroner.":"The lunch ladies make him eat creamed macaroni.","Snögubbarna kastar snöboll på hans fönster.":"The snowmen throw snowballs at his window.","Var är du? Allt är suddigt.":"Where are you? Everything's blurry.","Knäck. Sikta. Knäck.":"Crack. Aim. Crack.","Mina glasögon ligger kvar i graven.":"I left my glasses in the grave.","Jag träffade en gång. 1987.":"I hit something once. 1987.","Bzzz!":"Bzzz!","Blod! Gratis blod!":"Blood! Free blood!","Jag är från Kiruna.":"I'm from Kiruna.","Bara ett litet stick!":"Just a tiny bite!","Jag är sen till mötet!":"I'm late for the meeting!","Oink. Men argt.":"Oink. But angry.","Har någon sett min kalender?":"Has anyone seen my calendar?","UR VÄGEN!":"OUT OF MY WAY!","Jag är SEN!":"I'm LATE!","Flytta på dig!":"Move it!","Aj! Väggen!":"Ow! The wall!","Ät upp, annars blir det ingen efterrätt!":"Finish your plate or there's no dessert!","Köttbullar till alla!":"Meatballs for everyone!","Ta två, du är så tunn.":"Take two, you're so thin.","Inga armbågar på bordet!":"No elbows on the table!","Det är kallt här. För dig.":"It's cold in here. For you.","Min näsa är en morot. Problem?":"My nose is a carrot. Got a problem?","Vintern kommer. Den är jag.":"Winter is coming. It's me.","Vänta lite!":"Wait a moment!","Brevduvan vågar inte flyga mitt i en strid":"The pigeon won't fly in the middle of a fight","Brr!":"Brr!"}); Object.assign(EN_EXACT,{"Ugnsluckan":"The Oven Door","Julbordets Vrede":"Wrath of the Christmas Buffet","Kaffekalaset":"The Coffee Party","Bingokvällen":"Bingo Night","Kottgranaten":"Pinecone Grenade","Älgvandringen":"The Moose Migration","Ny förmåga · tangent 2 · nivå 10":"New ability · key 2 · level 10","Ultimat förmåga · tangent 3 · nivå 18":"Ultimate ability · key 3 · level 18","Tre heta tryckvågor slår ut från dig. Var och en gör 150% skada och sätter eld på fienderna.":"Three hot shockwaves burst out from you. Each deals 150% damage and sets enemies on fire.","I 7 sekunder får du +40% skada och +30% rustning, och köttbullar regnar ner över fienderna runt dig.":"For 7 seconds you get +40% damage and +30% armor, and meatballs rain down on nearby enemies.","Fyra heta kaffekoppar snurrar runt dig i 4 sekunder och skållar allt de träffar.":"Four hot coffee cups circle you for 4 seconds and scald everything they hit.","Fjorton bingokulor slår ner på fienderna runt dig och gör 260% skada var.":"Fourteen bingo balls crash down on nearby enemies, dealing 260% damage each.","Kasta en kotte som exploderar med 240% skada och sprider sex mindre explosioner runt sig.":"Throw a pinecone that explodes for 240% damage and scatters six smaller explosions around it.","Två vågor med fem älgar var rusar dit du siktar och tramplar allt i vägen.":"Two waves of five moose charge where you aim and trample everything in their way.","Varje rang: +30% skada och 8% kortare nedkylning.":"Each rank: +30% damage and 8% shorter cooldown.","Någon glömde stänga av ugnen. Det var du.":"Someone forgot to turn off the oven. It was you.","Sill, skinka och total förstörelse.":"Herring, ham and total destruction.","Sju sorters kakor är minimum.":"Seven kinds of cookies is the bare minimum.","B7! Någon? B7!":"B7! Anyone? B7!","Granen protesterade inte. Den är en gran.":"The spruce didn't object. It's a spruce.","Skogens kung har bråttom.":"The king of the forest is in a hurry.","Ugnen är på!":"The oven is on!","Varmt värre!":"Hot hot hot!","Tvåhundra grader!":"Two hundred degrees!","JULBORDET ÄR DUKAT!":"THE BUFFET IS SERVED!","Kaffe, någon?":"Coffee, anyone?","Påtår!":"Refill!","Det är nybryggt!":"It's freshly brewed!","BINGO!":"BINGO!","Kotte!":"Pinecone!","Älgvandring!":"Moose migration!","Lär dig":"Learn","i talangträdet (K).":"in the talent tree (K).","Låses upp vid":"Unlocks at","poäng":"points","Förmåga":"Ability","Ultimat":"Ultimate"}); TRD=null; TRM.clear(); if(LANG==='en'&&document.body) trWalk(document.body);
 let splashDone=false;
 function endSplash(){
   if(splashDone) return; splashDone=true; const s=$('splash'); s.classList.add('done'); setTimeout(()=>{s.hidden=true;},700);
@@ -5071,10 +5234,10 @@ function setupClass(id){
   for(const slot of ['weapon','helm','armor']){const it=P.equip[slot]; if(!it) continue; it.name=g[slot][0]; it.base=g[slot][1]; it.flavor=g[slot][2];}
 }
 function applyClassUI(){
-  const C=CL(), keys={e:'E',q:'Q',r:'R'};
+  const C=CL(), keys={e:'E',q:'Q',r:'R',u1:'2',u2:'3'};
   for(const b of skBtns){
     const s=b.dataset.slot; if(!s) continue;
-    const id=s==='dash'?'dash':mySkills()[s];
+    const id=s==='dash'?'dash':(s==='u1'||s==='u2')?TSK[P.cls||'krigare'][s]:mySkills()[s];
     b.dataset.skill=id; b.querySelector('svg').innerHTML=SKICON[id];
     b.title=s==='dash'?`${C.dash} (Shift)`:`${SKILLS[id].n} (${keys[s]}${s==='e'?' eller högerklick':''})`;
   }
@@ -5180,7 +5343,7 @@ addEventListener('keydown',e=>{
   if(k==='g'){setPixel(!PIXEL);return;}
   if(paused) return;
   keys.add(k);
-  if(k==='shift') cast('dash'); else if(k==='e') cast(mySkills().e); else if(k==='q') cast(mySkills().q); else if(k==='r') cast(mySkills().r); else if(k==='f'||k==='1') drinkPotion();
+  if(k==='shift') cast('dash'); else if(k==='e') cast(mySkills().e); else if(k==='q') cast(mySkills().q); else if(k==='r') cast(mySkills().r); else if(k==='f'||k==='1') drinkPotion(); else if(k==='2') cast(TSK[P.cls||'krigare'].u1); else if(k==='3') cast(TSK[P.cls||'krigare'].u2);
 });
 addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
 addEventListener('blur',()=>{keys.clear();mouse.down=false;touchAtk=false;joy=null;});
